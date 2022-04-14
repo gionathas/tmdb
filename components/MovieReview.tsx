@@ -1,0 +1,56 @@
+import React, { useRef } from "react";
+import { Review } from "../@types/models/review";
+import Properties from "../config/properties";
+import { generateImageUrlByPathOrDefault } from "../lib/api/image-api";
+import Avatar from "./miscellaneous/Avatar";
+import ExpandableText from "./miscellaneous/ExpandableText";
+import VoteBadge from "./miscellaneous/VoteBadge";
+
+type Props = {
+  review: Review;
+};
+
+const MovieReview = ({ review }: Props) => {
+  const reviewContentRef = useRef(null);
+
+  const { author, content, created_at: createdAt, id } = review;
+  const { rating, avatar_path } = review.author_details;
+  const reviewDate = new Date(createdAt);
+  const reviewDateAsString = reviewDate.toLocaleDateString();
+  const avatarImage = generateImageUrlByPathOrDefault(
+    avatar_path,
+    Properties.defaultAvatarImageSrc
+  );
+
+  return (
+    <div key={id} className="max-w-4xl p-4 border-b border-b-gray-500/50">
+      {/* Avatar + Title */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center">
+          <Avatar src={avatarImage} />
+          <div className="ml-4">
+            <h2 className="text-xl ">
+              <span className="capitalize">{author}</span>{" "}
+              <span className="text-lg">says</span>
+            </h2>
+            <p className="text-xs font-light text-primary-500/80">
+              {reviewDateAsString}
+            </p>
+          </div>
+        </div>
+        {rating && <VoteBadge vote={rating} size="sm" />}
+      </div>
+      {/* Content */}
+      <ExpandableText
+        as={"p"}
+        className="mt-6 ml-6 text-sm font-light leading-5 tracking-wide"
+        maxLines={5}
+        ref={reviewContentRef}
+      >
+        {content}
+      </ExpandableText>
+    </div>
+  );
+};
+
+export default MovieReview;

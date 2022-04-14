@@ -1,0 +1,33 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url("https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,300;1,400&display=swap");
+
+@layer base {
+  html {
+    font-family: "Source Sans Pro", sans-serif;
+  }
+
+  body {
+    @apply bg-dark text-gray-50;
+  }
+}
+
+@layer components {
+  .title {
+    @apply tracking-wide antialiased  !important;
+  }
+
+  .link {
+    @apply transition-colors duration-500 hover:text-primary-400;
+  }
+
+  .btn {
+    @apply rounded-md cursor-pointer;
+  }
+
+  .btn-primary {
+    @apply bg-dark ring-2 ring-primary-500;
+  }
+}
