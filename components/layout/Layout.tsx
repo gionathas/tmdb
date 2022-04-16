@@ -4,10 +4,10 @@ import Header from "./Header";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <div className="min-h-screen">
+    <div className="relative min-h-screen">
       <Header />
       <main className="pt-10">{children}</main>
-      <Footer />
+      {/* <Footer /> */}
     </div>
   );
 };

@@ -31,10 +31,13 @@ yarn-error.log*
 .env.test.local
 .env.production.local
 .env.production
+.env.development
 
 # vercel
 .vercel
 
 # typescript
 *.tsbuildinfo
-.vscode/launch.json
+
+# custom
+tmdb.code-workspace

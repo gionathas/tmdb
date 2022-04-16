@@ -3,28 +3,32 @@ import { useRouter } from "next/router";
 import React, { useMemo } from "react";
 import { generateImageUrlByPathOrDefault } from "../../lib/api/image-api";
 import { MoviePreview } from "../../@types/models/movie";
-import PlayButton from "../miscellaneous/PlayButton";
 import VoteBadge from "../miscellaneous/VoteBadge";
 import { Genre } from "../../@types/models/genre";
+import PlayButton from "../miscellaneous/buttons/PlayButton";
 
+export type variant = "base" | "16:9";
 export type size = "md" | "lg";
+export type style = `${variant}_${size}`;
 
 const MoviePreviewCard = ({
   movie,
   genresMap,
   genresToShow = 2,
   size = "lg",
+  variant = "base",
 }: {
   movie: MoviePreview;
   genresMap: Genre[];
   genresToShow?: number;
   size?: size;
+  variant?: variant;
 }) => {
   const router = useRouter();
   const { id, title, vote_average, poster_path, genre_ids } = movie;
   const posterImageSrc = generateImageUrlByPathOrDefault(poster_path, null);
 
-  const handleClick = () => {
+  const handleCardClick = () => {
     router.push(`/movies/${id}`);
   };
 
@@ -34,9 +38,12 @@ const MoviePreviewCard = ({
   );
 
   return (
-    <div className="space-y-2 cursor-pointer" onClick={handleClick}>
+    <div
+      className="space-y-2 transition-transform duration-500 cursor-pointer hover:scale-[1.02]"
+      onClick={handleCardClick}
+    >
       <Thumbnail
-        cardSize={size}
+        style={`${variant}_${size}`}
         title={title}
         vote={vote_average}
         thumbnailSrc={posterImageSrc}
@@ -53,25 +60,27 @@ const MoviePreviewCard = ({
 const Thumbnail = ({
   title,
   vote,
-  cardSize,
   thumbnailSrc,
+  style = "base_md",
 }: {
   thumbnailSrc: MoviePreview["poster_path"];
   title: MoviePreview["title"];
   vote: MoviePreview["vote_average"];
-  cardSize: size;
+  style?: style;
 }) => {
-  const thumbNailSize = classNames(
-    { "w-56 h-80": cardSize === "lg" },
-    { "w-48 h-64": cardSize === "md" }
+  const thumbnailSize = classNames(
+    { "w-56 h-80": style === "base_lg" },
+    { "w-48 h-64": style === "base_md" },
+    { "w-80 h-48": style === "16:9_md" },
+    { "w-96 h-56": style === "16:9_lg" }
   );
 
   return (
     <div
-      className={`${thumbNailSize} relative overflow-hidden rounded-lg group transition-all duration-500`}
+      className={`${thumbnailSize} relative overflow-hidden rounded-lg group transition-all duration-500`}
     >
       <img
-        className="object-cover w-full h-full transition-all duration-500 group-hover:opacity-60"
+        className="object-cover w-full h-full transition-all duration-500 object-center-top group-hover:opacity-60"
         src={thumbnailSrc}
         alt={title}
       />

@@ -1,18 +1,25 @@
-import { Credit } from "../../@types/models/credit";
 import {
-  Movie,
   MovieCredits,
   MovieDetail,
   MoviePreview,
 } from "../../@types//models/movie";
+import { Credit } from "../../@types/models/credit";
 import { Review } from "../../@types/models/review";
-import { TmdbAPI } from "../../config/api-clients";
+import { TmdbAPI } from "../../config/clients";
 import { SortOrder } from "../common";
 import { handleError } from "./helpers";
-import { ApiResponse, TmdbPaginatedResponse } from "./types";
+import {
+  ApiResponse,
+  ApiResponseWithPagination,
+  TmdbPaginatedResponse,
+} from "./types";
 
 export const basePath = "/movie";
-export type MovieCategory = "popular" | "top_rated";
+export type MovieCategory =
+  | "popular"
+  | "top_rated"
+  | "now_playing"
+  | "upcoming";
 export type LinkedMovieCategory = "recommendations" | "similar";
 
 export const TMDBApiRoutes = {
@@ -20,6 +27,7 @@ export const TMDBApiRoutes = {
   getMovieCreditsByMovieId: (movieId: number) =>
     `${basePath}/${movieId}/credits`,
   getMoviesByCategory: (ctg: MovieCategory) => `${basePath}/${ctg}`,
+  getTrendingMovies: `/trending/movie/week`,
   getLinkedMoviesByMovieIdAndCategory: (
     movieId: number,
     ctg: LinkedMovieCategory
@@ -46,10 +54,10 @@ export const getMovie = async (
   }
 };
 
-export const getMovies = async (
+export const getMoviesByCategory = async (
   category: MovieCategory,
-  size: number = 10
-): Promise<ApiResponse<TmdbPaginatedResponse<MoviePreview>>> => {
+  size?: number
+): Promise<ApiResponseWithPagination<MoviePreview>> => {
   try {
     const apiRoute = TMDBApiRoutes.getMoviesByCategory(category);
 
@@ -70,11 +78,34 @@ export const getMovies = async (
   }
 };
 
+export const getTrendingMovies = async (
+  size?: number
+): Promise<ApiResponseWithPagination<MoviePreview>> => {
+  try {
+    const { getTrendingMovies: apiRoute } = TMDBApiRoutes;
+
+    console.info(`Getting Trending movies..`);
+    const { data: trendingMovies } = await TmdbAPI.get<
+      TmdbPaginatedResponse<MoviePreview>
+    >(apiRoute);
+    console.info("Trending Movies successfully retrived!");
+
+    // sorting and filtering
+    trendingMovies.results = trendingMovies.results.slice(0, size);
+
+    return { data: trendingMovies };
+  } catch (error) {
+    console.error(`Error while retrieving Trending movies!`);
+    const { code, message } = handleError(error);
+    return { error: { code, message } };
+  }
+};
+
 export const getMoviesLinkedToMovie = async (
   movieId: number,
   category: LinkedMovieCategory,
   size: number = 10
-): Promise<ApiResponse<TmdbPaginatedResponse<MoviePreview>>> => {
+): Promise<ApiResponseWithPagination<MoviePreview>> => {
   try {
     const apiRoute = TMDBApiRoutes.getLinkedMoviesByMovieIdAndCategory(
       movieId,
@@ -136,7 +167,7 @@ export const getMovieCredits = async (
 export const getMovieReviews = async (
   movieId: number,
   size: number = 10
-): Promise<ApiResponse<TmdbPaginatedResponse<Review>>> => {
+): Promise<ApiResponseWithPagination<Review>> => {
   try {
     const apiRoute = TMDBApiRoutes.getMovieReviewsByMovieId(movieId);
 

@@ -1,21 +1,27 @@
 import React from "react";
 import { CastCredit } from "../../@types/models/credit";
+import Properties from "../../config/properties";
 import CastCard from "../cards/CastCard";
+import Slideshow from "./Slideshow";
+
+const { castSlideshowScrollOffset } = Properties;
 
 type Props = {
   cast: CastCredit[];
 };
 
-// TODO: Add navigation arrows
 const MovieCastSlideshow = ({ cast }: Props) => {
   return (
     <div className="rounded">
-      <h2 className="text-xl font-medium">Top Cast</h2>
-      <div className="flex pt-4 pb-10 space-x-6 overflow-auto">
-        {cast.slice(0, 12).map((cast) => (
+      <Slideshow
+        classname="pt-4 pb-10"
+        scrollOffset={castSlideshowScrollOffset}
+        title={<h2 className="text-xl font-medium">Top Cast</h2>}
+      >
+        {cast.map((cast) => (
           <CastCard key={cast.id} cast={cast} />
         ))}
-      </div>
+      </Slideshow>
     </div>
   );
 };

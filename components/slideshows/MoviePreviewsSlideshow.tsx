@@ -1,81 +1,44 @@
-import React, { useState } from "react";
+import React from "react";
 import { Genre } from "../../@types/models/genre";
-import ArrowIcon from "../icons/ArrowIcon";
-import MoviePreviewCard, {
-  size as MovieCardSize,
-} from "../cards/MoviePreviewCard";
 import { MoviePreview } from "../../@types/models/movie";
+import Properties from "../../config/properties";
+import MoviePreviewCard, {
+  size as MovieCardStyle,
+  variant as MovieCardvariant,
+} from "../cards/MoviePreviewCard";
+import Slideshow from "./Slideshow";
 
-const moviesShowned = 6; //TODO: adapt to various screen size
-const x_axis_transform_percentage = 17; //TODO: adapt to various screen size
+const { movieSlideshowScrollOffset: scrollOffset } = Properties;
 
 const MoviePreviewSlideshow = ({
   title,
   movies,
   genresMap,
-  previewSize = "md",
+  cardSize = "md",
+  variant = "base",
 }: {
   title: string;
   movies: MoviePreview[];
   genresMap: Genre[];
-  previewSize?: MovieCardSize;
-}) => {
-  const [sliderIndex, setSliderIndex] = useState(0);
-
-  const onLeftSlide = () => {
-    if (sliderIndex === 0) return;
-    setSliderIndex(sliderIndex - 1);
-  };
-
-  const onRightSlide = () => {
-    if (sliderIndex + moviesShowned >= movies.length - 1) return;
-    setSliderIndex(sliderIndex + 1);
-  };
-
-  return (
-    <div className="overflow-hidden">
-      <div className="flex items-center justify-between">
-        <h2 className="text-3xl">{title}</h2>
-        <div className="mr-6">
-          <NavigationArrows
-            onLeftClick={onLeftSlide}
-            onRightClick={onRightSlide}
-          />
-        </div>
-      </div>
-      <div
-        className="flex mt-4 space-x-3 transition-transform duration-500"
-        style={{
-          transform: `translate3d(${
-            -sliderIndex * x_axis_transform_percentage
-          }%, 0, 0)`,
-        }}
-      >
-        {movies.map((movie) => (
-          <MoviePreviewCard
-            key={movie.id}
-            movie={movie}
-            genresMap={genresMap}
-            size={previewSize}
-          />
-        ))}
-      </div>
-    </div>
-  );
-};
-
-const NavigationArrows = ({
-  onLeftClick,
-  onRightClick,
-}: {
-  onLeftClick: () => void;
-  onRightClick: () => void;
+  cardSize?: MovieCardStyle;
+  variant?: MovieCardvariant;
 }) => {
   return (
-    <div className="flex space-x-4">
-      <ArrowIcon arrow="left" onClick={onLeftClick} />
-      <ArrowIcon arrow="right" onClick={onRightClick} />
-    </div>
+    <Slideshow
+      title={<h2 className="text-2xl font-light text-gray-200">{title}</h2>}
+      classname=""
+      scrollOffset={scrollOffset}
+    >
+      {movies.map((movie) => (
+        <MoviePreviewCard
+          key={movie.id}
+          movie={movie}
+          genresMap={genresMap}
+          size={cardSize}
+          variant={variant}
+        />
+      ))}
+    </Slideshow>
   );
 };
 

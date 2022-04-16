@@ -55,3 +55,12 @@ export type PolymorphicComponentPropsWithRef<
   C extends React.ElementType,
   Props = {}
 > = PolymorphicComponentProps<C, Props> & { ref?: PolymorphicRef<C> };
+
+// this is the type expected from the property params of GetStaticPaths
+export type Paths = (
+  | string
+  | {
+      params: ParsedUrlQuery;
+      locale?: string | undefined;
+    }
+)[];

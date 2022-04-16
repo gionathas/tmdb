@@ -1,5 +1,6 @@
 const colors = require("tailwindcss/colors");
 
+//TODO: needs productions settings
 module.exports = {
   content: [
     "./pages/**/*.{js,ts,jsx,tsx}",
@@ -11,6 +12,10 @@ module.exports = {
         primary: colors.orange,
         dark: "#101012",
         "dark-blue": "#042541",
+      },
+      objectPosition: {
+        "center-top": "50% 12%",
+        "center-bottom": "center bottom",
       },
     },
   },

@@ -1,22 +1,14 @@
-import { NextPageContext } from "next";
 import React from "react";
-import Layout from "../components/layout/Layout";
 
-interface ErrorComponentProps {
-  statusCode?: number;
-}
+import { NextPageContext } from "next";
 
-const Error = ({ statusCode }: ErrorComponentProps) => {
+const Error = ({ statusCode }: { statusCode: number }) => {
   return (
-    <Layout>
-      return (
-      <p>
-        {statusCode
-          ? `An error ${statusCode} occurred on server`
-          : "An error occurred on client"}
-      </p>
-      );
-    </Layout>
+    <p>
+      {statusCode
+        ? `An error ${statusCode} occurred on server`
+        : "An error occurred on client"}
+    </p>
   );
 };
 

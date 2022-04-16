@@ -43,7 +43,7 @@ const MovieReview = ({ review }: Props) => {
       {/* Content */}
       <ExpandableText
         as={"p"}
-        className="mt-6 ml-6 text-sm font-light leading-5 tracking-wide"
+        className="mt-6 ml-6 text-sm font-normal leading-relaxed text-gray-300"
         maxLines={5}
         ref={reviewContentRef}
       >

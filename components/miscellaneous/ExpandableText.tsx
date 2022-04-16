@@ -21,17 +21,16 @@ const ExpandableText = React.forwardRef(
     const [isContentExpanded, setIsContentExpanded] = useState(false);
     const [isContentExpandable, setIsContentExpandable] = useState(false);
 
-    const calculateIsContentExpandable = (): boolean => {
-      if (ref && ref.current) {
-        return ref.current?.scrollHeight > ref.current?.clientHeight;
-      }
-
-      return false;
-    };
-
     useEffect(() => {
+      const calculateIsContentExpandable = (): boolean => {
+        if (ref && ref.current) {
+          return ref.current?.scrollHeight > ref.current?.clientHeight;
+        }
+
+        return false;
+      };
       setIsContentExpandable(calculateIsContentExpandable());
-    }, []);
+    }, [ref]);
 
     const toggleContentExpansion = () => {
       setIsContentExpanded(!isContentExpanded);

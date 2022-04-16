@@ -2,7 +2,7 @@ import React from "react";
 import { CrewCredit } from "../../@types/models/credit";
 import { MovieDetail } from "../../@types/models/movie";
 import { generateImageUrlByPathOrDefault } from "../../lib/api/image-api";
-import ActionButton from "../miscellaneous/ActionButton";
+import ActionButton from "../miscellaneous/buttons/ActionButton";
 import VoteBadge from "../miscellaneous/VoteBadge";
 
 type OwnProps = {
@@ -168,7 +168,7 @@ const MovieOverview = ({
   const renderCrewCredit = () => {
     return crew.map((crew, index) => (
       <div key={index} className="text-sm">
-        <h2 className="font-semibold">{crew.name}</h2>
+        <h2 className="font-semibold name">{crew.name}</h2>
         <div className="text-xs">{crew.job}</div>
       </div>
     ));
@@ -182,9 +182,7 @@ const MovieOverview = ({
       {/* Description */}
       <div className="mt-4">
         <h2 className="text-xl font-medium">Overview</h2>
-        <p className="mt-1 text-sm leading-relaxed tracking-wide text-gray-300">
-          {overview}
-        </p>
+        <p className="mt-1 text-sm leading-snug text-gray-300">{overview}</p>
       </div>
 
       {/* Crew Staff */}

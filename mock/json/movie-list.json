@@ -28,7 +28,7 @@
       "popularity": 5329.202,
       "poster_path": "/qsdjk9oAKSQMWs0Vt5Pyfh6O4GZ.jpg",
       "release_date": "2022-03-01",
-      "title": "Bad Request",
+      "title": "404 Error",
       "video": false,
       "vote_average": 7.5,
       "vote_count": 1433
@@ -44,7 +44,7 @@
       "popularity": 4501.778,
       "poster_path": "/odVv1sqVs0KxBXiA8bhIBlPgalx.jpg",
       "release_date": "2022-02-03",
-      "title": "Error",
+      "title": "Throw 500 Error",
       "video": false,
       "vote_average": 6.4,
       "vote_count": 495

@@ -8,6 +8,7 @@ import {
   MoviePreview,
 } from "../../@types/models/movie";
 import { Review } from "../../@types/models/review";
+import { Paths } from "../../@types/utils";
 import MoviePreviewCard from "../../components/cards/MoviePreviewCard";
 import MovieHero from "../../components/heroes/MovieHero";
 import Layout from "../../components/layout/Layout";
@@ -22,7 +23,7 @@ import {
   getMovie,
   getMovieCredits,
   getMovieReviews,
-  getMovies,
+  getMoviesByCategory,
   getMoviesLinkedToMovie,
 } from "../../lib/api/movie-api";
 import { formatNumberToUSDCurrency } from "../../lib/utils";
@@ -36,24 +37,31 @@ type Props = {
   hasError: boolean;
 };
 
-//TODO: miss correct implementation
+//TODO: add also other movie ids to be pre-rendered (such as top rated or trending movies)
 export const getStaticPaths: GetStaticPaths = async () => {
-  const { data: popularMovies, error } = await getMovies("popular");
+  const { data: popularMovies } = await getMoviesByCategory("popular");
 
-  const popularMoviePaths = popularMovies!.results.map(({ id }) => {
-    return {
-      params: {
-        movieId: id.toString(),
-      },
-    };
-  });
+  let paths: Paths = [];
+  // pre-render popular movies
+  if (popularMovies && popularMovies.results) {
+    const { results } = popularMovies;
+    const popularMoviePaths = results.map(({ id }) => {
+      return {
+        params: {
+          movieId: id.toString(),
+        },
+      };
+    });
+    paths.concat(popularMoviePaths);
+  }
 
   return {
-    paths: popularMoviePaths,
+    paths: paths,
     fallback: "blocking",
   };
 };
 
+// TODO: add constant values
 export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
   const movieId = parseInt(params?.movieId as string);
   console.info(`Generating Movie Detail Page for id ${movieId}..`);
@@ -83,14 +91,12 @@ export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
     { data: reviews },
   ] = requestedData;
 
-  //TODO: add macro costant for fixed values (like 10, 6, ec..)
   return {
     props: {
       movie: movie || null,
       genres: genres || null,
       credits: credits || null,
-      recomendations:
-        (recommendations && recommendations.results.slice(0, 6)) || null,
+      recomendations: (recommendations && recommendations.results) || null,
       reviews: (reviews && reviews.results) || null,
       hasError,
     },
@@ -121,8 +127,8 @@ const MoviePage: NextPage<Props> = ({
         <title>{title}</title>
       </Head>
       <Layout>
-        <MovieHero className="h-[700px]" movie={movie!} crew={crew} />
-        <div className="grid grid-cols-7 mt-10">
+        <MovieHero className="h-[680px]" movie={movie!} crew={crew} />
+        <div className="grid grid-cols-7 mt-10 mb-32">
           {/* Column with Cast Slideshows + Reviews */}
           <div className="col-span-5 pl-10">
             <MovieCastSlideshow cast={cast} />
@@ -144,8 +150,8 @@ const MoviePage: NextPage<Props> = ({
 
 const ReviewList = ({ reviews }: { reviews: Review[] }) => {
   return (
-    <div className="mt-16 ">
-      <h2 className="text-xl font-semibold">Reviews</h2>
+    <div className="mt-16 ml-4">
+      <h2 className="text-xl font-medium">Reviews</h2>
       {reviews.length === 0 && (
         <p className="mt-4 ml-4 text-sm font-light">
           No review of this movie has been written yet!
@@ -168,9 +174,12 @@ const RecommendedMovieList = ({
   genresMap: Genre[];
 }) => {
   return (
-    <div className="mt-32">
+    <div className="px-2 mt-32">
       <h2 className="text-2xl font-medium">Reccomended for you</h2>
-      <div className="grid grid-cols-2 mt-4 gap-y-6">
+      <div className="grid grid-cols-2 mt-4 gap-y-10">
+        {recomendations.length === 0 && (
+          <h2 className="font-light">No Recommended movies to show!</h2>
+        )}
         {recomendations.map((movie) => (
           <MoviePreviewCard
             key={movie.id}

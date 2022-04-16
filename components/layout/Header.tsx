@@ -17,7 +17,7 @@ const Header = () => {
 
 const Logo = () => {
   return (
-    <Link href="/">
+    <Link href="/" passHref>
       <div className="w-32 cursor-pointer">
         <img
           className="object-contain w-full h-full"

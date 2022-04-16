@@ -15,8 +15,12 @@
 }
 
 @layer components {
+  .name {
+    @apply tracking-wide  !important;
+  }
+
   .title {
-    @apply tracking-wide antialiased  !important;
+    @apply antialiased !important;
   }
 
   .link {
@@ -24,10 +28,16 @@
   }
 
   .btn {
-    @apply rounded-md cursor-pointer;
+    @apply rounded-md cursor-pointer outline-none;
   }
 
   .btn-primary {
     @apply bg-dark ring-2 ring-primary-500;
+  }
+}
+
+@layer utilities {
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none !important;
   }
 }
