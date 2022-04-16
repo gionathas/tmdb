@@ -1,14 +1,18 @@
+import _ from "lodash";
 import type { GetStaticProps, NextPage } from "next";
 import Error from "next/error";
 import Head from "next/head";
-import Layout from "../components/layout/Layout";
-import MoviePreviewSlideshow from "../components/slideshows/MoviePreviewsSlideshow";
-import { getMoviesByCategory, getTrendingMovies } from "../lib/api/movie-api";
-import { MoviePreview } from "../@types/models/movie";
 import { Genre } from "../@types/models/genre";
+import { MoviePreview } from "../@types/models/movie";
+import Layout from "../components/layout/Layout";
+import VoteBadge from "../components/miscellaneous/VoteBadge";
+import MovieBanner from "../components/MovieBanner";
+import MoviePreviewSlideshow from "../components/slideshows/MoviePreviewsSlideshow";
+import useMovieGenres from "../hooks/useMovieGenres";
 import { getAllGenres } from "../lib/api/genre-api";
 import { hasApiResponsesError } from "../lib/api/helpers";
-import _ from "lodash";
+import { generateImageUrlByPathOrDefault } from "../lib/api/image-api";
+import { getMoviesByCategory, getTrendingMovies } from "../lib/api/movie-api";
 
 type Props = {
   popularMovies: MoviePreview[] | null;
@@ -20,7 +24,6 @@ type Props = {
   hasError: boolean;
 };
 
-// TODO: increase the size of the movie showned
 // TODO: add constants to control the size of the movies to be shown for each category
 export const getStaticProps: GetStaticProps<Props> = async (context) => {
   console.info("Generating Index Page..");
@@ -80,7 +83,12 @@ const HomePage: NextPage<Props> = ({
         <title>TMDB</title>
       </Head>
       <Layout>
-        <div className="space-y-3">
+        <SelectedMovieBanner
+          bannerMovie={popularMovies?.at(0)!}
+          genresMap={genresList!}
+        />
+
+        <div className="space-y-2">
           <MoviePreviewSlideshow
             movies={popularMovies!}
             title="Popular Movies on TMDB"
@@ -114,10 +122,54 @@ const HomePage: NextPage<Props> = ({
             title="Top Rated ⭐️"
             genresMap={genresList!}
             cardSize="md"
+            showVotes
           />
         </div>
       </Layout>
     </>
+  );
+};
+
+const SelectedMovieBanner = ({
+  bannerMovie,
+  genresMap,
+}: {
+  bannerMovie: MoviePreview;
+  genresMap: Genre[];
+}) => {
+  const { genres } = useMovieGenres(bannerMovie, genresMap, 3);
+  return (
+    <MovieBanner
+      className="mb-10"
+      opacity={0.5}
+      height={600}
+      backdropImageSrc={generateImageUrlByPathOrDefault(
+        bannerMovie.backdrop_path,
+        null
+      )}
+    >
+      <div className="flex flex-col items-center justify-center h-full">
+        <div className="max-w-xl pl-10">
+          <h2 className="text-6xl font-semibold title">
+            {bannerMovie.title || bannerMovie.original_title}
+          </h2>
+          <div className="flex items-baseline space-x-4 ">
+            <button className="px-4 py-2 mt-4 bg-gray-500/60 btn">
+              Watch Detail
+            </button>
+            <button className="px-4 py-2 mt-4 bg-gray-500/60 btn">
+              Play Trailer
+            </button>
+          </div>
+          <p className="mt-4 text-gray-200 line-clamp-3">
+            {bannerMovie.overview}
+          </p>
+          <p className="mt-2 text-sm italic capitalize text-primary-500">
+            {genres.join(", ")}
+          </p>
+        </div>
+      </div>
+    </MovieBanner>
   );
 };
 

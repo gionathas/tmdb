@@ -23,3 +23,22 @@ export const getAllGenres = async (): Promise<ApiResponse<Genre[]>> => {
     return { error: { code, message } };
   }
 };
+
+/**
+ * @param movieGenreIds list of genres id to map
+ * @param genresMap a map where the key is the genred id and the value is the genre name
+ * @returns the list of the genres names mapped by their respective ids
+ */
+export const getMovieGenresFromIds = (
+  movieGenreIds: number[],
+  genresMap: Genre[]
+): string[] => {
+  return movieGenreIds
+    .map((genre_id) => {
+      const genre = genresMap.find(({ id }) => id === genre_id);
+      return genre && genre.name;
+    })
+    .filter((genre_name): genre_name is string => {
+      return typeof genre_name === "string";
+    });
+};

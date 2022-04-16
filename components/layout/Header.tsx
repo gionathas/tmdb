@@ -1,9 +1,10 @@
 import Link from "next/link";
 import React from "react";
 
+// TODO: add scroll effect
 const Header = () => {
   return (
-    <header className="w-full px-10 mx-auto bg-black ">
+    <header className="fixed inset-x-0 z-10 w-full px-10 mx-auto bg-transparent ">
       <div className="flex items-center justify-between py-4">
         <div className="flex space-x-10">
           <Logo />

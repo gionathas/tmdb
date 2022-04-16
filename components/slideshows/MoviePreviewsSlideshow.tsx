@@ -1,3 +1,4 @@
+import { useRouter } from "next/router";
 import React from "react";
 import { Genre } from "../../@types/models/genre";
 import { MoviePreview } from "../../@types/models/movie";
@@ -16,13 +17,16 @@ const MoviePreviewSlideshow = ({
   genresMap,
   cardSize = "md",
   variant = "base",
+  showVotes = false,
 }: {
   title: string;
   movies: MoviePreview[];
   genresMap: Genre[];
   cardSize?: MovieCardStyle;
   variant?: MovieCardvariant;
+  showVotes?: boolean;
 }) => {
+  const router = useRouter();
   return (
     <Slideshow
       title={<h2 className="text-2xl font-light text-gray-200">{title}</h2>}
@@ -36,6 +40,8 @@ const MoviePreviewSlideshow = ({
           genresMap={genresMap}
           size={cardSize}
           variant={variant}
+          onClick={() => router.push(`/movies/${movie.id}`)}
+          showVote={showVotes}
         />
       ))}
     </Slideshow>

@@ -3,7 +3,7 @@ import { CastCredit, CrewCredit } from "./credit";
 // TODO: Refactor to types
 interface Movie {
   id: number;
-  title: string;
+  title?: string;
   adult: boolean;
   vote_average: number;
   poster_path?: string;
@@ -11,6 +11,8 @@ interface Movie {
   popularity: number;
   original_language: string;
   release_date: string;
+  original_title: string;
+  overview: string;
 }
 
 export interface MoviePreview extends Movie {
@@ -19,7 +21,6 @@ export interface MoviePreview extends Movie {
 
 export interface MovieDetail extends Movie {
   runtime?: number;
-  overview: string;
   status: string;
   vote_count: number;
   production_countries: ProductionCountries[];

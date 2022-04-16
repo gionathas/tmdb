@@ -1,11 +1,10 @@
 import classNames from "classnames";
-import { useRouter } from "next/router";
-import React, { useMemo } from "react";
-import { generateImageUrlByPathOrDefault } from "../../lib/api/image-api";
-import { MoviePreview } from "../../@types/models/movie";
-import VoteBadge from "../miscellaneous/VoteBadge";
+import React from "react";
 import { Genre } from "../../@types/models/genre";
-import PlayButton from "../miscellaneous/buttons/PlayButton";
+import { MoviePreview } from "../../@types/models/movie";
+import useMovieGenres from "../../hooks/useMovieGenres";
+import { generateImageUrlByPathOrDefault } from "../../lib/api/image-api";
+import VoteBadge from "../miscellaneous/VoteBadge";
 
 export type variant = "base" | "16:9";
 export type size = "md" | "lg";
@@ -17,38 +16,36 @@ const MoviePreviewCard = ({
   genresToShow = 2,
   size = "lg",
   variant = "base",
+  onClick: handleCardClick,
+  showVote = false,
 }: {
   movie: MoviePreview;
   genresMap: Genre[];
   genresToShow?: number;
   size?: size;
   variant?: variant;
+  onClick?: () => void;
+  showVote?: boolean;
 }) => {
-  const router = useRouter();
-  const { id, title, vote_average, poster_path, genre_ids } = movie;
+  const { title, vote_average, poster_path, original_title } = movie;
+  const displayTitle = title || original_title;
   const posterImageSrc = generateImageUrlByPathOrDefault(poster_path, null);
 
-  const handleCardClick = () => {
-    router.push(`/movies/${id}`);
-  };
-
-  const movieGenres = useMemo(
-    () => getMovieGenresFromIds(genre_ids, genresMap).slice(0, genresToShow),
-    [genre_ids, genresMap, genresToShow]
-  );
+  const { genres } = useMovieGenres(movie, genresMap, genresToShow);
 
   return (
     <div
-      className="space-y-2 transition-transform duration-500 cursor-pointer hover:scale-[1.02]"
+      className={`space-y-2 transition-transform duration-500 cursor-pointer hover:scale-[1.02]`}
       onClick={handleCardClick}
     >
       <Thumbnail
         style={`${variant}_${size}`}
-        title={title}
+        title={displayTitle}
         vote={vote_average}
         thumbnailSrc={posterImageSrc}
+        showVote={showVote}
       />
-      <PreviewInfo cardSize={size} genres={movieGenres} title={title} />
+      <PreviewInfo cardSize={size} genres={genres} title={displayTitle} />
     </div>
   );
 };
@@ -62,11 +59,13 @@ const Thumbnail = ({
   vote,
   thumbnailSrc,
   style = "base_md",
+  showVote,
 }: {
   thumbnailSrc: MoviePreview["poster_path"];
   title: MoviePreview["title"];
   vote: MoviePreview["vote_average"];
   style?: style;
+  showVote: boolean;
 }) => {
   const thumbnailSize = classNames(
     { "w-56 h-80": style === "base_lg" },
@@ -85,17 +84,20 @@ const Thumbnail = ({
         alt={title}
       />
       {/* Upper left vote badge */}
-      <div className="absolute top-4 left-4">
-        <VoteBadge vote={vote} size="sm" />
-      </div>
+      {showVote && (
+        <div className="absolute top-4 left-4">
+          <VoteBadge vote={vote} size="sm" />
+        </div>
+      )}
+
       {/* Center Play Button */}
-      <div
+      {/* <div
         className={
           "opacity-0 absolute top-0 left-0 w-full h-full group-hover:grid group-hover:opacity-100 transition-all duration-300"
         }
       >
         <PlayButton />
-      </div>
+      </div> */}
     </div>
   );
 };
@@ -133,25 +135,6 @@ const PreviewInfo = ({
       )}
     </div>
   );
-};
-
-/**
- * @param movieGenreIds list of genres id to map
- * @param genresMap a map where the key is the genred id and the value is the genre name
- * @returns the list of the genres names mapped by their respective ids
- */
-const getMovieGenresFromIds = (
-  movieGenreIds: number[],
-  genresMap: Genre[]
-): string[] => {
-  return movieGenreIds
-    .map((genre_id) => {
-      const genre = genresMap.find(({ id }) => id === genre_id);
-      return genre && genre.name;
-    })
-    .filter((genre_name): genre_name is string => {
-      return typeof genre_name === "string";
-    });
 };
 
 export default MoviePreviewCard;

@@ -56,7 +56,7 @@ const ExpandableText = React.forwardRef(
         </Component>
         {isContentExpandable && (
           <span
-            className="flex justify-end text-xs underline cursor-pointer opacity-60 underline-offset-1"
+            className="flex justify-end text-xs cursor-pointer hover:underline opacity-60 underline-offset-1"
             onClick={toggleContentExpansion}
           >
             {isContentExpanded ? "Read Less" : "Read More"}

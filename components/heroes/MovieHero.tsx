@@ -19,6 +19,7 @@ const MovieHero = ({ movie, crew, className }: OwnProps) => {
   );
   const posterImageSrc = generateImageUrlByPathOrDefault(poster_path, null);
 
+  // TODO: Use MovieBanner component
   return (
     <div className={`relative h-full ${className}`}>
       <BackgroundImage backdropSrc={backgroundImageSrc} />
@@ -76,10 +77,12 @@ const MovieHeader = ({ movie }: { movie: MovieDetail }) => {
   const {
     title,
     release_date,
+    original_title,
     production_countries: countries,
     genres,
     runtime,
   } = movie;
+  const displayTitle = title || original_title;
   const releaseDate = new Date(release_date);
   const releaseDateAsString = releaseDate.toLocaleDateString();
   const movieYear = releaseDate.getFullYear();
@@ -91,7 +94,7 @@ const MovieHeader = ({ movie }: { movie: MovieDetail }) => {
     <div>
       {/* Title + Year */}
       <h2 className="text-3xl">
-        <span className="font-semibold title">{title}</span>
+        <span className="font-semibold title">{displayTitle}</span>
         <span className="ml-1.5 text-gray-300 uppercase">({movieYear})</span>
       </h2>
 
