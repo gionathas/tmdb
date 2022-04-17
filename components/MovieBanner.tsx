@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Image from "next/image";
-import { toBase64 } from "../lib/utils";
+import { toBase64 } from "lib/utils";
 
 type Props = {
   backdropImageSrc: string;

@@ -1,9 +1,11 @@
+import Image from "next/image";
 import React from "react";
 import { CrewCredit } from "../../@types/models/credit";
 import { MovieDetail } from "../../@types/models/movie";
-import { generateImageUrlByPathOrDefault } from "../../lib/api/image-api";
-import ActionButton from "../miscellaneous/buttons/ActionButton";
-import VoteBadge from "../miscellaneous/VoteBadge";
+import { generateImageUrlByPathOrDefault } from "lib/api/image-api";
+import ActionButton from "components/miscellaneous/buttons/ActionButton";
+import VoteBadge from "components/miscellaneous/VoteBadge";
+import MovieBanner from "components/MovieBanner";
 
 type OwnProps = {
   movie: MovieDetail;
@@ -19,37 +21,27 @@ const MovieHero = ({ movie, crew, className }: OwnProps) => {
   );
   const posterImageSrc = generateImageUrlByPathOrDefault(poster_path, null);
 
-  // TODO: Use MovieBanner component
   return (
-    <div className={`relative h-full ${className}`}>
-      <BackgroundImage backdropSrc={backgroundImageSrc} />
-      <div className="absolute top-0">
+    <MovieBanner
+      backdropImageSrc={backgroundImageSrc}
+      height={700}
+      opacity={0.2}
+    >
+      <div className="flex flex-col items-center justify-center h-full">
         <div className="flex py-12 pl-10 space-x-8 pr-36">
           <MoviePosterImage posterSrc={posterImageSrc} />
           <MovieSideInformation movie={movie} crew={crew} />
         </div>
       </div>
-    </div>
-  );
-};
-
-const BackgroundImage = ({ backdropSrc }: { backdropSrc: string }) => {
-  return (
-    <img
-      className="object-cover w-full h-full opacity-20"
-      src={backdropSrc}
-      alt="Movie Backdrop Image"
-    />
+    </MovieBanner>
   );
 };
 
 const MoviePosterImage = ({ posterSrc }: { posterSrc: string }) => {
   return (
-    <img
-      className="w-[400px] h-[550px] rounded-lg object-cover shadow-xl"
-      src={posterSrc}
-      alt="Poster Image"
-    />
+    <div className="relative w-[500px] h-[500px]">
+      <Image src={posterSrc} layout="fill" objectFit="cover" priority />
+    </div>
   );
 };
 

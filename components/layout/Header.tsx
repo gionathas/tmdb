@@ -1,10 +1,12 @@
+import Image from "next/image";
 import Link from "next/link";
 import React from "react";
+import Properties from "config/properties";
 
 // TODO: add scroll effect
 const Header = () => {
   return (
-    <header className="fixed inset-x-0 z-10 w-full px-10 mx-auto bg-transparent ">
+    <header className="fixed inset-x-0 z-10 w-full px-10 mx-auto bg-transparent">
       <div className="flex items-center justify-between py-4">
         <div className="flex space-x-10">
           <Logo />
@@ -19,11 +21,12 @@ const Header = () => {
 const Logo = () => {
   return (
     <Link href="/" passHref>
-      <div className="w-32 cursor-pointer">
-        <img
-          className="object-contain w-full h-full"
-          src="https://www.themoviedb.org/assets/2/v4/logos/v2/blue_short-8e7b30f73a4020692ccca9c88bafe5dcb6f8a62a4c6bc55cd9ba82bb2cd95f6c.svg"
+      <div className="relative w-32 cursor-pointer">
+        <Image
+          src={Properties.logoPath}
           alt="TMDB Logo"
+          layout="fill"
+          objectFit="contain"
         />
       </div>
     </Link>

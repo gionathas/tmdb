@@ -2,17 +2,17 @@ import _ from "lodash";
 import type { GetStaticProps, NextPage } from "next";
 import Error from "next/error";
 import Head from "next/head";
+import { useRouter } from "next/router";
 import { Genre } from "../@types/models/genre";
 import { MoviePreview } from "../@types/models/movie";
-import Layout from "../components/layout/Layout";
-import VoteBadge from "../components/miscellaneous/VoteBadge";
-import MovieBanner from "../components/MovieBanner";
-import MoviePreviewSlideshow from "../components/slideshows/MoviePreviewsSlideshow";
-import useMovieGenres from "../hooks/useMovieGenres";
-import { getAllGenres } from "../lib/api/genre-api";
-import { hasApiResponsesError } from "../lib/api/helpers";
-import { generateImageUrlByPathOrDefault } from "../lib/api/image-api";
-import { getMoviesByCategory, getTrendingMovies } from "../lib/api/movie-api";
+import Layout from "components/layout/Layout";
+import MovieBanner from "components/MovieBanner";
+import MoviePreviewSlideshow from "components/slideshows/MoviePreviewsSlideshow";
+import useMovieGenres from "hooks/useMovieGenres";
+import { getAllGenres } from "lib/api/genre-api";
+import { hasApiResponsesError } from "lib/api/helpers";
+import { generateImageUrlByPathOrDefault } from "lib/api/image-api";
+import { getMoviesByCategory, getTrendingMovies } from "lib/api/movie-api";
 
 type Props = {
   popularMovies: MoviePreview[] | null;
@@ -88,7 +88,7 @@ const HomePage: NextPage<Props> = ({
           genresMap={genresList!}
         />
 
-        <div className="space-y-2">
+        <div className="mt-10 space-y-2">
           <MoviePreviewSlideshow
             movies={popularMovies!}
             title="Popular Movies on TMDB"
@@ -130,6 +130,7 @@ const HomePage: NextPage<Props> = ({
   );
 };
 
+// TODO: move it inside a dedicated file compoennt
 const SelectedMovieBanner = ({
   bannerMovie,
   genresMap,
@@ -137,10 +138,17 @@ const SelectedMovieBanner = ({
   bannerMovie: MoviePreview;
   genresMap: Genre[];
 }) => {
+  const router = useRouter();
   const { genres } = useMovieGenres(bannerMovie, genresMap, 3);
+
+  const watchDetailHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    const movieId = bannerMovie.id;
+    router.push(`/movies/${movieId}`);
+  };
+
   return (
     <MovieBanner
-      className="mb-10"
       opacity={0.5}
       height={600}
       backdropImageSrc={generateImageUrlByPathOrDefault(
@@ -154,17 +162,20 @@ const SelectedMovieBanner = ({
             {bannerMovie.title || bannerMovie.original_title}
           </h2>
           <div className="flex items-baseline space-x-4 ">
-            <button className="px-4 py-2 mt-4 bg-gray-500/60 btn">
+            <button
+              onClick={(e) => watchDetailHandler(e)}
+              className="px-4 py-2 mt-4 bg-gray-500/60 btn"
+            >
               Watch Detail
             </button>
             <button className="px-4 py-2 mt-4 bg-gray-500/60 btn">
               Play Trailer
             </button>
           </div>
-          <p className="mt-4 text-gray-200 line-clamp-3">
+          <p className="mt-4 tracking-wide text-gray-100 line-clamp-3">
             {bannerMovie.overview}
           </p>
-          <p className="mt-2 text-sm italic capitalize text-primary-500">
+          <p className="mt-2 text-sm tracking-wider capitalize text-primary-500">
             {genres.join(", ")}
           </p>
         </div>

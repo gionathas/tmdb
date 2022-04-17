@@ -5,8 +5,8 @@ import {
 } from "../../@types//models/movie";
 import { Credit } from "../../@types/models/credit";
 import { Review } from "../../@types/models/review";
-import { TmdbAPI } from "../../config/clients";
-import { SortOrder } from "../common";
+import { TmdbAPI } from "config/clients";
+import { SortOrder } from "lib/common";
 import { handleError } from "./helpers";
 import {
   ApiResponse,

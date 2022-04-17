@@ -2,9 +2,9 @@ import classNames from "classnames";
 import React from "react";
 import { Genre } from "../../@types/models/genre";
 import { MoviePreview } from "../../@types/models/movie";
-import useMovieGenres from "../../hooks/useMovieGenres";
-import { generateImageUrlByPathOrDefault } from "../../lib/api/image-api";
-import VoteBadge from "../miscellaneous/VoteBadge";
+import useMovieGenres from "hooks/useMovieGenres";
+import { generateImageUrlByPathOrDefault } from "lib/api/image-api";
+import VoteBadge from "components/miscellaneous/VoteBadge";
 
 export type variant = "base" | "16:9";
 export type size = "md" | "lg";

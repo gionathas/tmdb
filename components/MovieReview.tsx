@@ -1,10 +1,10 @@
 import React, { useRef } from "react";
 import { Review } from "../@types/models/review";
-import Properties from "../config/properties";
-import { generateImageUrlByPathOrDefault } from "../lib/api/image-api";
-import Avatar from "./miscellaneous/Avatar";
-import ExpandableText from "./miscellaneous/ExpandableText";
-import VoteBadge from "./miscellaneous/VoteBadge";
+import Properties from "config/properties";
+import { generateImageUrlByPathOrDefault } from "lib/api/image-api";
+import Avatar from "components/miscellaneous/Avatar";
+import ExpandableText from "components/miscellaneous/ExpandableText";
+import VoteBadge from "components/miscellaneous/VoteBadge";
 
 type Props = {
   review: Review;
@@ -19,7 +19,7 @@ const MovieReview = ({ review }: Props) => {
   const reviewDateAsString = reviewDate.toLocaleDateString();
   const avatarImage = generateImageUrlByPathOrDefault(
     avatar_path,
-    Properties.defaultAvatarImageSrc
+    Properties.defaultAvatarImageSrcPath
   );
 
   return (

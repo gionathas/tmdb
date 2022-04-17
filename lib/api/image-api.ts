@@ -1,5 +1,5 @@
-import Properties from "../../config/properties";
-import { isValidUrl } from "../utils";
+import Properties from "config/properties";
+import { isValidUrl } from "lib/utils";
 
 export const generateImageUrlByPathOrDefault = (
   path: string | null | undefined,

@@ -1,7 +1,7 @@
 import React from "react";
 import { CastCredit } from "../../@types/models/credit";
-import { Properties } from "../../config/properties";
-import { generateImageUrlByPathOrDefault } from "../../lib/api/image-api";
+import { Properties } from "config/properties";
+import { generateImageUrlByPathOrDefault } from "lib/api/image-api";
 
 type Props = {
   cast: CastCredit;
@@ -11,7 +11,7 @@ const CastCard = ({ cast }: Props) => {
   const { name, character, profile_path } = cast;
   const castProfileImage = generateImageUrlByPathOrDefault(
     profile_path,
-    Properties.defaultAvatarImageSrc
+    Properties.defaultAvatarImageSrcPath
   );
   return (
     <div className="flex-none overflow-hidden rounded-lg cursor-pointer w-36">
