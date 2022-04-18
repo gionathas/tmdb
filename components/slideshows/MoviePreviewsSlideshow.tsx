@@ -9,7 +9,7 @@ import MoviePreviewCard, {
 } from "../cards/MoviePreviewCard";
 import Slideshow from "./Slideshow";
 
-const { movieSlideshowScrollOffset: scrollOffset } = Properties;
+const { movieSlideshowScrollXOffset: scrollOffset } = Properties;
 
 const MoviePreviewSlideshow = ({
   title,

@@ -83,6 +83,7 @@ const HomePage: NextPage<Props> = ({
         <title>TMDB</title>
       </Head>
       <Layout>
+        {/* FIXME: */}
         <SelectedMovieBanner
           bannerMovie={popularMovies?.at(0)!}
           genresMap={genresList!}

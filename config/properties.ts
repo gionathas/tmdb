@@ -6,8 +6,9 @@ export const Properties = {
   },
   logoPath: "/logo.svg",
   defaultAvatarImageSrcPath: "/img/default_avatar.jpeg",
-  movieSlideshowScrollOffset: 800,
-  castSlideshowScrollOffset: 400,
+  movieSlideshowScrollXOffset: 800,
+  castSlideshowScrollXOffset: 400,
+  headerScrollYOffset: 60,
 };
 
 export default Properties;

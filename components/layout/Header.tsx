@@ -1,18 +1,25 @@
+import Properties from "config/properties";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
-import Properties from "config/properties";
+import { useWindowScroll } from "react-use";
 
-// TODO: add scroll effect
 const Header = () => {
+  const { headerScrollYOffset } = Properties;
+  const { y } = useWindowScroll();
+
+  const bgClass = y >= headerScrollYOffset ? "bg-black" : "bg-transparent";
+
   return (
-    <header className="fixed inset-x-0 z-10 w-full px-10 mx-auto bg-transparent">
+    <header
+      className={`fixed inset-x-0 z-10 w-full px-10 mx-auto transition-colors duration-300 ${bgClass} `}
+    >
       <div className="flex items-center justify-between py-4">
         <div className="flex space-x-10">
           <Logo />
           <NavLinks />
         </div>
-        <SignIn />
+        <SignInButton />
       </div>
     </header>
   );
@@ -49,7 +56,7 @@ const NavLinks = () => {
   );
 };
 
-const SignIn = () => {
+const SignInButton = () => {
   return (
     <div className="py-2 text-xs tracking-wide uppercase btn btn-primary px-9">
       Sign In
