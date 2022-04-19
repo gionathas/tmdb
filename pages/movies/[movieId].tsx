@@ -9,8 +9,8 @@ import {
 } from "../../@types/models/movie";
 import { Review } from "../../@types/models/review";
 import { Paths } from "../../@types/utils";
+import MovieDetailBanner from "../../components/banner/MovieDetailBanner";
 import MoviePreviewCard from "../../components/cards/MoviePreviewCard";
-import MovieHero from "../../components/heroes/MovieHero";
 import Layout from "../../components/layout/Layout";
 import MovieReview from "../../components/MovieReview";
 import MovieCastSlideshow from "../../components/slideshows/MovieCastSlideshow";
@@ -127,7 +127,7 @@ const MoviePage: NextPage<Props> = ({
         <title>{title}</title>
       </Head>
       <Layout>
-        <MovieHero className="h-[680px]" movie={movie!} crew={crew} />
+        <MovieDetailBanner className="h-[680px]" movie={movie!} crew={crew} />
         <div className="grid grid-cols-7 mt-10 mb-32">
           {/* Column with Cast Slideshows + Reviews */}
           <div className="col-span-5 pl-10">
@@ -148,6 +148,7 @@ const MoviePage: NextPage<Props> = ({
   );
 };
 
+// TODO: Add Infine Scroll effect
 const ReviewList = ({ reviews }: { reviews: Review[] }) => {
   return (
     <div className="mt-16 ml-4">

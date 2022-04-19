@@ -1,15 +1,15 @@
-export const isLastElement = (idx: number, array: Array<any>) => {
+export const isLastElement = (idx: number, array: Array<any>): boolean => {
   return idx === array.length - 1;
 };
 
-export const formatNumberToUSDCurrency = (value: number) => {
+export const formatNumberToUSDCurrency = (value: number): string => {
   return new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
   }).format(value);
 };
 
-export const isValidUrl = (url: string) => {
+export const isValidUrl = (url: string): boolean => {
   try {
     new URL(url);
   } catch (error) {
@@ -18,7 +18,7 @@ export const isValidUrl = (url: string) => {
   return true;
 };
 
-export const toBase64 = (str: string) =>
+export const toBase64 = (str: string): string =>
   typeof window === "undefined"
     ? Buffer.from(str).toString("base64")
     : window.btoa(str);

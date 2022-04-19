@@ -9,6 +9,7 @@ export const Properties = {
   movieSlideshowScrollXOffset: 800,
   castSlideshowScrollXOffset: 400,
   headerScrollYOffset: 60,
+  carouselInterval: 20000,
 };
 
 export default Properties;
