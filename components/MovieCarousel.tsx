@@ -1,8 +1,8 @@
+import Properties from "config/properties";
+import useInterval from "hooks/useInterval";
+import { useState } from "react";
 import { Genre } from "../@types/models/genre";
 import { MoviePreview } from "../@types/models/movie";
-import Properties from "config/properties";
-import { useState } from "react";
-import { useInterval } from "react-use";
 import MoviePreviewBanner from "./banner/MoviePreviewBanner";
 
 /**
@@ -17,22 +17,24 @@ const MovieCarousel = ({
   genresMap: Genre[];
   height: number;
 }) => {
-  const [currentIndex, setCurrentIndex] = useState(0);
   const { carouselInterval } = Properties;
-
-  useInterval(() => nextMovie, carouselInterval);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   const nextMovie = () => {
     setCurrentIndex((prevIndex) =>
       prevIndex + 1 >= movies.length ? 0 : prevIndex + 1
     );
+    resetInterval();
   };
 
   const prevMovie = () => {
     setCurrentIndex((prevIndex) =>
       prevIndex - 1 < 0 ? movies.length - 1 : prevIndex - 1
     );
+    resetInterval();
   };
+
+  const { resetInterval } = useInterval(nextMovie, carouselInterval);
 
   return (
     <div className="flex">
@@ -42,7 +44,7 @@ const MovieCarousel = ({
         return (
           <div
             key={movie.id}
-            className={`transition-opacity duration-300 ${fadeEffect}`}
+            className={`transition-opacity duration-700 ease-in-out ${fadeEffect}`}
           >
             {show && (
               <MoviePreviewBanner

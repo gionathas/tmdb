@@ -1,11 +1,11 @@
+import MovieBanner from "components/banner/MovieBanner";
+import ActionButton from "components/miscellaneous/buttons/ActionButton";
+import VoteBadge from "components/miscellaneous/VoteBadge";
+import { generateImageUrlByPathOrDefault } from "lib/api/image-api";
 import Image from "next/image";
 import React from "react";
 import { CrewCredit } from "../../@types/models/credit";
 import { MovieDetail } from "../../@types/models/movie";
-import { generateImageUrlByPathOrDefault } from "lib/api/image-api";
-import ActionButton from "components/miscellaneous/buttons/ActionButton";
-import VoteBadge from "components/miscellaneous/VoteBadge";
-import MovieBanner from "components/banner/MovieBanner";
 
 type OwnProps = {
   movie: MovieDetail;
@@ -29,7 +29,7 @@ const MovieDetailBanner = ({ movie, crew, className }: OwnProps) => {
       height={700}
       backgroundOpacity={0.2}
     >
-      <div className="flex flex-col items-center justify-center h-full">
+      <div className="flex flex-col justify-center h-full">
         <div className="flex py-12 pl-10 space-x-8 pr-36">
           <MoviePosterImage posterSrc={posterImageSrc} />
           <MovieSideInformation movie={movie} crew={crew} />
@@ -41,7 +41,7 @@ const MovieDetailBanner = ({ movie, crew, className }: OwnProps) => {
 
 const MoviePosterImage = ({ posterSrc }: { posterSrc: string }) => {
   return (
-    <div className="relative w-[500px] h-[500px]">
+    <div className="relative flex-none w-[350px] h-[500px] rounded overflow-hidden">
       <Image src={posterSrc} layout="fill" objectFit="cover" priority />
     </div>
   );
@@ -56,7 +56,7 @@ const MovieSideInformation = ({
 }) => {
   const { vote_average: vote } = movie;
   return (
-    <div className="pt-6">
+    <div className="flex-1 pt-6">
       <MovieHeader movie={movie} />
       <MovieSubHeader vote={vote} />
       <MovieOverview movie={movie} crew={crew} />

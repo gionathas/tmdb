@@ -5,18 +5,19 @@ import { MoviePreview } from "../../@types/models/movie";
 import useMovieGenres from "hooks/useMovieGenres";
 import { generateImageUrlByPathOrDefault } from "lib/api/image-api";
 import VoteBadge from "components/miscellaneous/VoteBadge";
+import { useRouter } from "next/router";
 
 export type variant = "base" | "16:9";
 export type size = "md" | "lg";
 export type style = `${variant}_${size}`;
 
+//TODO: Add default onclick handler (route to the movie detail)
 const MoviePreviewCard = ({
   movie,
   genresMap,
   genresToShow = 2,
   size = "lg",
   variant = "base",
-  onClick: handleCardClick,
   showVote = false,
 }: {
   movie: MoviePreview;
@@ -24,19 +25,23 @@ const MoviePreviewCard = ({
   genresToShow?: number;
   size?: size;
   variant?: variant;
-  onClick?: () => void;
   showVote?: boolean;
 }) => {
+  const router = useRouter();
   const { title, vote_average, poster_path, original_title } = movie;
   const displayTitle = title || original_title;
   const posterImageSrc = generateImageUrlByPathOrDefault(poster_path, null);
 
   const { genres } = useMovieGenres(movie, genresMap, genresToShow);
 
+  const handleClick = () => {
+    router.push(`/movies/${movie.id}`);
+  };
+
   return (
     <div
       className={`space-y-2 transition-transform duration-500 cursor-pointer hover:scale-[1.02]`}
-      onClick={handleCardClick}
+      onClick={handleClick}
     >
       <Thumbnail
         style={`${variant}_${size}`}
