@@ -38,7 +38,7 @@ const MovieBanner = ({
         opacity={backgroundOpacity}
         onLoad={handleLoading}
       />
-      <div className="absolute top-0 h-full">{children}</div>
+      <div className="absolute inset-x-0 h-full">{children}</div>
     </div>
   );
 };
