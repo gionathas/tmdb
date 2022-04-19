@@ -9,7 +9,12 @@ type Props = {
   scrollOffset: number;
 };
 
-const Slideshow = ({ title, children, classname, scrollOffset }: Props) => {
+const Slideshow = ({
+  title,
+  children,
+  classname = "",
+  scrollOffset,
+}: Props) => {
   const slideContainerRef = useRef<HTMLDivElement>(null);
   const { x: sliderPosition } = useScroll(slideContainerRef);
 
@@ -37,16 +42,8 @@ const Slideshow = ({ title, children, classname, scrollOffset }: Props) => {
     (slideContainerRef && slideContainerRef.current && sliderPosition == 0) ||
     false;
 
-  //   if (slideContainerRef.current) {
-  //     console.log("clientWidth: ", slideContainerRef.current.clientWidth);
-  //     console.log("scrollWidth: ", slideContainerRef.current.scrollWidth);
-  //     console.log("offsetWidth: ", slideContainerRef.current.offsetWidth);
-  //     console.log("x: ", sliderPosition);
-  //     console.log("isScrollableRight: ", isScrollableRight);
-  //   }
-
   return (
-    <div className={`${classname}`}>
+    <div className={classname}>
       <div className="flex items-center ml-4">
         {title}
         <ScrollArrowButtons
@@ -78,16 +75,18 @@ const ScrollArrowButtons = ({
   hideRightArrow?: boolean;
   hideLeftArrow?: boolean;
 }) => {
+  const styleClasses =
+    "fill-gray-300 transition-colors duration-200 hover:bg-gray-600/40";
   return (
     <div className="flex space-x-1.5 ml-auto mr-2">
       <ArrowButton
-        className="bg-gray-500/50"
+        className={`${styleClasses}`}
         direction="left"
         onClick={onLeftClick}
         hide={hideLeftArrow}
       />
       <ArrowButton
-        className="bg-gray-500/50"
+        className={`${styleClasses}`}
         direction="right"
         onClick={onRightClick}
         hide={hideRightArrow}
