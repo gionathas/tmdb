@@ -5,6 +5,8 @@ import { Genre } from "../@types/models/genre";
 import { MoviePreview } from "../@types/models/movie";
 import MoviePreviewBanner from "./banner/MoviePreviewBanner";
 
+const { carouselIntervalMillis: carouselInterval } = Properties;
+
 /**
  * This Carousel cycle around a list of movie, within a fade effect.
  */
@@ -17,7 +19,6 @@ const MovieCarousel = ({
   genresMap: Genre[];
   height: number;
 }) => {
-  const { carouselInterval } = Properties;
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const nextMovie = () => {

@@ -1,5 +1,4 @@
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
-import Error from "next/error";
 import Head from "next/head";
 import { Genre } from "../../@types/models/genre";
 import {
@@ -25,8 +24,12 @@ import {
   getMovieReviews,
   getMoviesByCategory,
   getMoviesLinkedToMovie,
+  getTrendingMovies,
 } from "../../lib/api/movie-api";
 import { formatNumberToUSDCurrency } from "../../lib/utils";
+import Properties from "config/properties";
+
+const revalidateTime = Properties.movieDetailPageRevalidationSeconds;
 
 type Props = {
   movie: MovieDetail | null;
@@ -34,26 +37,56 @@ type Props = {
   credits: MovieCredits | null;
   recomendations: MoviePreview[] | null;
   reviews: Review[] | null;
-  hasError: boolean;
 };
 
 //TODO: add also other movie ids to be pre-rendered (such as top rated or trending movies)
 export const getStaticPaths: GetStaticPaths = async () => {
-  const { data: popularMovies } = await getMoviesByCategory("popular");
+  // const { data: popularMovies } = await getMoviesByCategory("popular");
+
+  const prerenderedMovies = await Promise.all([
+    getMoviesByCategory("popular"),
+    getMoviesByCategory("top_rated"),
+    getMoviesByCategory("now_playing"),
+    getMoviesByCategory("upcoming"),
+    getTrendingMovies(),
+  ]);
+
+  const hasError = hasApiResponsesError(...prerenderedMovies);
+  if (hasError) {
+    throw new Error(
+      `Error while executing getStaticPaths for Movie Detail Page!`
+    );
+  }
 
   let paths: Paths = [];
+  prerenderedMovies.map(({ data }) => {
+    if (data && data.results) {
+      const movies = data.results;
+      const moviePaths = movies.map(({ id }) => {
+        return {
+          params: {
+            movieId: String(id),
+          },
+        };
+      });
+      paths = paths.concat(moviePaths);
+    }
+  });
+
   // pre-render popular movies
-  if (popularMovies && popularMovies.results) {
-    const { results } = popularMovies;
-    const popularMoviePaths = results.map(({ id }) => {
-      return {
-        params: {
-          movieId: id.toString(),
-        },
-      };
-    });
-    paths.concat(popularMoviePaths);
-  }
+  // if (popularMovies && popularMovies.results) {
+  //   const { results } = popularMovies;
+  //   const popularMoviePaths = results.map(({ id }) => {
+  //     return {
+  //       params: {
+  //         movieId: String(id),
+  //       },
+  //     };
+  //   });
+  //   paths = paths.concat(popularMoviePaths);
+  // }
+
+  console.info("Generated %d paths:", paths.length);
 
   return {
     paths: paths,
@@ -77,10 +110,10 @@ export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
   const hasError = hasApiResponsesError(...requestedData);
   const hasValidData = hasApiResponsesValidData(...requestedData);
 
-  if (!hasError && !hasValidData) {
-    return {
-      notFound: true,
-    };
+  if (hasError || !hasValidData) {
+    throw new Error(
+      `Error while generating Movie Detail Page with id ${movieId}. Page generation skipped!`
+    );
   }
 
   const [
@@ -98,8 +131,8 @@ export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
       credits: credits || null,
       recomendations: (recommendations && recommendations.results) || null,
       reviews: (reviews && reviews.results) || null,
-      hasError,
     },
+    revalidate: revalidateTime,
   };
 };
 
@@ -112,12 +145,7 @@ const MoviePage: NextPage<Props> = ({
   credits,
   reviews,
   recomendations,
-  hasError,
 }) => {
-  if (hasError) {
-    return <Error statusCode={500} />;
-  }
-
   const { title } = movie!;
   const { cast, crew } = credits!;
 
