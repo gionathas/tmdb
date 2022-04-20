@@ -127,7 +127,12 @@ const MoviePage: NextPage<Props> = ({
         <title>{title}</title>
       </Head>
       <Layout>
-        <MovieDetailBanner className="h-[680px]" movie={movie!} crew={crew} />
+        <MovieDetailBanner
+          movie={movie!}
+          crew={crew}
+          backgroundOpacity={0.2}
+          height={700}
+        />
         <div className="grid grid-cols-7 mt-10 mb-32">
           {/* Column with Cast Slideshows + Reviews */}
           <div className="col-span-5 pl-10">
@@ -148,7 +153,7 @@ const MoviePage: NextPage<Props> = ({
   );
 };
 
-// TODO: Add Infine Scroll effect
+// TODO: Add Infite Scroll effect
 const ReviewList = ({ reviews }: { reviews: Review[] }) => {
   return (
     <div className="mt-16 ml-4">

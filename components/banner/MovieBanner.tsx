@@ -1,10 +1,11 @@
-import React, { useState } from "react";
-import Image from "next/image";
-import { toBase64 } from "lib/utils";
+import useImageLoad from "hooks/useImageLoad";
 import { shimmerEffect } from "lib/effects";
+import { toBase64 } from "lib/utils";
+import Image from "next/image";
+import React, { useEffect, useState } from "react";
 
 type Props = {
-  backdropImageSrc: string;
+  backdropImageSrc: string | null;
   height: number;
   backgroundOpacity: number;
   className?: string;
@@ -20,24 +21,18 @@ const MovieBanner = ({
   backgroundOpacity,
   style = {},
 }: Props) => {
-  const [isLoading, setLoading] = useState(true);
-
-  const handleLoading = () => {
-    setLoading(false);
-  };
-
-  const loadingClasses = (isLoading && "animate-pulse blur-md") || "";
-
   return (
     <div
       style={{ height: `${height}px`, ...style }}
-      className={`relative ${loadingClasses} ${className}`}
+      className={`relative ${className}`}
     >
-      <BackgroundImage
-        backdropSrc={backdropImageSrc}
-        opacity={backgroundOpacity}
-        onLoad={handleLoading}
-      />
+      {backdropImageSrc && (
+        <BackgroundImage
+          backdropSrc={backdropImageSrc}
+          opacity={backgroundOpacity}
+        />
+      )}
+
       <div className="absolute inset-x-0 h-full">{children}</div>
     </div>
   );
@@ -46,32 +41,29 @@ const MovieBanner = ({
 const BackgroundImage = ({
   backdropSrc,
   opacity,
-  onLoad,
 }: {
   backdropSrc: string;
   opacity: number;
-  onLoad: () => void;
 }) => {
-  const [isLoading, setIsLoading] = useState(true);
-
-  const handleLoading = () => {
-    setIsLoading(false);
-    onLoad();
-  };
+  const {
+    isLoading: isImageLoading,
+    handleLoadingComplete: handleImageLoadingComplete,
+  } = useImageLoad(backdropSrc);
 
   return (
     <Image
       src={backdropSrc}
       layout="fill"
       objectFit="cover"
+      alt="Movie Background Image"
       objectPosition="center"
-      style={{ opacity: isLoading ? 0.5 : opacity }}
-      className={`transition-opacity duration-200`}
+      style={{ opacity: isImageLoading ? 0 : opacity }}
+      className={`transition-opacity duration-300`}
       placeholder="blur"
-      onLoadingComplete={handleLoading}
       blurDataURL={`data:image/svg+xml;base64,${toBase64(
         shimmerEffect(700, 475)
       )}`}
+      onLoadingComplete={handleImageLoadingComplete}
       priority
     />
   );

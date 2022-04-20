@@ -40,7 +40,6 @@ const MoviePreviewSlideshow = ({
           genresMap={genresMap}
           size={cardSize}
           variant={variant}
-          onClick={() => router.push(`/movies/${movie.id}`)}
           showVote={showVotes}
         />
       ))}

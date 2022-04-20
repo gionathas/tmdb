@@ -1,9 +1,12 @@
 import MovieBanner from "components/banner/MovieBanner";
 import ActionButton from "components/miscellaneous/buttons/ActionButton";
 import VoteBadge from "components/miscellaneous/VoteBadge";
+import useImageLoad from "hooks/useImageLoad";
 import { generateImageUrlByPathOrDefault } from "lib/api/image-api";
+import { shimmerEffect } from "lib/effects";
+import { toBase64 } from "lib/utils";
 import Image from "next/image";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { CrewCredit } from "../../@types/models/credit";
 import { MovieDetail } from "../../@types/models/movie";
 
@@ -11,9 +14,27 @@ type OwnProps = {
   movie: MovieDetail;
   crew: CrewCredit[];
   className?: string;
+  height: number;
+  backgroundOpacity: number;
 };
 
-const MovieDetailBanner = ({ movie, crew, className }: OwnProps) => {
+const MovieDetailBanner = ({
+  movie,
+  crew,
+  className,
+  height,
+  backgroundOpacity,
+}: OwnProps) => {
+  const [isContentLoading, setIsContentLoading] = useState(true);
+
+  useEffect(() => {
+    setIsContentLoading(true);
+  }, [movie]);
+
+  const handleContentLoadingComplete = () => {
+    setIsContentLoading(false);
+  };
+
   const { backdrop_path, poster_path } = movie;
   const backgroundImageSrc = generateImageUrlByPathOrDefault(
     backdrop_path,
@@ -21,17 +42,23 @@ const MovieDetailBanner = ({ movie, crew, className }: OwnProps) => {
   );
   const posterImageSrc = generateImageUrlByPathOrDefault(poster_path, null);
 
-  //TODO: add loading effect
+  const loadingClass = isContentLoading
+    ? "animate-pulse blur-sm"
+    : "animate-none blur-none";
 
   return (
     <MovieBanner
+      className={loadingClass}
       backdropImageSrc={backgroundImageSrc}
-      height={700}
-      backgroundOpacity={0.2}
+      height={height}
+      backgroundOpacity={backgroundOpacity}
     >
       <div className="flex flex-col justify-center h-full">
         <div className="flex py-12 pl-10 space-x-8 pr-36">
-          <MoviePosterImage posterSrc={posterImageSrc} />
+          <MoviePosterImage
+            posterSrc={posterImageSrc}
+            onLoadingComplete={handleContentLoadingComplete}
+          />
           <MovieSideInformation movie={movie} crew={crew} />
         </div>
       </div>
@@ -39,10 +66,43 @@ const MovieDetailBanner = ({ movie, crew, className }: OwnProps) => {
   );
 };
 
-const MoviePosterImage = ({ posterSrc }: { posterSrc: string }) => {
+const MoviePosterImage = ({
+  posterSrc,
+  onLoadingComplete,
+}: {
+  posterSrc: string | null;
+  onLoadingComplete: () => void;
+}) => {
+  const {
+    isLoading: isPosterLoading,
+    handleLoadingComplete: handlePosterLoadingComplete,
+  } = useImageLoad(posterSrc);
+
+  const handleLoadingComplete = () => {
+    handlePosterLoadingComplete();
+    onLoadingComplete();
+  };
+
+  const loadingClasses = isPosterLoading ? "opacity-0" : "opacity-1";
+
   return (
-    <div className="relative flex-none w-[350px] h-[500px] rounded overflow-hidden">
-      <Image src={posterSrc} layout="fill" objectFit="cover" priority />
+    <div
+      className={`relative flex-none w-[350px] h-[500px] rounded overflow-hidden transition-opacity duration-300 ${loadingClasses}`}
+    >
+      {posterSrc && (
+        <Image
+          src={posterSrc}
+          layout="fill"
+          objectFit="cover"
+          placeholder="blur"
+          blurDataURL={`data:image/svg+xml;base64,${toBase64(
+            shimmerEffect(700, 475)
+          )}`}
+          alt="Movie Poster Image"
+          onLoadingComplete={handleLoadingComplete}
+          priority
+        />
+      )}
     </div>
   );
 };

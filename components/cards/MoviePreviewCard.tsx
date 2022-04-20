@@ -11,7 +11,6 @@ export type variant = "base" | "16:9";
 export type size = "md" | "lg";
 export type style = `${variant}_${size}`;
 
-//TODO: Add default onclick handler (route to the movie detail)
 const MoviePreviewCard = ({
   movie,
   genresMap,
