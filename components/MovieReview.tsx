@@ -17,10 +17,7 @@ const MovieReview = ({ review }: Props) => {
   const { rating, avatar_path } = review.author_details;
   const reviewDate = new Date(createdAt);
   const reviewDateAsString = reviewDate.toLocaleDateString();
-  const avatarImage = generateImageUrlByPathOrDefault(
-    avatar_path,
-    Properties.defaultAvatarImageSrcPath
-  );
+  const avatarImage = generateImageUrlByPathOrDefault(avatar_path, null);
 
   return (
     <div key={id} className="max-w-4xl p-4 border-b border-b-gray-500/50">

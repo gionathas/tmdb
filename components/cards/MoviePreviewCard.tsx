@@ -6,6 +6,9 @@ import useMovieGenres from "hooks/useMovieGenres";
 import { generateImageUrlByPathOrDefault } from "lib/api/image-api";
 import VoteBadge from "components/miscellaneous/VoteBadge";
 import { useRouter } from "next/router";
+import Image from "next/image";
+import { shimmerEffect } from "lib/effects";
+import { toBase64 } from "lib/utils";
 
 export type variant = "base" | "16:9";
 export type size = "md" | "lg";
@@ -65,9 +68,9 @@ const Thumbnail = ({
   style = "base_md",
   showVote,
 }: {
-  thumbnailSrc: MoviePreview["poster_path"];
-  title: MoviePreview["title"];
-  vote: MoviePreview["vote_average"];
+  thumbnailSrc: string | null;
+  title: string;
+  vote: number;
   style?: style;
   showVote: boolean;
 }) => {
@@ -82,11 +85,26 @@ const Thumbnail = ({
     <div
       className={`${thumbnailSize} relative overflow-hidden rounded-lg group transition-all duration-500`}
     >
-      <img
+      {thumbnailSrc && (
+        <Image
+          src={thumbnailSrc}
+          objectFit="cover"
+          alt="Movie Thumbnail"
+          objectPosition="center 10%"
+          className="transition-opacity duration-500 group-hover:opacity-60"
+          placeholder="blur"
+          blurDataURL={`data:image/svg+xml;base64,${toBase64(
+            shimmerEffect(700, 475)
+          )}`}
+          layout="fill"
+        />
+      )}
+
+      {/* <img
         className="object-cover w-full h-full transition-all duration-500 object-center-top group-hover:opacity-60"
         src={thumbnailSrc}
         alt={title}
-      />
+      /> */}
       {/* Upper left vote badge */}
       {showVote && (
         <div className="absolute top-4 left-4">
