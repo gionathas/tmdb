@@ -217,23 +217,24 @@ const MovieSubHeader = ({
       </div>
 
       {/* Play Trailer Button */}
-      <div className="flex font-medium tracking-wide transition-colors duration-300 cursor-pointer group">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="w-4 fill-gray-50 group-hover:fill-gray-300"
-          viewBox="0 0 24 24"
-        >
-          <path d="M3 22v-20l18 10-18 10z" />
-        </svg>
-        {showPlayTrailer && (
+      {showPlayTrailer && (
+        <div className="flex font-medium tracking-wide transition-colors duration-300 cursor-pointer group">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="w-4 fill-gray-50 group-hover:fill-gray-300"
+            viewBox="0 0 24 24"
+          >
+            <path d="M3 22v-20l18 10-18 10z" />
+          </svg>
+
           <span
             onClick={handlePlayTrailer}
             className="ml-2 group-hover:text-gray-300"
           >
             Play Trailer
           </span>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 };

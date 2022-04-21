@@ -50,7 +50,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
     getMoviesByCategory("popular"),
     getMoviesByCategory("top_rated"),
     getMoviesByCategory("now_playing"),
-    getMoviesByCategory("upcoming"),
+    // getMoviesByCategory("upcoming"),
     getTrendingMovies(),
   ]);
 
@@ -100,9 +100,9 @@ export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
   ]);
 
   const hasError = hasApiResponsesError(...requestedData);
-  const hasValidData = hasApiResponsesValidData(...requestedData);
+  // const hasValidData = hasApiResponsesValidData(...requestedData);
 
-  if (hasError || !hasValidData) {
+  if (hasError) {
     throw new Error(
       `Error while generating Movie Detail Page with id ${movieId}. Page generation skipped!`
     );

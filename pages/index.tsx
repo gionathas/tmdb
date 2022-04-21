@@ -53,7 +53,6 @@ export const getStaticProps: GetStaticProps<Props> = async (context) => {
     { data: genres },
   ] = requestedData;
 
-  //TODO: add shuffle
   return {
     props: {
       popularMovies:

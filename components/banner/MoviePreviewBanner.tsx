@@ -26,18 +26,22 @@ const MoviePreviewBanner = ({
   const router = useRouter();
   const { genres } = useMovieGenres(bannerMovie, genresMap, 3);
 
-  const watchDetailHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
+  const goToMovieDetail = () => {
     const movieId = bannerMovie.id;
     router.push(`/movies/${movieId}`);
   };
 
-  const arrowStyleClasses =
+  const navigationArrowStyle =
     "fill-gray-300/80 hover:bg-gray-400/20 p-3 rounded-md transition-colors duration-150";
+
+  const { title, original_title, overview } = bannerMovie;
+  const genresListString = genres.join(", ");
+  const movieYear = new Date(bannerMovie.release_date).getFullYear();
+
   return (
     <MovieBanner
       style={style}
-      className={className}
+      className={`${className}`}
       backgroundOpacity={0.5}
       height={height}
       backdropImageSrc={generateImageUrlByPathOrDefault(
@@ -50,35 +54,30 @@ const MoviePreviewBanner = ({
           <ArrowButton
             direction={"left"}
             variant="xl"
-            className={arrowStyleClasses}
+            className={navigationArrowStyle}
             onClick={onLeftClick}
           />
-          <div className="max-w-xl pl-5">
+          <div
+            className="max-w-xl pl-5 cursor-pointer"
+            onClick={goToMovieDetail}
+          >
             <h2 className="text-6xl font-semibold title">
-              {bannerMovie.title || bannerMovie.original_title}
+              {title || original_title}
             </h2>
-            <div className="flex items-baseline space-x-4 ">
-              <button
-                onClick={(e) => watchDetailHandler(e)}
-                className="px-4 py-2 mt-4 bg-gray-500/60 btn"
-              >
-                Watch Detail
-              </button>
-              <button className="px-4 py-2 mt-4 bg-gray-500/60 btn">
-                Play Trailer
-              </button>
-            </div>
-            <p className="mt-4 tracking-wide text-gray-100 line-clamp-3">
-              {bannerMovie.overview}
+            <span className="text-sm font-light text-gray-50/70">
+              {movieYear}
+            </span>
+            <p className="mt-4 tracking-wide text-gray-200 line-clamp-3">
+              {overview}
             </p>
             <p className="mt-2 text-sm tracking-wider capitalize text-primary-500">
-              {genres.join(", ")}
+              {genresListString}
             </p>
           </div>
           <ArrowButton
             direction={"right"}
             variant="xl"
-            className={`ml-auto ${arrowStyleClasses}`}
+            className={`ml-auto ${navigationArrowStyle}`}
             onClick={onRightClick}
           />
         </div>

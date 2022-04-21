@@ -11,6 +11,7 @@ type Props = {
   className?: string;
   children: React.ReactNode;
   style?: React.CSSProperties;
+  onClick?: () => void;
 };
 
 const MovieBanner = ({
@@ -20,11 +21,13 @@ const MovieBanner = ({
   height,
   backgroundOpacity,
   style = {},
+  onClick: handleClick,
 }: Props) => {
   return (
     <div
       style={{ height: `${height}px`, ...style }}
       className={`relative ${className}`}
+      onClick={handleClick}
     >
       {backdropImageSrc && (
         <BackgroundImage
