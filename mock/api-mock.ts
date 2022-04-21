@@ -3,6 +3,7 @@ import reviews from "./json/reviews.json";
 import credits from "./json/credits.json";
 import recommendations from "./json/recommendations.json";
 import movieList from "./json/movie-list.json";
+import videos from "./json/videos.json";
 import genres from "./json/genres.json";
 import coming_soon from "./json/coming-soon.json";
 import trendings from "./json/trending.json";
@@ -29,6 +30,8 @@ const mockMoviePage = (TmdbApiMock: MockAdapter) => {
     .reply(200, reviews)
     .onGet(/\/movie\/\d+\/credits/)
     .reply(200, credits)
+    .onGet(/\/movie\/\d+\/videos/)
+    .reply(200, videos)
     .onGet("/movie/3")
     .reply(500)
     .onGet("/movie/2")

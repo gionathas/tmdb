@@ -22,3 +22,7 @@ export const generateImageUrlByPathOrDefault = (
 
   return defaultValue;
 };
+
+export const generateYoutubeVideoUrl = (key: string): string => {
+  return `https://www.youtube.com/watch?v=${key}`;
+};

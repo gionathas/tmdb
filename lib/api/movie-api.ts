@@ -1,3 +1,6 @@
+import { Video } from "../../@types/models/video";
+import { TmdbAPI } from "config/clients";
+import { SortOrder } from "lib/common";
 import {
   MovieCredits,
   MovieDetail,
@@ -5,12 +8,12 @@ import {
 } from "../../@types//models/movie";
 import { Credit } from "../../@types/models/credit";
 import { Review } from "../../@types/models/review";
-import { TmdbAPI } from "config/clients";
-import { SortOrder } from "lib/common";
 import { handleError } from "./helpers";
 import {
   ApiResponse,
   ApiResponseWithPagination,
+  ApiResponseWithResults,
+  TmdbListResponse,
   TmdbPaginatedResponse,
 } from "./types";
 
@@ -34,6 +37,7 @@ export const TMDBApiRoutes = {
   ) => `${basePath}/${movieId}/${ctg}`,
   getMovieReviewsByMovieId: (movieId: number) =>
     `${basePath}/${movieId}/reviews`,
+  getMovieVideos: (movieId: number) => `${basePath}/${movieId}/videos`,
 };
 
 export const getMovie = async (
@@ -186,6 +190,47 @@ export const getMovieReviews = async (
   } catch (error) {
     console.error(
       `Error while retrieving reviews of movie with id ${movieId}!`
+    );
+    const { code, message } = handleError(error);
+    return { error: { code, message } };
+  }
+};
+
+export const getMovieYoutubeTrailer = async (
+  movieId: number
+): Promise<ApiResponse<Video>> => {
+  try {
+    const apiRoute = TMDBApiRoutes.getMovieVideos(movieId);
+
+    console.info(`Getting videos of movie with id ${movieId}..`);
+    const { data: videos } = await TmdbAPI.get<TmdbListResponse<Video>>(
+      apiRoute
+    );
+    console.info(`Videos of movie with id ${movieId} succesfully retrieved!`);
+
+    console.info(
+      `Searching for youtube trailer of movie with id ${movieId}...`
+    );
+
+    //return the first official youtube trailer (if exist)
+    const youtubeTrailer =
+      videos.results &&
+      videos.results.sort((a, b) => Number(b.official) - Number(a.official)) && //sort by official trailer first
+      videos.results.find(
+        (video) =>
+          video.type.toLowerCase() === "trailer" &&
+          video.site.toLowerCase() === "youtube"
+      );
+    console.info(
+      `Youtube trailer of movie with id ${movieId} ${
+        youtubeTrailer != null ? "successfully found" : "were not found"
+      }!`
+    );
+
+    return { data: youtubeTrailer };
+  } catch (error) {
+    console.error(
+      `Error while retrieving youtube trailer of movie with id ${movieId}!`
     );
     const { code, message } = handleError(error);
     return { error: { code, message } };

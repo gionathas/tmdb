@@ -3,7 +3,7 @@ import React from "react";
 import { Genre } from "../../@types/models/genre";
 import { MoviePreview } from "../../@types/models/movie";
 import useMovieGenres from "hooks/useMovieGenres";
-import { generateImageUrlByPathOrDefault } from "lib/api/image-api";
+import { generateImageUrlByPathOrDefault } from "lib/api/multimedia-api";
 import VoteBadge from "components/miscellaneous/VoteBadge";
 import { useRouter } from "next/router";
 import Image from "next/image";

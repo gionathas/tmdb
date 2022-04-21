@@ -1,6 +1,6 @@
 import ArrowButton from "components/miscellaneous/buttons/ArrowButton";
 import useMovieGenres from "hooks/useMovieGenres";
-import { generateImageUrlByPathOrDefault } from "lib/api/image-api";
+import { generateImageUrlByPathOrDefault } from "lib/api/multimedia-api";
 import { useRouter } from "next/router";
 import { Genre } from "../../@types/models/genre";
 import { MoviePreview } from "../../@types/models/movie";

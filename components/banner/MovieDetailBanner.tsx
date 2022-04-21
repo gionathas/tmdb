@@ -2,7 +2,7 @@ import MovieBanner from "components/banner/MovieBanner";
 import ActionButton from "components/miscellaneous/buttons/ActionButton";
 import VoteBadge from "components/miscellaneous/VoteBadge";
 import useImageLoad from "hooks/useImageLoad";
-import { generateImageUrlByPathOrDefault } from "lib/api/image-api";
+import { generateImageUrlByPathOrDefault } from "lib/api/multimedia-api";
 import { shimmerEffect } from "lib/effects";
 import { toBase64 } from "lib/utils";
 import Image from "next/image";
@@ -13,17 +13,19 @@ import { MovieDetail } from "../../@types/models/movie";
 type OwnProps = {
   movie: MovieDetail;
   crew: CrewCredit[];
-  className?: string;
   height: number;
   backgroundOpacity: number;
+  onPlayTrailer?: () => void;
+  showPlayTrailer: boolean;
 };
 
 const MovieDetailBanner = ({
   movie,
   crew,
-  className,
   height,
   backgroundOpacity,
+  onPlayTrailer: handlePlayTrailer,
+  showPlayTrailer = false,
 }: OwnProps) => {
   const [isContentLoading, setIsContentLoading] = useState(true);
 
@@ -59,7 +61,12 @@ const MovieDetailBanner = ({
             posterSrc={posterImageSrc}
             onLoadingComplete={handleContentLoadingComplete}
           />
-          <MovieSideInformation movie={movie} crew={crew} />
+          <MovieSideInformation
+            movie={movie}
+            crew={crew}
+            onPlayTrailer={handlePlayTrailer}
+            showPlayTrailer={showPlayTrailer}
+          />
         </div>
       </div>
     </MovieBanner>
@@ -110,15 +117,23 @@ const MoviePosterImage = ({
 const MovieSideInformation = ({
   movie,
   crew,
+  onPlayTrailer: handlePlayTrailer,
+  showPlayTrailer,
 }: {
   movie: MovieDetail;
   crew: CrewCredit[];
+  onPlayTrailer?: () => void;
+  showPlayTrailer: boolean;
 }) => {
   const { vote_average: vote } = movie;
   return (
     <div className="flex-1 pt-6">
       <MovieHeader movie={movie} />
-      <MovieSubHeader vote={vote} />
+      <MovieSubHeader
+        vote={vote}
+        onPlayTrailer={handlePlayTrailer}
+        showPlayTrailer={showPlayTrailer}
+      />
       <MovieOverview movie={movie} crew={crew} />
     </div>
   );
@@ -168,7 +183,15 @@ const MovieHeader = ({ movie }: { movie: MovieDetail }) => {
 /**
  * It renders the Vote Score and the main action buttons (Rate, Play Tailer, Add to Watchlist,ecc..)
  */
-const MovieSubHeader = ({ vote }: { vote: number }) => {
+const MovieSubHeader = ({
+  vote,
+  onPlayTrailer: handlePlayTrailer = () => void 0,
+  showPlayTrailer,
+}: {
+  vote: number;
+  onPlayTrailer?: () => void;
+  showPlayTrailer: boolean;
+}) => {
   return (
     <div className="flex items-center mt-5 space-x-6">
       {/* Vote Score */}
@@ -202,7 +225,14 @@ const MovieSubHeader = ({ vote }: { vote: number }) => {
         >
           <path d="M3 22v-20l18 10-18 10z" />
         </svg>
-        <span className="ml-2 group-hover:text-gray-300">Play Trailer</span>
+        {showPlayTrailer && (
+          <span
+            onClick={handlePlayTrailer}
+            className="ml-2 group-hover:text-gray-300"
+          >
+            Play Trailer
+          </span>
+        )}
       </div>
     </div>
   );

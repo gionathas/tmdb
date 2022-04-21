@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
 import { Review } from "../@types/models/review";
 import Properties from "config/properties";
-import { generateImageUrlByPathOrDefault } from "lib/api/image-api";
+import { generateImageUrlByPathOrDefault } from "lib/api/multimedia-api";
 import Avatar from "components/miscellaneous/Avatar";
 import ExpandableText from "components/miscellaneous/ExpandableText";
 import VoteBadge from "components/miscellaneous/VoteBadge";

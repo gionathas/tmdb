@@ -1,5 +1,9 @@
+import MovieTrailerPlayer from "components/MovieTrailerPlayer";
+import Properties from "config/properties";
+import { generateYoutubeVideoUrl } from "lib/api/multimedia-api";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import Head from "next/head";
+import { useState } from "react";
 import { Genre } from "../../@types/models/genre";
 import {
   MovieCredits,
@@ -7,6 +11,7 @@ import {
   MoviePreview,
 } from "../../@types/models/movie";
 import { Review } from "../../@types/models/review";
+import { Video } from "../../@types/models/video";
 import { Paths } from "../../@types/utils";
 import MovieDetailBanner from "../../components/banner/MovieDetailBanner";
 import MoviePreviewCard from "../../components/cards/MoviePreviewCard";
@@ -24,10 +29,10 @@ import {
   getMovieReviews,
   getMoviesByCategory,
   getMoviesLinkedToMovie,
+  getMovieYoutubeTrailer,
   getTrendingMovies,
 } from "../../lib/api/movie-api";
 import { formatNumberToUSDCurrency } from "../../lib/utils";
-import Properties from "config/properties";
 
 const revalidateTime = Properties.movieDetailPageRevalidationSeconds;
 
@@ -37,12 +42,10 @@ type Props = {
   credits: MovieCredits | null;
   recomendations: MoviePreview[] | null;
   reviews: Review[] | null;
+  youtubeTrailer?: Video | null;
 };
 
-//TODO: add also other movie ids to be pre-rendered (such as top rated or trending movies)
 export const getStaticPaths: GetStaticPaths = async () => {
-  // const { data: popularMovies } = await getMoviesByCategory("popular");
-
   const prerenderedMovies = await Promise.all([
     getMoviesByCategory("popular"),
     getMoviesByCategory("top_rated"),
@@ -73,19 +76,6 @@ export const getStaticPaths: GetStaticPaths = async () => {
     }
   });
 
-  // pre-render popular movies
-  // if (popularMovies && popularMovies.results) {
-  //   const { results } = popularMovies;
-  //   const popularMoviePaths = results.map(({ id }) => {
-  //     return {
-  //       params: {
-  //         movieId: String(id),
-  //       },
-  //     };
-  //   });
-  //   paths = paths.concat(popularMoviePaths);
-  // }
-
   console.info("Generated %d paths:", paths.length);
 
   return {
@@ -95,12 +85,14 @@ export const getStaticPaths: GetStaticPaths = async () => {
 };
 
 // TODO: add constant values
+// TODO: genres must be available globally
 export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
   const movieId = parseInt(params?.movieId as string);
   console.info(`Generating Movie Detail Page for id ${movieId}..`);
 
   const requestedData = await Promise.all([
     getMovie(movieId),
+    getMovieYoutubeTrailer(movieId),
     getAllGenres(),
     getMovieCredits(movieId, 10, 6),
     getMoviesLinkedToMovie(movieId, "recommendations", 6),
@@ -118,6 +110,7 @@ export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
 
   const [
     { data: movie },
+    { data: youtubeTrailer },
     { data: genres },
     { data: credits },
     { data: recommendations },
@@ -131,6 +124,7 @@ export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
       credits: credits || null,
       recomendations: (recommendations && recommendations.results) || null,
       reviews: (reviews && reviews.results) || null,
+      youtubeTrailer: youtubeTrailer || null,
     },
     revalidate: revalidateTime,
   };
@@ -145,7 +139,16 @@ const MoviePage: NextPage<Props> = ({
   credits,
   reviews,
   recomendations,
+  youtubeTrailer,
 }) => {
+  const [showTrailer, setShowTrailer] = useState(false);
+
+  const handlePlayTrailer = (event?: React.MouseEvent<HTMLButtonElement>) => {
+    event?.preventDefault();
+    setShowTrailer(true);
+  };
+
+  const isYoutubeTrailerAvailable = youtubeTrailer != null;
   const { title } = movie!;
   const { cast, crew } = credits!;
 
@@ -160,7 +163,16 @@ const MoviePage: NextPage<Props> = ({
           crew={crew}
           backgroundOpacity={0.2}
           height={700}
+          onPlayTrailer={handlePlayTrailer}
+          showPlayTrailer={isYoutubeTrailerAvailable}
         />
+        {showTrailer && isYoutubeTrailerAvailable && (
+          <MovieTrailerPlayer
+            videoSrc={generateYoutubeVideoUrl(youtubeTrailer.key)}
+            onClose={() => setShowTrailer(false)}
+          />
+        )}
+
         <div className="grid grid-cols-7 mt-10 mb-32">
           {/* Column with Cast Slideshows + Reviews */}
           <div className="col-span-5 pl-10">
@@ -181,7 +193,7 @@ const MoviePage: NextPage<Props> = ({
   );
 };
 
-// TODO: Add Infite Scroll effect
+// TODO: Add Infinite Scroll effect
 const ReviewList = ({ reviews }: { reviews: Review[] }) => {
   return (
     <div className="mt-16 ml-4">

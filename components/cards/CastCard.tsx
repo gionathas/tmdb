@@ -1,7 +1,7 @@
 import React from "react";
 import { CastCredit } from "../../@types/models/credit";
 import { Properties } from "config/properties";
-import { generateImageUrlByPathOrDefault } from "lib/api/image-api";
+import { generateImageUrlByPathOrDefault } from "lib/api/multimedia-api";
 import Image from "next/image";
 
 type Props = {

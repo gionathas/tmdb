@@ -17,6 +17,15 @@ export type TmdbPaginatedResponse<T> = {
   results: T[];
 };
 
+export type TmdbListResponse<T> = {
+  id: number;
+  results: T[];
+};
+
+// Utility types
+
+export type ApiResponseWithResults<T> = ApiResponse<TmdbListResponse<T>>;
+
 export type ApiResponseWithPagination<T> = ApiResponse<
   TmdbPaginatedResponse<T>
 >;

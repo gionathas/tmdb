@@ -53,13 +53,17 @@ export const getStaticProps: GetStaticProps<Props> = async (context) => {
     { data: genres },
   ] = requestedData;
 
+  //TODO: add shuffle
   return {
     props: {
-      popularMovies: (popularMovies && popularMovies.results) || null,
-      topRatedMovies: (topRatedMovies && topRatedMovies.results) || null,
-      trendingMovies: (trendingMovies && trendingMovies.results) || null,
-      nowPlayingMovies: (nowPlaying && nowPlaying.results) || null,
-      premiereMovies: (comingSoon && comingSoon.results) || null,
+      popularMovies:
+        (popularMovies && _.shuffle(popularMovies.results)) || null,
+      topRatedMovies:
+        (topRatedMovies && _.shuffle(topRatedMovies.results)) || null,
+      trendingMovies:
+        (trendingMovies && _.shuffle(trendingMovies.results)) || null,
+      nowPlayingMovies: (nowPlaying && _.shuffle(nowPlaying.results)) || null,
+      premiereMovies: (comingSoon && _.shuffle(comingSoon.results)) || null,
       genresList: genres || null,
     },
     revalidate: revalidationTime,
