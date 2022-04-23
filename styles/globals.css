@@ -40,4 +40,10 @@
   .hide-scrollbar::-webkit-scrollbar {
     display: none !important;
   }
+
+  .base-padding {
+    @apply px-4 md:px-6 lg:px-8 xl:px-10;
+  }
+
+  //TODO: implement it also for Safari/IOS
 }

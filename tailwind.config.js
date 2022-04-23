@@ -8,6 +8,9 @@ module.exports = {
     "./styles/**/*.css",
   ],
   theme: {
+    container: {
+      center: true,
+    },
     extend: {
       colors: {
         primary: colors.orange,
@@ -20,5 +23,8 @@ module.exports = {
       },
     },
   },
-  plugins: [require("@tailwindcss/line-clamp")],
+  plugins: [
+    require("@tailwindcss/line-clamp"),
+    require("tailwindcss-debug-screens"),
+  ],
 };

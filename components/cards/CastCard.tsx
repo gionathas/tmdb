@@ -31,8 +31,10 @@ const CastCard = ({ cast }: Props) => {
       </div>
       {/* info */}
       <div className="h-full p-2 bg-gray-500/10">
-        <h2 className="text-sm font-semibold name">{name}</h2>
-        <p className="mt-1 text-xs font-medium text-primary-500">{character}</p>
+        <h2 className="text-sm font-semibold 2xl:text-base name">{name}</h2>
+        <p className="mt-1 text-xs font-medium 2xlxl:text-sm text-primary-500">
+          {character}
+        </p>
       </div>
     </div>
   );

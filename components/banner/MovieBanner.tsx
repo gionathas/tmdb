@@ -2,7 +2,7 @@ import useImageLoad from "hooks/useImageLoad";
 import { shimmerEffect } from "lib/effects";
 import { toBase64 } from "lib/utils";
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import React from "react";
 
 type Props = {
   backdropImageSrc: string | null;

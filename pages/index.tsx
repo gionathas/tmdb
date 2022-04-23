@@ -1,6 +1,8 @@
 import Layout from "components/layout/Layout";
 import MovieCarousel from "components/MovieCarousel";
-import MoviePreviewSlideshow from "components/slideshows/MoviePreviewsSlideshow";
+import MovieSlideshow from "components/slideshows/MovieSlideshow";
+import Properties from "config/properties";
+import useMediaQuery from "hooks/useMediaQuery";
 import { getAllGenres } from "lib/api/genre-api";
 import { hasApiResponsesError } from "lib/api/helpers";
 import { getMoviesByCategory, getTrendingMovies } from "lib/api/movie-api";
@@ -9,7 +11,6 @@ import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
 import { Genre } from "../@types/models/genre";
 import { MoviePreview } from "../@types/models/movie";
-import Properties from "config/properties";
 
 const revalidationTime = Properties.indexPageRevalidationSeconds;
 
@@ -76,6 +77,11 @@ const HomePage: NextPage<Props> = ({
   premiereMovies,
   genresList,
 }: Props) => {
+  const isMdScreen = useMediaQuery("(min-width: 768px)");
+  const mainSlideshowCardSizes = isMdScreen ? "lg" : "md";
+  const baseSlideShowCardSize = isMdScreen ? "md" : "sm";
+  // const arrowsVariant: ArrowVariant = isMdScreen ? "xl" : "lg";
+
   return (
     <>
       <Head>
@@ -86,42 +92,44 @@ const HomePage: NextPage<Props> = ({
           height={700}
           movies={popularMovies!}
           genresMap={genresList!}
+          arrowsVariant={"xl"}
         />
 
-        <div className="mt-10 space-y-2">
-          <MoviePreviewSlideshow
+        <div className="px-4 mt-8 space-y-2 md:mt-10">
+          <MovieSlideshow
             movies={popularMovies!}
             title="Popular Movies on TMDB"
             genresMap={genresList!}
-            cardSize="lg"
+            cardSize={mainSlideshowCardSizes}
             variant="16:9"
           />
-          <MoviePreviewSlideshow
+          <MovieSlideshow
             movies={trendingMovies!}
             title="Trending Now"
             genresMap={genresList!}
-            cardSize="md"
+            cardSize={baseSlideShowCardSize}
             variant="16:9"
           />
-          <MoviePreviewSlideshow
+          <MovieSlideshow
             movies={nowPlayingMovies!}
             title="Now Playing "
             genresMap={genresList!}
-            cardSize="md"
+            cardSize={baseSlideShowCardSize}
             variant="16:9"
           />
-          <MoviePreviewSlideshow
+          <MovieSlideshow
             movies={premiereMovies!}
             title="Premiere"
             genresMap={genresList!}
-            cardSize="md"
+            cardSize={baseSlideShowCardSize}
             variant="16:9"
           />
-          <MoviePreviewSlideshow
+          <MovieSlideshow
             movies={topRatedMovies!}
             title="Top Rated ⭐️"
             genresMap={genresList!}
-            cardSize="md"
+            cardSize={baseSlideShowCardSize}
+            variant="base"
             showVotes
           />
         </div>

@@ -12,10 +12,10 @@ const Header = () => {
 
   return (
     <header
-      className={`fixed inset-x-0 z-10 w-full px-10 mx-auto transition-colors duration-300 ${bgClass} `}
+      className={`base-padding fixed inset-x-0 z-10 w-full transition-colors duration-300 ${bgClass} `}
     >
-      <div className="flex items-center justify-between py-4">
-        <div className="flex space-x-10">
+      <div className="flex items-center justify-between py-3 md:py-4">
+        <div className="flex items-center space-x-10">
           <Logo />
           <NavLinks />
         </div>
@@ -26,15 +26,11 @@ const Header = () => {
 };
 
 const Logo = () => {
+  const { logoPath: logo } = Properties;
   return (
     <Link href="/" passHref>
-      <div className="relative w-32 cursor-pointer">
-        <Image
-          src={Properties.logoPath}
-          alt="TMDB Logo"
-          layout="fill"
-          objectFit="contain"
-        />
+      <div className="relative w-24 h-8 cursor-pointer sm:w-28 md:w-32">
+        <Image src={logo} alt="TMDB Logo" layout="fill" objectFit="contain" />
       </div>
     </Link>
   );
@@ -42,7 +38,7 @@ const Logo = () => {
 
 const NavLinks = () => {
   return (
-    <nav className="flex space-x-6 font-light">
+    <nav className="hidden md:space-x-6 md:font-light md:flex">
       <Link href="#" passHref>
         <div className="link">Movies</div>
       </Link>
@@ -58,7 +54,7 @@ const NavLinks = () => {
 
 const SignInButton = () => {
   return (
-    <div className="py-2 text-xs tracking-wide uppercase btn btn-primary px-9">
+    <div className="hidden py-2 text-xs tracking-wide uppercase md:block btn btn-primary px-9">
       Sign In
     </div>
   );

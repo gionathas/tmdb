@@ -18,22 +18,43 @@ const ExpandableText = React.forwardRef(
     { as, children, maxLines, className, ...rest }: ExpandableTextProps<T>,
     ref?: PolymorphicRef<T>
   ) => {
-    const [isContentExpanded, setIsContentExpanded] = useState(false);
-    const [isContentExpandable, setIsContentExpandable] = useState(false);
+    const [isExpanded, setIsExpanded] = useState(false);
+    const [isExpandable, setIsExpandable] = useState(false);
+
+    // const calculateIsContentExpandable = useCallback(
+    //   (node: HTMLElement | null) => {
+    //     if (node !== null) {
+    //       // console.log("Client height: ", node.clientHeight);
+    //       // console.log("Scroll height: ", node.scrollHeight);
+
+    //       const hasScrollableContent = node.scrollHeight > node.clientHeight;
+    //       setIsContentExpandable(hasScrollableContent);
+    //     }
+    //   },
+    //   []
+    // );
 
     useEffect(() => {
-      const calculateIsContentExpandable = (): boolean => {
+      const calculateIsExpandable = () => {
         if (ref && ref.current) {
-          return ref.current?.scrollHeight > ref.current?.clientHeight;
+          const text = ref.current as HTMLElement;
+          setIsExpandable(text.scrollHeight > text.clientHeight);
+        } else {
+          setIsExpandable(false);
         }
-
-        return false;
       };
-      setIsContentExpandable(calculateIsContentExpandable());
-    }, [ref]);
 
-    const toggleContentExpansion = () => {
-      setIsContentExpanded(!isContentExpanded);
+      calculateIsExpandable();
+      window.addEventListener("resize", calculateIsExpandable);
+      return () => {
+        window.removeEventListener("resize", calculateIsExpandable);
+      };
+    }, [isExpanded]);
+
+    const toggleExpanded = () => {
+      setIsExpanded((isExpanded) => {
+        return !isExpanded;
+      });
     };
 
     const Component = as || "p";
@@ -43,23 +64,21 @@ const ExpandableText = React.forwardRef(
       { "line-clamp-5": maxLines === 5 }
     );
 
+    const classes = `${
+      !isExpanded ? lineClamp : "line-clamp-none"
+    } ${className}`;
+
     return (
       <>
-        <Component
-          ref={ref}
-          className={`${className} ${lineClamp} ${
-            isContentExpanded && "line-clamp-none"
-          }`}
-          {...rest}
-        >
+        <Component ref={ref} className={classes} {...rest}>
           {children}
         </Component>
-        {isContentExpandable && (
+        {(isExpandable || isExpanded) && (
           <span
             className="flex justify-end text-xs cursor-pointer hover:underline opacity-60 underline-offset-1"
-            onClick={toggleContentExpansion}
+            onClick={toggleExpanded}
           >
-            {isContentExpanded ? "Read Less" : "Read More"}
+            {isExpanded ? "Read Less" : "Read More"}
           </span>
         )}
       </>

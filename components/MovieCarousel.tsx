@@ -1,3 +1,4 @@
+import { variant as ArrowVariant } from "components/miscellaneous/buttons/ArrowButton";
 import Properties from "config/properties";
 import useInterval from "hooks/useInterval";
 import { useState } from "react";
@@ -14,10 +15,12 @@ const MovieCarousel = ({
   movies,
   genresMap,
   height,
+  arrowsVariant,
 }: {
   movies: MoviePreview[];
   genresMap: Genre[];
   height: number;
+  arrowsVariant: ArrowVariant;
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -55,6 +58,7 @@ const MovieCarousel = ({
                 genresMap={genresMap}
                 onLeftClick={prevMovie}
                 onRightClick={nextMovie}
+                arrowVariant={arrowsVariant}
               />
             )}
           </div>

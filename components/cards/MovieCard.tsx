@@ -1,20 +1,20 @@
 import classNames from "classnames";
+import VoteBadge from "components/miscellaneous/VoteBadge";
+import useMovieGenres from "hooks/useMovieGenres";
+import { generateImageUrlByPathOrDefault } from "lib/api/multimedia-api";
+import { shimmerEffect } from "lib/effects";
+import { toBase64 } from "lib/utils";
+import Image from "next/image";
+import { useRouter } from "next/router";
 import React from "react";
 import { Genre } from "../../@types/models/genre";
 import { MoviePreview } from "../../@types/models/movie";
-import useMovieGenres from "hooks/useMovieGenres";
-import { generateImageUrlByPathOrDefault } from "lib/api/multimedia-api";
-import VoteBadge from "components/miscellaneous/VoteBadge";
-import { useRouter } from "next/router";
-import Image from "next/image";
-import { shimmerEffect } from "lib/effects";
-import { toBase64 } from "lib/utils";
 
 export type variant = "base" | "16:9";
-export type size = "md" | "lg";
+export type size = "sm" | "md" | "lg";
 export type style = `${variant}_${size}`;
 
-const MoviePreviewCard = ({
+const MovieCard = ({
   movie,
   genresMap,
   genresToShow = 2,
@@ -30,20 +30,20 @@ const MoviePreviewCard = ({
   showVote?: boolean;
 }) => {
   const router = useRouter();
+  const { genres } = useMovieGenres(movie, genresMap, genresToShow);
+
   const { title, vote_average, poster_path, original_title } = movie;
   const displayTitle = title || original_title;
   const posterImageSrc = generateImageUrlByPathOrDefault(poster_path, null);
 
-  const { genres } = useMovieGenres(movie, genresMap, genresToShow);
-
-  const handleClick = () => {
+  const handleCardClick = () => {
     router.push(`/movies/${movie.id}`);
   };
 
   return (
     <div
-      className={`space-y-2 transition-transform duration-500 cursor-pointer hover:scale-[1.02]`}
-      onClick={handleClick}
+      className={`flex flex-col max-w-min space-y-2 transition-transform duration-500 cursor-pointer hover:scale-[1.01]`}
+      onClick={handleCardClick}
     >
       <Thumbnail
         style={`${variant}_${size}`}
@@ -77,8 +77,10 @@ const Thumbnail = ({
   const thumbnailSize = classNames(
     { "w-56 h-80": style === "base_lg" },
     { "w-48 h-64": style === "base_md" },
+    { "w-40 h-60": style === "base_sm" },
+    { "w-96 h-56": style === "16:9_lg" },
     { "w-80 h-48": style === "16:9_md" },
-    { "w-96 h-56": style === "16:9_lg" }
+    { "w-72 h-40": style === "16:9_sm" }
   );
 
   return (
@@ -100,26 +102,11 @@ const Thumbnail = ({
         />
       )}
 
-      {/* <img
-        className="object-cover w-full h-full transition-all duration-500 object-center-top group-hover:opacity-60"
-        src={thumbnailSrc}
-        alt={title}
-      /> */}
-      {/* Upper left vote badge */}
       {showVote && (
         <div className="absolute top-4 left-4">
           <VoteBadge vote={vote} size="sm" />
         </div>
       )}
-
-      {/* Center Play Button */}
-      {/* <div
-        className={
-          "opacity-0 absolute top-0 left-0 w-full h-full group-hover:grid group-hover:opacity-100 transition-all duration-300"
-        }
-      >
-        <PlayButton />
-      </div> */}
     </div>
   );
 };
@@ -139,7 +126,8 @@ const PreviewInfo = ({
 }) => {
   const titleSize = classNames(
     { "text-2xl": cardSize === "lg" },
-    { "text-xl": cardSize === "md" }
+    { "text-xl": cardSize === "md" },
+    { "text-lg 2xl:text-xl": cardSize === "sm" }
   );
 
   const renderGenres = (genres: string[]) => {
@@ -148,8 +136,10 @@ const PreviewInfo = ({
   };
 
   return (
-    <div id="movie-info">
-      <h2 className={`title ${titleSize} text-gray-100 text-small`}>{title}</h2>
+    <div className="">
+      <h2 className={`title ${titleSize} text-gray-100 text-small"`}>
+        {title}
+      </h2>
       {genres && (
         <p className={`mt-0.5 text-xs font-light text-primary-400`}>
           {renderGenres(genres)}
@@ -159,4 +149,4 @@ const PreviewInfo = ({
   );
 };
 
-export default MoviePreviewCard;
+export default MovieCard;

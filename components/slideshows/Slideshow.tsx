@@ -34,7 +34,7 @@ const Slideshow = ({
     (slideContainerRef &&
       slideContainerRef.current &&
       slideContainerRef.current.scrollWidth -
-        slideContainerRef.current.clientWidth <=
+        slideContainerRef.current.clientWidth <
         sliderPosition) ||
     false;
 
@@ -42,55 +42,39 @@ const Slideshow = ({
     (slideContainerRef && slideContainerRef.current && sliderPosition == 0) ||
     false;
 
+  const arrowStyle =
+    "fill-white absolute z-10 transition-opacity opacity-80 hover:opacity-100";
+
   return (
-    <div className={classname}>
-      <div className="flex items-center ml-4">
-        {title}
-        <ScrollArrowButtons
-          onLeftScroll={scrollToLeft}
-          onRightScroll={scrollToRight}
-          hideRightArrow={isScrollableRight}
-          hideLeftArrow={isScrollableLeft}
+    <div className={`${classname}`}>
+      <div>{title}</div>
+      <div className="relative">
+        <ArrowButton
+          className={`top-14 left-0 ${arrowStyle} ${
+            !isScrollableLeft ? "visible" : "invisible"
+          }`}
+          direction="left"
+          onClick={scrollToLeft}
+          hide={isScrollableLeft}
+          variant="lg"
+        />
+        <div
+          //@ts-ignore
+          ref={slideContainerRef}
+          className={`relative flex overflow-auto scroll-smooth snap-x space-x-3.5 hide-scrollbar mt-4`}
+        >
+          {children}
+        </div>
+        <ArrowButton
+          className={`top-14 right-0 ${arrowStyle} ${
+            !isScrollableRight ? "visible" : "invisible"
+          }`}
+          direction="right"
+          onClick={scrollToRight}
+          hide={isScrollableRight}
+          variant="lg"
         />
       </div>
-      <div
-        //@ts-ignore
-        ref={slideContainerRef}
-        className={`relative flex overflow-auto scroll-smooth snap-x space-x-3.5 hide-scrollbar py-4 px-4`}
-      >
-        {children}
-      </div>
-    </div>
-  );
-};
-
-const ScrollArrowButtons = ({
-  onLeftScroll: onLeftClick,
-  onRightScroll: onRightClick,
-  hideRightArrow = false,
-  hideLeftArrow = false,
-}: {
-  onLeftScroll?: () => void;
-  onRightScroll?: () => void;
-  hideRightArrow?: boolean;
-  hideLeftArrow?: boolean;
-}) => {
-  const styleClasses =
-    "fill-gray-300 transition-colors duration-200 hover:bg-gray-600/40";
-  return (
-    <div className="flex space-x-1.5 ml-auto mr-2">
-      <ArrowButton
-        className={`${styleClasses}`}
-        direction="left"
-        onClick={onLeftClick}
-        hide={hideLeftArrow}
-      />
-      <ArrowButton
-        className={`${styleClasses}`}
-        direction="right"
-        onClick={onRightClick}
-        hide={hideRightArrow}
-      />
     </div>
   );
 };

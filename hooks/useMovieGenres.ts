@@ -1,7 +1,7 @@
+import { getMovieGenresFromIds } from "lib/api/genre-api";
 import { useMemo } from "react";
 import { Genre } from "../@types/models/genre";
 import { MoviePreview } from "../@types/models/movie";
-import { getMovieGenresFromIds } from "lib/api/genre-api";
 
 const useMovieGenres = (
   movie: MoviePreview,

@@ -1,17 +1,16 @@
-import { useRouter } from "next/router";
 import React from "react";
 import { Genre } from "../../@types/models/genre";
 import { MoviePreview } from "../../@types/models/movie";
 import Properties from "../../config/properties";
-import MoviePreviewCard, {
+import MovieCard, {
   size as MovieCardStyle,
   variant as MovieCardvariant,
-} from "../cards/MoviePreviewCard";
+} from "../cards/MovieCard";
 import Slideshow from "./Slideshow";
 
 const { movieSlideshowScrollXOffset: scrollOffset } = Properties;
 
-const MoviePreviewSlideshow = ({
+const MovieSlideshow = ({
   title,
   movies,
   genresMap,
@@ -26,25 +25,27 @@ const MoviePreviewSlideshow = ({
   variant?: MovieCardvariant;
   showVotes?: boolean;
 }) => {
-  const router = useRouter();
   return (
     <Slideshow
       title={<h2 className="text-2xl font-light text-gray-200">{title}</h2>}
-      classname=""
       scrollOffset={scrollOffset}
     >
-      {movies.map((movie) => (
-        <MoviePreviewCard
-          key={movie.id}
-          movie={movie}
-          genresMap={genresMap}
-          size={cardSize}
-          variant={variant}
-          showVote={showVotes}
-        />
-      ))}
+      {movies.length > 0 ? (
+        movies.map((movie) => (
+          <MovieCard
+            key={movie.id}
+            movie={movie}
+            genresMap={genresMap}
+            size={cardSize}
+            variant={variant}
+            showVote={showVotes}
+          />
+        ))
+      ) : (
+        <h2 className="ml-4 text-sm font-light">No movies found!</h2>
+      )}
     </Slideshow>
   );
 };
 
-export default MoviePreviewSlideshow;
+export default MovieSlideshow;

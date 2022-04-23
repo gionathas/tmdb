@@ -1,5 +1,7 @@
 import MovieTrailerPlayer from "components/MovieTrailerPlayer";
+import MovieSlideshow from "components/slideshows/MovieSlideshow";
 import Properties from "config/properties";
+import useMediaQuery from "hooks/useMediaQuery";
 import { generateYoutubeVideoUrl } from "lib/api/multimedia-api";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import Head from "next/head";
@@ -14,15 +16,12 @@ import { Review } from "../../@types/models/review";
 import { Video } from "../../@types/models/video";
 import { Paths } from "../../@types/utils";
 import MovieDetailBanner from "../../components/banner/MovieDetailBanner";
-import MoviePreviewCard from "../../components/cards/MoviePreviewCard";
+import MovieCard from "../../components/cards/MovieCard";
 import Layout from "../../components/layout/Layout";
 import MovieReview from "../../components/MovieReview";
 import MovieCastSlideshow from "../../components/slideshows/MovieCastSlideshow";
 import { getAllGenres } from "../../lib/api/genre-api";
-import {
-  hasApiResponsesError,
-  hasApiResponsesValidData,
-} from "../../lib/api/helpers";
+import { hasApiResponsesError } from "../../lib/api/helpers";
 import {
   getMovie,
   getMovieCredits,
@@ -90,16 +89,16 @@ export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
   const movieId = parseInt(params?.movieId as string);
   console.info(`Generating Movie Detail Page for id ${movieId}..`);
 
-  const requestedData = await Promise.all([
+  const requiredData = await Promise.all([
     getMovie(movieId),
     getMovieYoutubeTrailer(movieId),
     getAllGenres(),
-    getMovieCredits(movieId, 10, 6),
-    getMoviesLinkedToMovie(movieId, "recommendations", 6),
-    getMovieReviews(movieId, 8),
+    getMovieCredits(movieId, 10, 6), // fetch 10 people from the cast (top 10 actors) and 6 people from the crew (producer, director, ecc..)
+    getMoviesLinkedToMovie(movieId, "recommendations", 8), //fetch 6 recommendem movie
+    getMovieReviews(movieId, 8), //fetch the first 8 reviews
   ]);
 
-  const hasError = hasApiResponsesError(...requestedData);
+  const hasError = hasApiResponsesError(...requiredData);
   // const hasValidData = hasApiResponsesValidData(...requestedData);
 
   if (hasError) {
@@ -115,7 +114,7 @@ export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
     { data: credits },
     { data: recommendations },
     { data: reviews },
-  ] = requestedData;
+  ] = requiredData;
 
   return {
     props: {
@@ -131,7 +130,8 @@ export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
 };
 
 /**
- * This page render a specific movie, identified his id.
+ * This page render the detail of a specific movie identified by his id:
+ * movie general info, cast, crew, reviews and recommended movies
  */
 const MoviePage: NextPage<Props> = ({
   movie,
@@ -173,20 +173,17 @@ const MoviePage: NextPage<Props> = ({
           />
         )}
 
-        <div className="grid grid-cols-7 mt-10 mb-32">
-          {/* Column with Cast Slideshows + Reviews */}
-          <div className="col-span-5 pl-10">
-            <MovieCastSlideshow cast={cast} />
-            <ReviewList reviews={reviews!} />
-          </div>
-          {/* Column with Menu (on the right) */}
-          <div className="col-span-2">
-            <MovieSecondaryInfo movie={movie!} />
-            <RecommendedMovieList
-              recomendations={recomendations!}
-              genresMap={genres!}
-            />
-          </div>
+        <div className="flex mt-10 base-padding">
+          <MovieCastSlideshow cast={cast} />
+          <MovieSecondaryInfo movie={movie!} />
+        </div>
+
+        <div className="flex flex-col mt-20 mb-10 lg:flex-row base-padding">
+          <ReviewList reviews={reviews!} />
+          <RecommendedMovieList
+            recomendations={recomendations!}
+            genresMap={genres!}
+          />
         </div>
       </Layout>
     </>
@@ -219,22 +216,37 @@ const RecommendedMovieList = ({
   recomendations: MoviePreview[];
   genresMap: Genre[];
 }) => {
-  return (
-    <div className="px-2 mt-32">
-      <h2 className="text-2xl font-medium">Reccomended for you</h2>
-      <div className="grid grid-cols-2 mt-4 gap-y-10">
-        {recomendations.length === 0 && (
-          <h2 className="font-light">No Recommended movies to show!</h2>
+  const isLgScreen = useMediaQuery("(min-width: 1024px)"); //FIXME:
+  const titleString = "Recommended";
+  const title = (
+    <h2 className="text-xl font-light md:text-2xl">{titleString}</h2>
+  );
+
+  return true ? (
+    <div className="max-w-xs ml-auto">
+      <h2 className="text-xl font-light md:text-2xl">{titleString}</h2>
+      <div className="grid grid-cols-2 mt-4 gap-x-4 gap-y-10">
+        {recomendations.length > 0 ? (
+          recomendations.map((movie) => (
+            <MovieCard
+              key={movie.id}
+              genresMap={genresMap}
+              movie={movie}
+              size="sm"
+            />
+          ))
+        ) : (
+          <h2 className="ml-4 text-sm font-light">No movies found!</h2>
         )}
-        {recomendations.map((movie) => (
-          <MoviePreviewCard
-            key={movie.id}
-            genresMap={genresMap}
-            movie={movie}
-            size="md"
-          />
-        ))}
       </div>
+    </div>
+  ) : (
+    <div className="mt-10">
+      <MovieSlideshow
+        title={titleString}
+        movies={recomendations}
+        genresMap={genresMap}
+      />
     </div>
   );
 };
@@ -253,22 +265,22 @@ const MovieSecondaryInfo = ({ movie }: { movie: MovieDetail }) => {
     revenue !== 0 ? formatNumberToUSDCurrency(revenue) : "Not Estimated";
 
   return (
-    <div className="pb-6 pl-4 mt-10 space-y-6 border-l border-l-primary-500/70">
-      <div>
-        <h2 className="text-sm font-semibold">Status</h2>
-        <p className="text-sm">{status}</p>
+    <div className="hidden pb-6 pl-4 mt-10 space-y-6 border-l w-80 lg:block border-l-primary-500/70">
+      <div className="text-sm 2xl:text-base">
+        <h2 className="font-semibold ">Status</h2>
+        <p>{status}</p>
       </div>
-      <div>
-        <h2 className="text-sm font-semibold">Original Language</h2>
-        <p className="text-sm uppercase">{originalLanguage}</p>
+      <div className="text-sm 2xl:text-base">
+        <h2 className="font-semibold">Original Language</h2>
+        <p className="uppercase">{originalLanguage}</p>
       </div>
-      <div>
-        <h2 className="text-sm font-semibold">Budget</h2>
-        <p className="text-sm lining-nums">{movieBudget}</p>
+      <div className="text-sm 2xl:text-base">
+        <h2 className="font-semibold ">Budget</h2>
+        <p className="lining-nums">{movieBudget}</p>
       </div>
-      <div>
-        <h2 className="text-sm font-semibold">Revenue</h2>
-        <p className="text-sm lining-nums">{movieRevenues}</p>
+      <div className="text-sm 2xl:text-base">
+        <h2 className="font-semibold ">Revenue</h2>
+        <p className="lining-nums">{movieRevenues}</p>
       </div>
     </div>
   );

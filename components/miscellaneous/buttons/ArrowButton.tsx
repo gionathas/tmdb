@@ -1,15 +1,10 @@
 import classNames from "classnames";
 import React from "react";
+import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/solid";
 
 type directions = "left" | "right";
-const leftArrowSvgPath = (
-  <path d="M20 .755l-14.374 11.245 14.374 11.219-.619.781-15.381-12 15.391-12 .609.755z" />
-);
-const rightArrowSvgPath = (
-  <path d="M4 .755l14.374 11.245-14.374 11.219.619.781 15.381-12-15.391-12-.609.755z" />
-);
 
-type variant = "sm" | "base" | "lg" | "xl";
+export type variant = "sm" | "base" | "lg" | "xl";
 
 const ArrowButton = ({
   direction,
@@ -24,28 +19,19 @@ const ArrowButton = ({
   className?: string;
   variant?: variant;
 }) => {
-  const icon = direction === "left" ? leftArrowSvgPath : rightArrowSvgPath;
   const hideClass = (hide && "opacity-0 cursor-default") || "cursor-pointer";
-  const variantClass = classNames(
-    "scale-75",
-    { "scale-50": variant === "sm" },
-    { "scale-110": variant === "lg" },
-    { "scale-150": variant === "xl" }
+  const size = classNames(
+    { "w-5 h-5": variant === "sm" },
+    { "w-8 h-8": variant === "base" },
+    { "w-12 h-12": variant === "lg" },
+    { "w-20 h-20": variant === "xl" }
   );
-  return (
-    <div
-      className={`grid place-items-center transition-opacity duration-200 ${hideClass} ${className}`}
-      onClick={handleClick}
-    >
-      <svg
-        className={`${variantClass}`}
-        width="24"
-        height="24"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        {icon}
-      </svg>
-    </div>
+  const classes = `${hideClass} ${className} ${size}`;
+
+  return direction === "left" ? (
+    <ChevronLeftIcon className={classes} onClick={handleClick} />
+  ) : (
+    <ChevronRightIcon className={classes} onClick={handleClick} />
   );
 };
 

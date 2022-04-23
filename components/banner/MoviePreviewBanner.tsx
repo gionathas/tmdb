@@ -5,12 +5,14 @@ import { useRouter } from "next/router";
 import { Genre } from "../../@types/models/genre";
 import { MoviePreview } from "../../@types/models/movie";
 import MovieBanner from "./MovieBanner";
+import { variant as ArrowVariant } from "components/miscellaneous/buttons/ArrowButton";
 
 const MoviePreviewBanner = ({
   bannerMovie,
   genresMap,
   height,
   className = "",
+  arrowVariant,
   style = {},
   onLeftClick,
   onRightClick,
@@ -18,6 +20,7 @@ const MoviePreviewBanner = ({
   bannerMovie: MoviePreview;
   genresMap: Genre[];
   height: number;
+  arrowVariant: ArrowVariant;
   className?: string;
   style?: React.CSSProperties;
   onRightClick?: () => void;
@@ -27,12 +30,12 @@ const MoviePreviewBanner = ({
   const { genres } = useMovieGenres(bannerMovie, genresMap, 3);
 
   const goToMovieDetail = () => {
-    const movieId = bannerMovie.id;
+    const { id: movieId } = bannerMovie;
     router.push(`/movies/${movieId}`);
   };
 
   const navigationArrowStyle =
-    "fill-gray-300/80 hover:bg-gray-400/20 p-3 rounded-md transition-colors duration-150";
+    "fill-gray-200 opacity-70 hover:opacity-100 transition-all p-3 rounded-md duration-150 ";
 
   const { title, original_title, overview } = bannerMovie;
   const genresListString = genres.join(", ");
@@ -41,7 +44,7 @@ const MoviePreviewBanner = ({
   return (
     <MovieBanner
       style={style}
-      className={`${className}`}
+      className={className}
       backgroundOpacity={0.5}
       height={height}
       backdropImageSrc={generateImageUrlByPathOrDefault(
@@ -50,33 +53,33 @@ const MoviePreviewBanner = ({
       )}
     >
       <div className="flex flex-col justify-center h-full">
-        <div className="flex items-center mx-4">
+        <div className="flex items-center md:mx-4">
           <ArrowButton
             direction={"left"}
-            variant="xl"
+            variant={arrowVariant}
             className={navigationArrowStyle}
             onClick={onLeftClick}
           />
           <div
-            className="max-w-xl pl-5 cursor-pointer"
+            className="max-w-md pl-5 cursor-pointer lg:max-w-xl"
             onClick={goToMovieDetail}
           >
-            <h2 className="text-6xl font-semibold title">
+            <h2 className="text-4xl font-semibold md:text-5xl lg:text-6xl title">
               {title || original_title}
             </h2>
-            <span className="text-sm font-light text-gray-50/70">
+            <span className="text-xs font-light md:text-sm xl:text-lg text-gray-50/70">
               {movieYear}
             </span>
-            <p className="mt-4 tracking-wide text-gray-200 line-clamp-3">
+            <p className="mt-4 text-sm tracking-wide text-gray-200 lg:text-base xl:text-lg line-clamp-3">
               {overview}
             </p>
-            <p className="mt-2 text-sm tracking-wider capitalize text-primary-500">
+            <p className="mt-2 text-xs tracking-wider capitalize md:text-sm xl:text-lg text-primary-500">
               {genresListString}
             </p>
           </div>
           <ArrowButton
             direction={"right"}
-            variant="xl"
+            variant={arrowVariant}
             className={`ml-auto ${navigationArrowStyle}`}
             onClick={onRightClick}
           />

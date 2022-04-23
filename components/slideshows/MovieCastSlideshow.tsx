@@ -8,21 +8,20 @@ const { castSlideshowScrollXOffset: castSlideshowScrollOffset } = Properties;
 
 type Props = {
   cast: CastCredit[];
+  className?: string;
 };
 
-const MovieCastSlideshow = ({ cast }: Props) => {
+const MovieCastSlideshow = ({ cast, className = "" }: Props) => {
   return (
-    <div className="rounded">
-      <Slideshow
-        classname="pt-4 pb-10"
-        scrollOffset={castSlideshowScrollOffset}
-        title={<h2 className="text-xl font-medium">Top Cast</h2>}
-      >
-        {cast.map((cast) => (
-          <CastCard key={cast.id} cast={cast} />
-        ))}
-      </Slideshow>
-    </div>
+    <Slideshow
+      classname={`overflow-hidden ${className}`}
+      scrollOffset={castSlideshowScrollOffset}
+      title={<h2 className="text-xl font-medium">Top Cast</h2>}
+    >
+      {cast.map((cast) => (
+        <CastCard key={cast.id} cast={cast} />
+      ))}
+    </Slideshow>
   );
 };
 
