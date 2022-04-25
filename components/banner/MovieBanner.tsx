@@ -12,6 +12,7 @@ type Props = {
   children: React.ReactNode;
   style?: React.CSSProperties;
   onClick?: () => void;
+  onLoadingComplete?: () => void;
 };
 
 const MovieBanner = ({
@@ -22,6 +23,7 @@ const MovieBanner = ({
   backgroundOpacity,
   style = {},
   onClick: handleClick,
+  onLoadingComplete,
 }: Props) => {
   return (
     <div
@@ -33,6 +35,7 @@ const MovieBanner = ({
         <BackgroundImage
           backdropSrc={backdropImageSrc}
           opacity={backgroundOpacity}
+          onLoadingComplete={onLoadingComplete}
         />
       )}
 
@@ -44,14 +47,21 @@ const MovieBanner = ({
 const BackgroundImage = ({
   backdropSrc,
   opacity,
+  onLoadingComplete,
 }: {
   backdropSrc: string;
   opacity: number;
+  onLoadingComplete?: () => void;
 }) => {
   const {
     isLoading: isImageLoading,
     handleLoadingComplete: handleImageLoadingComplete,
   } = useImageLoad(backdropSrc);
+
+  const handleLoadingComplete = () => {
+    handleImageLoadingComplete();
+    onLoadingComplete && onLoadingComplete();
+  };
 
   return (
     <Image
@@ -66,7 +76,7 @@ const BackgroundImage = ({
       blurDataURL={`data:image/svg+xml;base64,${toBase64(
         shimmerEffect(700, 475)
       )}`}
-      onLoadingComplete={handleImageLoadingComplete}
+      onLoadingComplete={handleLoadingComplete}
       priority
     />
   );

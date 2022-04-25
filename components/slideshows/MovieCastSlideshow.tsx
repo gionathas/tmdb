@@ -11,12 +11,15 @@ type Props = {
   className?: string;
 };
 
+const title = <h2 className="text-xl font-medium">Top Cast</h2>;
+
 const MovieCastSlideshow = ({ cast, className = "" }: Props) => {
   return (
     <Slideshow
-      classname={`overflow-hidden ${className}`}
+      className={`overflow-hidden ${className}`}
       scrollOffset={castSlideshowScrollOffset}
-      title={<h2 className="text-xl font-medium">Top Cast</h2>}
+      title={title}
+      arrowVariant="sm"
     >
       {cast.map((cast) => (
         <CastCard key={cast.id} cast={cast} />

@@ -47,7 +47,6 @@ const MovieCard = ({
     >
       <Thumbnail
         style={`${variant}_${size}`}
-        title={displayTitle}
         vote={vote_average}
         thumbnailSrc={posterImageSrc}
         showVote={showVote}
@@ -62,14 +61,12 @@ const MovieCard = ({
  * It render the thumbnail poster image of the movie
  */
 const Thumbnail = ({
-  title,
   vote,
   thumbnailSrc,
   style = "base_md",
   showVote,
 }: {
   thumbnailSrc: string | null;
-  title: string;
   vote: number;
   style?: style;
   showVote: boolean;

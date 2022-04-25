@@ -1,78 +1,111 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useScroll } from "react-use";
-import ArrowButton from "../miscellaneous/buttons/ArrowButton";
+import ArrowButton, {
+  variant as ArrowVariant,
+} from "../miscellaneous/buttons/ArrowButton";
 
 type Props = {
   title?: React.ReactElement;
-  classname?: string;
+  className?: string;
   children: React.ReactNode;
   scrollOffset: number;
+  arrowVariant: ArrowVariant;
 };
 
 const Slideshow = ({
   title,
   children,
-  classname = "",
+  className = "",
   scrollOffset,
+  arrowVariant,
 }: Props) => {
   const slideContainerRef = useRef<HTMLDivElement>(null);
   const { x: sliderPosition } = useScroll(slideContainerRef);
+  const [showArrows, setShowArrows] = useState(false);
+  const [isScrollable, setIsScrollable] = useState({
+    left: false,
+    right: false,
+  });
+
+  // each time the sliderPosition changes, calculate if the slideshow is scrollable (left and right) with the arrows
+  useEffect(() => {
+    const isScrollableRight =
+      (slideContainerRef.current &&
+        slideContainerRef.current.scrollWidth -
+          slideContainerRef.current.clientWidth >
+          sliderPosition) ||
+      false;
+    const isScrollableLeft =
+      (slideContainerRef.current && sliderPosition != 0) || false;
+    setIsScrollable({ left: isScrollableLeft, right: isScrollableRight });
+  }, [sliderPosition]);
+
+  // reset the scroll position to 0 each time the component get updated
+  useEffect(() => {
+    if (slideContainerRef.current) {
+      slideContainerRef.current.scrollLeft = 0;
+    }
+  }, [children]);
 
   const scrollToRight = () => {
-    if (slideContainerRef && slideContainerRef.current) {
-      slideContainerRef.current.scrollLeft += scrollOffset;
+    if (slideContainerRef.current) {
+      const currentScroll = slideContainerRef.current.scrollLeft;
+      slideContainerRef.current.scrollTo({
+        left: currentScroll + scrollOffset,
+        behavior: "smooth",
+      });
     }
   };
 
   const scrollToLeft = () => {
-    if (slideContainerRef && slideContainerRef.current) {
-      slideContainerRef.current.scrollLeft -= scrollOffset;
+    if (slideContainerRef.current) {
+      const currentScroll = slideContainerRef.current.scrollLeft;
+      slideContainerRef.current.scrollTo({
+        left: currentScroll - scrollOffset,
+        behavior: "smooth",
+      });
     }
   };
 
-  const isScrollableRight =
-    (slideContainerRef &&
-      slideContainerRef.current &&
-      slideContainerRef.current.scrollWidth -
-        slideContainerRef.current.clientWidth <
-        sliderPosition) ||
-    false;
+  const arrowBaseStyle =
+    "fill-white absolute transition-all opacity-80 hover:opacity-100 bg-gray-500/30 hover:bg-gray-500/60 duration-200 rounded-lg z-10 top-1/4";
+  const showArrow = "visible hover:cursor-pointer";
+  const hideArrow = "invisible hover:cursor-default";
 
-  const isScrollableLeft =
-    (slideContainerRef && slideContainerRef.current && sliderPosition == 0) ||
-    false;
-
-  const arrowStyle =
-    "fill-white absolute z-10 transition-opacity opacity-80 hover:opacity-100";
+  const getArrowVisibility = (dir: "left" | "right") => {
+    return isScrollable[dir] && showArrows ? showArrow : hideArrow;
+  };
 
   return (
-    <div className={`${classname}`}>
-      <div>{title}</div>
-      <div className="relative">
+    <div className={className}>
+      {title}
+      <div
+        className="relative"
+        onMouseEnter={() => setShowArrows(true)}
+        onMouseLeave={() => setShowArrows(false)}
+      >
+        {/* Left Scroll Arrow */}
         <ArrowButton
-          className={`top-14 left-0 ${arrowStyle} ${
-            !isScrollableLeft ? "visible" : "invisible"
-          }`}
+          className={`-left-4 ${arrowBaseStyle} ${getArrowVisibility("left")}`}
           direction="left"
           onClick={scrollToLeft}
-          hide={isScrollableLeft}
-          variant="lg"
+          variant={arrowVariant}
         />
+        {/* Slider Container */}
         <div
-          //@ts-ignore
           ref={slideContainerRef}
           className={`relative flex overflow-auto scroll-smooth snap-x space-x-3.5 hide-scrollbar mt-4`}
         >
           {children}
         </div>
+        {/* Right Scroll Arrow */}
         <ArrowButton
-          className={`top-14 right-0 ${arrowStyle} ${
-            !isScrollableRight ? "visible" : "invisible"
-          }`}
+          className={`-right-4 ${arrowBaseStyle} ${getArrowVisibility(
+            "right"
+          )}`}
           direction="right"
           onClick={scrollToRight}
-          hide={isScrollableRight}
-          variant="lg"
+          variant={arrowVariant}
         />
       </div>
     </div>

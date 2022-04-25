@@ -1,4 +1,7 @@
+import { variant as ArrowVariant } from "components/miscellaneous/buttons/ArrowButton";
+import MovieReviewList from "components/MovieReviewList";
 import MovieTrailerPlayer from "components/MovieTrailerPlayer";
+import RecommendedMovieList from "components/RecommendedMovieList";
 import MovieSlideshow from "components/slideshows/MovieSlideshow";
 import Properties from "config/properties";
 import useMediaQuery from "hooks/useMediaQuery";
@@ -16,9 +19,7 @@ import { Review } from "../../@types/models/review";
 import { Video } from "../../@types/models/video";
 import { Paths } from "../../@types/utils";
 import MovieDetailBanner from "../../components/banner/MovieDetailBanner";
-import MovieCard from "../../components/cards/MovieCard";
 import Layout from "../../components/layout/Layout";
-import MovieReview from "../../components/MovieReview";
 import MovieCastSlideshow from "../../components/slideshows/MovieCastSlideshow";
 import { getAllGenres } from "../../lib/api/genre-api";
 import { hasApiResponsesError } from "../../lib/api/helpers";
@@ -142,11 +143,19 @@ const MoviePage: NextPage<Props> = ({
   youtubeTrailer,
 }) => {
   const [showTrailer, setShowTrailer] = useState(false);
+  const isXlScreen = useMediaQuery("(min-width: 1280px)");
+  const isLgScreen = useMediaQuery("(min-width: 1024px)");
 
   const handlePlayTrailer = (event?: React.MouseEvent<HTMLButtonElement>) => {
     event?.preventDefault();
     setShowTrailer(true);
   };
+
+  const arrowVariant: ArrowVariant = isXlScreen
+    ? "lg"
+    : isLgScreen
+    ? "base"
+    : "sm";
 
   const isYoutubeTrailerAvailable = youtubeTrailer != null;
   const { title } = movie!;
@@ -174,80 +183,32 @@ const MoviePage: NextPage<Props> = ({
         )}
 
         <div className="flex mt-10 base-padding">
-          <MovieCastSlideshow cast={cast} />
+          {cast.length > 0 && <MovieCastSlideshow cast={cast} />}
           <MovieSecondaryInfo movie={movie!} />
         </div>
 
-        <div className="flex flex-col mt-20 mb-10 lg:flex-row base-padding">
-          <ReviewList reviews={reviews!} />
-          <RecommendedMovieList
-            recomendations={recomendations!}
-            genresMap={genres!}
-          />
+        <div className="flex flex-col mt-20 mb-10 xl:flex-row base-padding">
+          <MovieReviewList reviews={reviews!} />
+          {isXlScreen ? (
+            <RecommendedMovieList
+              className="max-w-xs ml-auto"
+              recomendations={recomendations!}
+              genresMap={genres!}
+            />
+          ) : (
+            <MovieSlideshow
+              className="mt-10"
+              title="Recommended"
+              movies={recomendations!}
+              genresMap={genres!}
+              cardSize="sm"
+              cardVariant="base"
+              arrowVariant={arrowVariant}
+            />
+          )}
         </div>
       </Layout>
     </>
-  );
-};
-
-// TODO: Add Infinite Scroll effect
-const ReviewList = ({ reviews }: { reviews: Review[] }) => {
-  return (
-    <div className="mt-16 ml-4">
-      <h2 className="text-xl font-medium">Reviews</h2>
-      {reviews.length === 0 && (
-        <p className="mt-4 ml-4 text-sm font-light">
-          No review of this movie has been written yet!
-        </p>
-      )}
-      <div className="space-y-4">
-        {reviews.map((review) => (
-          <MovieReview key={review.id} review={review} />
-        ))}
-      </div>
-    </div>
-  );
-};
-
-const RecommendedMovieList = ({
-  recomendations,
-  genresMap,
-}: {
-  recomendations: MoviePreview[];
-  genresMap: Genre[];
-}) => {
-  const isLgScreen = useMediaQuery("(min-width: 1024px)"); //FIXME:
-  const titleString = "Recommended";
-  const title = (
-    <h2 className="text-xl font-light md:text-2xl">{titleString}</h2>
-  );
-
-  return true ? (
-    <div className="max-w-xs ml-auto">
-      <h2 className="text-xl font-light md:text-2xl">{titleString}</h2>
-      <div className="grid grid-cols-2 mt-4 gap-x-4 gap-y-10">
-        {recomendations.length > 0 ? (
-          recomendations.map((movie) => (
-            <MovieCard
-              key={movie.id}
-              genresMap={genresMap}
-              movie={movie}
-              size="sm"
-            />
-          ))
-        ) : (
-          <h2 className="ml-4 text-sm font-light">No movies found!</h2>
-        )}
-      </div>
-    </div>
-  ) : (
-    <div className="mt-10">
-      <MovieSlideshow
-        title={titleString}
-        movies={recomendations}
-        genresMap={genresMap}
-      />
-    </div>
   );
 };
 

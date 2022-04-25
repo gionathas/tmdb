@@ -1,12 +1,24 @@
+import { variant as ArrowVariant } from "components/miscellaneous/buttons/ArrowButton";
 import React from "react";
 import { Genre } from "../../@types/models/genre";
 import { MoviePreview } from "../../@types/models/movie";
 import Properties from "../../config/properties";
 import MovieCard, {
   size as MovieCardStyle,
-  variant as MovieCardvariant,
+  variant as MovieCardVariant,
 } from "../cards/MovieCard";
 import Slideshow from "./Slideshow";
+
+type Props = {
+  title: string;
+  movies: MoviePreview[];
+  genresMap: Genre[];
+  cardSize?: MovieCardStyle;
+  cardVariant?: MovieCardVariant;
+  arrowVariant: ArrowVariant;
+  showVotes?: boolean;
+  className?: string;
+};
 
 const { movieSlideshowScrollXOffset: scrollOffset } = Properties;
 
@@ -15,19 +27,16 @@ const MovieSlideshow = ({
   movies,
   genresMap,
   cardSize = "md",
-  variant = "base",
+  cardVariant = "base",
+  arrowVariant,
   showVotes = false,
-}: {
-  title: string;
-  movies: MoviePreview[];
-  genresMap: Genre[];
-  cardSize?: MovieCardStyle;
-  variant?: MovieCardvariant;
-  showVotes?: boolean;
-}) => {
+  className = "",
+}: Props) => {
   return (
     <Slideshow
+      className={className}
       title={<h2 className="text-2xl font-light text-gray-200">{title}</h2>}
+      arrowVariant={arrowVariant}
       scrollOffset={scrollOffset}
     >
       {movies.length > 0 ? (
@@ -37,7 +46,7 @@ const MovieSlideshow = ({
             movie={movie}
             genresMap={genresMap}
             size={cardSize}
-            variant={variant}
+            variant={cardVariant}
             showVote={showVotes}
           />
         ))

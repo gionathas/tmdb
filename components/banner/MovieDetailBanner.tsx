@@ -27,26 +27,31 @@ const MovieDetailBanner = ({
   onPlayTrailer: handlePlayTrailer,
   showPlayTrailer = false,
 }: OwnProps) => {
-  const [isContentLoading, setIsContentLoading] = useState(true);
-
-  useEffect(() => {
-    setIsContentLoading(true);
-  }, [movie]);
-
-  const handleContentLoadingComplete = () => {
-    setIsContentLoading(false);
+  const { backdrop_path, poster_path } = movie;
+  const initialContentLoadingState = {
+    isPosterLoading: poster_path !== null && true,
+    isBackgroundLoading: backdrop_path !== null && true,
   };
 
-  const { backdrop_path, poster_path } = movie;
+  const [isContentLoading, setIsContentLoading] = useState(
+    initialContentLoadingState
+  );
+
+  useEffect(() => {
+    setIsContentLoading(initialContentLoadingState);
+  }, [movie.id]);
+
   const backgroundImageSrc = generateImageUrlByPathOrDefault(
     backdrop_path,
     null
   );
   const posterImageSrc = generateImageUrlByPathOrDefault(poster_path, null);
 
-  const loadingClass = isContentLoading
-    ? "animate-pulse blur-sm"
-    : "animate-none blur-none";
+  const { isBackgroundLoading, isPosterLoading } = isContentLoading;
+  const loadingClass =
+    isBackgroundLoading || isPosterLoading
+      ? "animate-pulse blur-sm"
+      : "animate-none blur-none";
 
   return (
     <MovieBanner
@@ -54,12 +59,20 @@ const MovieDetailBanner = ({
       backdropImageSrc={backgroundImageSrc}
       height={height}
       backgroundOpacity={backgroundOpacity}
+      onLoadingComplete={() =>
+        setIsContentLoading((prev) => ({ ...prev, isBackgroundLoading: false }))
+      }
     >
-      <div className="flex flex-col justify-center h-full pt-6 base-padding sm:pt-0">
+      <div className="flex flex-col justify-center h-full base-padding">
         <div className="lg:flex lg:space-x-8 2xl:pt-12">
           <MoviePosterImage
             posterSrc={posterImageSrc}
-            onLoadingComplete={handleContentLoadingComplete}
+            onLoadingComplete={() =>
+              setIsContentLoading((prev) => ({
+                ...prev,
+                isPosterLoading: false,
+              }))
+            }
           />
           <MovieInformation
             movie={movie}
@@ -276,13 +289,15 @@ const MovieOverview = ({
       {/* Overview */}
       <div className="mt-4">
         <h2 className="text-xl font-medium 2xl:text-2xl">Overview</h2>
-        <p className="mt-1 text-xs leading-snug text-gray-300 sm:text-sm 2xl:text-base">
+        <p className="mt-1 text-sm leading-snug text-gray-300 2xl:text-base">
           {overview}
         </p>
       </div>
 
       {/* Crew Staff */}
-      <div className="grid grid-cols-3 mt-12 gap-y-6">{renderCrewCredit()}</div>
+      <div className="hidden grid-cols-2 mt-12 sm:grid sm:grid-cols-3 gap-y-6">
+        {renderCrewCredit()}
+      </div>
     </div>
   );
 };
