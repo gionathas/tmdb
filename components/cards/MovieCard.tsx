@@ -127,7 +127,7 @@ const PreviewInfo = ({
     { "text-lg 2xl:text-xl": cardSize === "sm" }
   );
 
-  const genresList = genres && <>{genres.join(", ")}</>;
+  const genresAsString = genres && <>{genres.join(", ")}</>;
 
   return (
     <div className="">
@@ -137,7 +137,7 @@ const PreviewInfo = ({
       <p
         className={`mt-0.5 text-xs font-light text-primary-400 tracking-widest capitalize`}
       >
-        {genresList}
+        {genresAsString}
       </p>
     </div>
   );

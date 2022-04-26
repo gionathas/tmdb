@@ -1,6 +1,6 @@
 import Properties from "config/properties";
 import useInterval from "hooks/useInterval";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { Genre } from "../@types/models/genre";
 import { MoviePreview } from "../@types/models/movie";
 import MoviePreviewBanner from "./banner/MoviePreviewBanner";
@@ -21,19 +21,19 @@ const MovieCarousel = ({
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  const nextMovie = () => {
+  const nextMovie = useCallback(() => {
     setCurrentIndex((prevIndex) =>
       prevIndex + 1 >= movies.length ? 0 : prevIndex + 1
     );
     resetInterval();
-  };
+  }, [movies.length]);
 
-  const prevMovie = () => {
+  const prevMovie = useCallback(() => {
     setCurrentIndex((prevIndex) =>
       prevIndex - 1 < 0 ? movies.length - 1 : prevIndex - 1
     );
     resetInterval();
-  };
+  }, [movies.length]);
 
   const { resetInterval } = useInterval(nextMovie, carouselInterval);
 

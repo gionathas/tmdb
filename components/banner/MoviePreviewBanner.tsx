@@ -36,7 +36,7 @@ const MoviePreviewBanner = ({
   const arrowVariant = "sm";
 
   const { title, original_title, overview } = bannerMovie;
-  const genresListString = genres.join(", ");
+  const genresListAsString = genres.join(", ");
   const movieYear = new Date(bannerMovie.release_date).getFullYear();
   const backdropImageSrc = generateImageUrlByPathOrDefault(
     bannerMovie.backdrop_path,
@@ -73,7 +73,7 @@ const MoviePreviewBanner = ({
               {overview}
             </p>
             <p className="mt-2 text-xs tracking-wider capitalize lg:text-sm 2xl:text-base text-primary-500">
-              {genresListString}
+              {genresListAsString}
             </p>
           </div>
           <ArrowButton

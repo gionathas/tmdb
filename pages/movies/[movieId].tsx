@@ -8,7 +8,7 @@ import useMediaQuery from "hooks/useMediaQuery";
 import { generateYoutubeVideoUrl } from "lib/api/multimedia-api";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import Head from "next/head";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { Genre } from "../../@types/models/genre";
 import {
   MovieCredits,
@@ -146,10 +146,15 @@ const MoviePage: NextPage<Props> = ({
   const isXlScreen = useMediaQuery("(min-width: 1280px)");
   const isLgScreen = useMediaQuery("(min-width: 1024px)");
 
-  const handlePlayTrailer = (event?: React.MouseEvent<HTMLButtonElement>) => {
-    event?.preventDefault();
-    setShowTrailer(true);
-  };
+  const handlePlayTrailer = useCallback(
+    (event?: React.MouseEvent<HTMLButtonElement>) => {
+      event?.preventDefault();
+      setShowTrailer(true);
+    },
+    []
+  );
+
+  const handleCloseTrailerPlayer = useCallback(() => setShowTrailer(false), []);
 
   const arrowVariant: ArrowVariant = isXlScreen
     ? "lg"
@@ -160,6 +165,8 @@ const MoviePage: NextPage<Props> = ({
   const isYoutubeTrailerAvailable = youtubeTrailer != null;
   const { title } = movie!;
   const { cast, crew } = credits!;
+  const movieYoutubeTrailerSrc =
+    youtubeTrailer != null ? generateYoutubeVideoUrl(youtubeTrailer.key) : "";
 
   return (
     <>
@@ -178,8 +185,8 @@ const MoviePage: NextPage<Props> = ({
         />
         {showTrailer && isYoutubeTrailerAvailable && (
           <MovieTrailerPlayer
-            videoSrc={generateYoutubeVideoUrl(youtubeTrailer.key)}
-            onClose={() => setShowTrailer(false)}
+            videoSrc={movieYoutubeTrailerSrc}
+            onClose={handleCloseTrailerPlayer}
           />
         )}
 

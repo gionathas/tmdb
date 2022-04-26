@@ -52,9 +52,7 @@ const ExpandableText = React.forwardRef(
     }, [isExpanded]);
 
     const toggleExpanded = () => {
-      setIsExpanded((isExpanded) => {
-        return !isExpanded;
-      });
+      setIsExpanded((prevExpanded) => !prevExpanded);
     };
 
     const Component = as || "p";

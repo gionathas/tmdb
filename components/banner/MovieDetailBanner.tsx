@@ -6,7 +6,7 @@ import { generateImageUrlByPathOrDefault } from "lib/api/multimedia-api";
 import { shimmerEffect } from "lib/effects";
 import { toBase64 } from "lib/utils";
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { CrewCredit } from "../../@types/models/credit";
 import { MovieDetail } from "../../@types/models/movie";
 
@@ -41,40 +41,40 @@ const MovieDetailBanner = ({
     setIsContentLoading(initialContentLoadingState);
   }, [movie.id]);
 
-  const backgroundImageSrc = generateImageUrlByPathOrDefault(
-    backdrop_path,
-    null
-  );
-  const posterImageSrc = generateImageUrlByPathOrDefault(poster_path, null);
+  const handleMovieBannerLoadingComplete = useCallback(() => {
+    setIsContentLoading((prev) => ({ ...prev, isBackgroundLoading: false }));
+  }, []);
+
+  const handlePosterImageLoadingComplete = useCallback(() => {
+    setIsContentLoading((prev) => ({
+      ...prev,
+      isPosterLoading: false,
+    }));
+  }, []);
 
   const { isBackgroundLoading, isPosterLoading } = isContentLoading;
-  const loadingClass =
+  const loadingStyle =
     isBackgroundLoading || isPosterLoading
       ? "animate-pulse blur-sm"
       : "animate-none blur-none";
 
   return (
     <MovieBanner
-      className={loadingClass}
-      backdropImageSrc={backgroundImageSrc}
+      className={loadingStyle}
+      backdropImageSrc={generateImageUrlByPathOrDefault(backdrop_path, null)}
       height={height}
       backgroundOpacity={backgroundOpacity}
-      onLoadingComplete={() =>
-        setIsContentLoading((prev) => ({ ...prev, isBackgroundLoading: false }))
-      }
+      onLoadingComplete={handleMovieBannerLoadingComplete}
     >
       <div className="flex flex-col justify-center h-full base-padding">
         <div className="lg:flex lg:space-x-8 2xl:pt-12">
           <MoviePosterImage
-            posterSrc={posterImageSrc}
-            onLoadingComplete={() =>
-              setIsContentLoading((prev) => ({
-                ...prev,
-                isPosterLoading: false,
-              }))
-            }
+            className={`hidden lg:block relative flex-none w-[350px] h-[500px] xl:w-[400px] 2xl:w-[440px] 2xl:h-[550px] rounded overflow-hidden transition-opacity duration-300`}
+            posterSrc={generateImageUrlByPathOrDefault(poster_path, null)}
+            onLoadingComplete={handlePosterImageLoadingComplete}
           />
           <MovieInformation
+            className="w-full max-w-4xl mx-auto lg:pt-5 lg:flex-1 2xl:pt-2"
             movie={movie}
             crew={crew}
             onPlayTrailer={handlePlayTrailer}
@@ -89,9 +89,11 @@ const MovieDetailBanner = ({
 const MoviePosterImage = ({
   posterSrc,
   onLoadingComplete,
+  className = "",
 }: {
   posterSrc: string | null;
   onLoadingComplete: () => void;
+  className?: string;
 }) => {
   const {
     isLoading: isPosterLoading,
@@ -103,12 +105,10 @@ const MoviePosterImage = ({
     onLoadingComplete();
   };
 
-  const loadingClasses = isPosterLoading ? "opacity-0" : "opacity-1";
+  const loadingStyle = isPosterLoading ? "opacity-0" : "opacity-1";
 
   return (
-    <div
-      className={`hidden lg:block relative flex-none w-[350px] h-[500px] xl:w-[400px] 2xl:w-[440px] 2xl:h-[550px] rounded overflow-hidden transition-opacity duration-300 ${loadingClasses}`}
-    >
+    <div className={`${loadingStyle} ${className}`}>
       {posterSrc && (
         <Image
           src={posterSrc}
@@ -132,22 +132,25 @@ const MovieInformation = ({
   crew,
   onPlayTrailer: handlePlayTrailer,
   showPlayTrailer,
+  className = "",
 }: {
   movie: MovieDetail;
   crew: CrewCredit[];
   onPlayTrailer?: () => void;
   showPlayTrailer: boolean;
+  className?: string;
 }) => {
   const { vote_average: vote } = movie;
   return (
-    <div className="w-full max-w-4xl mx-auto lg:pt-5 lg:flex-1 2xl:pt-2">
-      <MovieHeader movie={movie} />
-      <MovieSubHeader
+    <div className={className}>
+      <MovieInformationHeader movie={movie} />
+      <MovieInformationSubHeader
+        className="flex flex-wrap items-center mt-7 gap-x-4 gap-y-5"
         vote={vote}
         onPlayTrailer={handlePlayTrailer}
         showPlayTrailer={showPlayTrailer}
       />
-      <MovieOverview movie={movie} crew={crew} />
+      <MovieInformationOverview className="mt-6" movie={movie} crew={crew} />
     </div>
   );
 };
@@ -155,7 +158,13 @@ const MovieInformation = ({
 /**
  * It renders: Title, Year, Release Date, Country, Genres, Duration
  */
-const MovieHeader = ({ movie }: { movie: MovieDetail }) => {
+const MovieInformationHeader = ({
+  movie,
+  className = "",
+}: {
+  movie: MovieDetail;
+  className?: string;
+}) => {
   const {
     title,
     release_date,
@@ -173,7 +182,7 @@ const MovieHeader = ({ movie }: { movie: MovieDetail }) => {
   const movieGenresAsString: String = genres.map((gn) => gn.name).join(", ");
 
   return (
-    <div>
+    <div className={className}>
       {/* Title + Year */}
       <h2 className="text-3xl 2xl:text-4xl">
         <span className="font-semibold title">{displayTitle}</span>
@@ -194,17 +203,19 @@ const MovieHeader = ({ movie }: { movie: MovieDetail }) => {
 /**
  * It renders the Vote Score and the main action buttons (Rate, Play Tailer, Add to Watchlist,ecc..)
  */
-const MovieSubHeader = ({
+const MovieInformationSubHeader = ({
   vote,
   onPlayTrailer: handlePlayTrailer = () => void 0,
   showPlayTrailer,
+  className = "",
 }: {
   vote: number;
   onPlayTrailer?: () => void;
   showPlayTrailer: boolean;
+  className?: string;
 }) => {
   return (
-    <div className="flex flex-wrap items-center mt-7 gap-x-4 gap-y-5">
+    <div className={className}>
       {/* Vote Score */}
       <div className="flex items-center space-x-2">
         <VoteBadge vote={vote} size="lg" />
@@ -261,26 +272,26 @@ const MovieSubHeader = ({
  * @description It renders: tagline, movie description and a grid with the main crew staff
  * @returns
  */
-const MovieOverview = ({
+const MovieInformationOverview = ({
   movie,
   crew,
+  className = "",
 }: {
   movie: MovieDetail;
   crew: CrewCredit[];
+  className?: string;
 }) => {
   const { overview, tagline } = movie;
 
-  const renderCrewCredit = () => {
-    return crew.map((crew, index) => (
-      <div key={index} className="text-sm">
-        <h2 className="font-semibold name 2xl:text-lg">{crew.name}</h2>
-        <div className="text-xs 2xl:text-sm">{crew.job}</div>
-      </div>
-    ));
-  };
+  const movieCrewList = crew.map((crew, index) => (
+    <div key={index} className="text-sm">
+      <h2 className="font-semibold name 2xl:text-lg">{crew.name}</h2>
+      <div className="text-xs 2xl:text-sm">{crew.job}</div>
+    </div>
+  ));
 
   return (
-    <div className="mt-6">
+    <div className={className}>
       {/* Tagline */}
       <div className="text-sm italic text-gray-400 sm:text-base 2xl:text-lg">
         {tagline}
@@ -296,7 +307,7 @@ const MovieOverview = ({
 
       {/* Crew Staff */}
       <div className="hidden grid-cols-2 mt-12 sm:grid sm:grid-cols-3 gap-y-6">
-        {renderCrewCredit()}
+        {movieCrewList}
       </div>
     </div>
   );

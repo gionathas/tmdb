@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import ReactPlayer from "react-player/youtube";
 
 /**
@@ -14,6 +14,10 @@ const MovieTrailerPlayer = ({
 }) => {
   const [isReady, setIsReady] = useState(false);
 
+  const handlePlayerReady = useCallback(() => {
+    setIsReady(true);
+  }, []);
+
   const playTrailerBtnStyle = `absolute top-1 right-3 text-xl  ${
     isReady ? "opacity-1" : "opacity-0"
   }`;
@@ -26,7 +30,7 @@ const MovieTrailerPlayer = ({
           width="100%"
           height="100%"
           url={videoSrc}
-          onReady={() => setIsReady(true)}
+          onReady={handlePlayerReady}
         />
         <button onClick={handleClose} className={playTrailerBtnStyle}>
           &#x2715;
