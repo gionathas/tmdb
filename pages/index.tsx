@@ -79,7 +79,6 @@ const HomePage: NextPage<Props> = ({
   genresList,
 }: Props) => {
   const isMdScreen = useMediaQuery("(min-width: 768px)");
-  const isXlScreen = useMediaQuery("(min-width: 1280px)");
   const isLgScreen = useMediaQuery("(min-width: 1024px)");
   const mainSlideshowCardSizes = isMdScreen ? "lg" : "md";
   const baseSlideShowCardSize = isMdScreen ? "md" : "sm";

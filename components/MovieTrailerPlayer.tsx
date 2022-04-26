@@ -14,6 +14,10 @@ const MovieTrailerPlayer = ({
 }) => {
   const [isReady, setIsReady] = useState(false);
 
+  const playTrailerBtnStyle = `absolute top-1 right-3 text-xl  ${
+    isReady ? "opacity-1" : "opacity-0"
+  }`;
+
   return (
     <div className={`absolute inset-0 grid w-full h-screen place-items-center`}>
       <div className={`relative w-full lg:w-3/4 h-2/3 `}>
@@ -24,12 +28,7 @@ const MovieTrailerPlayer = ({
           url={videoSrc}
           onReady={() => setIsReady(true)}
         />
-        <button
-          onClick={handleClose}
-          className={`absolute top-1 right-3 text-xl  ${
-            isReady ? "opacity-1" : "opacity-0"
-          }`}
-        >
+        <button onClick={handleClose} className={playTrailerBtnStyle}>
           &#x2715;
         </button>
       </div>

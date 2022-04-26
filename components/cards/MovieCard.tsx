@@ -32,13 +32,13 @@ const MovieCard = ({
   const router = useRouter();
   const { genres } = useMovieGenres(movie, genresMap, genresToShow);
 
-  const { title, vote_average, poster_path, original_title } = movie;
-  const displayTitle = title || original_title;
-  const posterImageSrc = generateImageUrlByPathOrDefault(poster_path, null);
-
   const handleCardClick = () => {
     router.push(`/movies/${movie.id}`);
   };
+
+  const { title, vote_average, poster_path, original_title } = movie;
+  const displayTitle = title || original_title;
+  const posterImageSrc = generateImageUrlByPathOrDefault(poster_path, null);
 
   return (
     <div
@@ -127,21 +127,18 @@ const PreviewInfo = ({
     { "text-lg 2xl:text-xl": cardSize === "sm" }
   );
 
-  const renderGenres = (genres: string[]) => {
-    const genresList = genres.join(", ");
-    return <span className="tracking-widest capitalize">{genresList}</span>;
-  };
+  const genresList = genres && <>{genres.join(", ")}</>;
 
   return (
     <div className="">
       <h2 className={`title ${titleSize} text-gray-100 text-small"`}>
         {title}
       </h2>
-      {genres && (
-        <p className={`mt-0.5 text-xs font-light text-primary-400`}>
-          {renderGenres(genres)}
-        </p>
-      )}
+      <p
+        className={`mt-0.5 text-xs font-light text-primary-400 tracking-widest capitalize`}
+      >
+        {genresList}
+      </p>
     </div>
   );
 };

@@ -38,6 +38,10 @@ const MoviePreviewBanner = ({
   const { title, original_title, overview } = bannerMovie;
   const genresListString = genres.join(", ");
   const movieYear = new Date(bannerMovie.release_date).getFullYear();
+  const backdropImageSrc = generateImageUrlByPathOrDefault(
+    bannerMovie.backdrop_path,
+    null
+  );
 
   return (
     <MovieBanner
@@ -45,10 +49,7 @@ const MoviePreviewBanner = ({
       className={className}
       backgroundOpacity={0.5}
       height={height}
-      backdropImageSrc={generateImageUrlByPathOrDefault(
-        bannerMovie.backdrop_path,
-        null
-      )}
+      backdropImageSrc={backdropImageSrc}
     >
       <div className="flex flex-col justify-center h-full">
         <div className="flex items-center md:mx-4">

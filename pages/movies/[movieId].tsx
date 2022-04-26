@@ -167,6 +167,7 @@ const MoviePage: NextPage<Props> = ({
         <title>{title}</title>
       </Head>
       <Layout>
+        {/* Main Movie Banner */}
         <MovieDetailBanner
           movie={movie!}
           crew={crew}
@@ -182,11 +183,13 @@ const MoviePage: NextPage<Props> = ({
           />
         )}
 
+        {/* Row with Cast Slideshow and MovieSecondaryInfo (status, revenue, language ) */}
         <div className="flex mt-10 base-padding">
           {cast.length > 0 && <MovieCastSlideshow cast={cast} />}
           <MovieSecondaryInfo movie={movie!} />
         </div>
 
+        {/* Row with movie reviews and a list of recommended movies (on sm screen they are stacked in column) */}
         <div className="flex flex-col mt-20 mb-10 xl:flex-row base-padding">
           <MovieReviewList reviews={reviews!} />
           {isXlScreen ? (
@@ -226,7 +229,7 @@ const MovieSecondaryInfo = ({ movie }: { movie: MovieDetail }) => {
     revenue !== 0 ? formatNumberToUSDCurrency(revenue) : "Not Estimated";
 
   return (
-    <div className="hidden pb-6 pl-4 mt-10 space-y-6 border-l w-80 lg:block border-l-primary-500/70">
+    <div className="hidden pb-6 pl-4 mt-10 ml-auto space-y-6 border-l w-80 lg:block border-l-primary-500/70">
       <div className="text-sm 2xl:text-base">
         <h2 className="font-semibold ">Status</h2>
         <p>{status}</p>
