@@ -47,16 +47,14 @@ const MovieCarousel = ({
             key={movie.id}
             className={`transition-opacity duration-700 ease-in-out ${fadeEffect}`}
           >
-            {show && (
-              <MoviePreviewBanner
-                className="w-full"
-                height={height}
-                bannerMovie={movie}
-                genresMap={genresMap}
-                onLeftClick={prevMovie}
-                onRightClick={nextMovie}
-              />
-            )}
+            <MoviePreviewBanner
+              className={`w-full ${show ? "block" : "hidden"}`}
+              height={height}
+              bannerMovie={movie}
+              genresMap={genresMap}
+              onLeftClick={prevMovie}
+              onRightClick={nextMovie}
+            />
           </div>
         );
       })}
