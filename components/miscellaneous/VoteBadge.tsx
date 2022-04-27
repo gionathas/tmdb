@@ -16,7 +16,11 @@ const VoteBadge = ({ vote, size = "sm" }: { vote: number; size?: size }) => {
 
   return (
     <div
-      className={`${badgeSize} grid bg-gray-900/50 font-semibold rounded-full ${ringColor} ring-2 place-items-center hover:scale-110 transition-transform duration-200`}
+      className={classNames(
+        " grid bg-gray-900/50 font-semibold rounded-full  ring-2 place-items-center hover:scale-110 transition-transform duration-200",
+        badgeSize,
+        ringColor
+      )}
     >
       {vote.toFixed(1)}
     </div>

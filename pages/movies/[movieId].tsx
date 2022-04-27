@@ -8,7 +8,7 @@ import useMediaQuery from "hooks/useMediaQuery";
 import { generateYoutubeVideoUrl } from "lib/api/multimedia-api";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import Head from "next/head";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { Genre } from "../../@types/models/genre";
 import {
   MovieCredits,
@@ -146,10 +146,15 @@ const MoviePage: NextPage<Props> = ({
   const isXlScreen = useMediaQuery("(min-width: 1280px)");
   const isLgScreen = useMediaQuery("(min-width: 1024px)");
 
-  const handlePlayTrailer = (event?: React.MouseEvent<HTMLButtonElement>) => {
-    event?.preventDefault();
-    setShowTrailer(true);
-  };
+  const handlePlayTrailer = useCallback(
+    (event?: React.MouseEvent<HTMLButtonElement>) => {
+      event?.preventDefault();
+      setShowTrailer(true);
+    },
+    []
+  );
+
+  const handleCloseTrailerPlayer = useCallback(() => setShowTrailer(false), []);
 
   const arrowVariant: ArrowVariant = isXlScreen
     ? "lg"
@@ -160,6 +165,8 @@ const MoviePage: NextPage<Props> = ({
   const isYoutubeTrailerAvailable = youtubeTrailer != null;
   const { title } = movie!;
   const { cast, crew } = credits!;
+  const movieYoutubeTrailerSrc =
+    youtubeTrailer != null ? generateYoutubeVideoUrl(youtubeTrailer.key) : "";
 
   return (
     <>
@@ -167,6 +174,7 @@ const MoviePage: NextPage<Props> = ({
         <title>{title}</title>
       </Head>
       <Layout>
+        {/* Main Movie Banner */}
         <MovieDetailBanner
           movie={movie!}
           crew={crew}
@@ -177,16 +185,18 @@ const MoviePage: NextPage<Props> = ({
         />
         {showTrailer && isYoutubeTrailerAvailable && (
           <MovieTrailerPlayer
-            videoSrc={generateYoutubeVideoUrl(youtubeTrailer.key)}
-            onClose={() => setShowTrailer(false)}
+            videoSrc={movieYoutubeTrailerSrc}
+            onClose={handleCloseTrailerPlayer}
           />
         )}
 
+        {/* Row with Cast Slideshow and MovieSecondaryInfo (status, revenue, language ) */}
         <div className="flex mt-10 base-padding">
           {cast.length > 0 && <MovieCastSlideshow cast={cast} />}
           <MovieSecondaryInfo movie={movie!} />
         </div>
 
+        {/* Row with movie reviews and a list of recommended movies (on sm screen they are stacked in column) */}
         <div className="flex flex-col mt-20 mb-10 xl:flex-row base-padding">
           <MovieReviewList reviews={reviews!} />
           {isXlScreen ? (
@@ -226,7 +236,7 @@ const MovieSecondaryInfo = ({ movie }: { movie: MovieDetail }) => {
     revenue !== 0 ? formatNumberToUSDCurrency(revenue) : "Not Estimated";
 
   return (
-    <div className="hidden pb-6 pl-4 mt-10 space-y-6 border-l w-80 lg:block border-l-primary-500/70">
+    <div className="hidden pb-6 pl-4 mt-10 ml-auto space-y-6 border-l w-80 lg:block border-l-primary-500/70">
       <div className="text-sm 2xl:text-base">
         <h2 className="font-semibold ">Status</h2>
         <p>{status}</p>

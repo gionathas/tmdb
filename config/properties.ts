@@ -9,7 +9,7 @@ export const Properties = {
   movieSlideshowScrollXOffset: 800,
   castSlideshowScrollXOffset: 400,
   headerScrollYOffset: 60,
-  carouselIntervalMillis: 15000, // every 7 seconds
+  carouselIntervalMillis: 15000, // every 7 seconds (15000ms)
   indexPageRevalidationSeconds: 3600, // every hour
   movieDetailPageRevalidationSeconds: 300, // every 5 minute
 };

@@ -32,13 +32,12 @@ const MovieCard = ({
   const router = useRouter();
   const { genres } = useMovieGenres(movie, genresMap, genresToShow);
 
-  const { title, vote_average, poster_path, original_title } = movie;
-  const displayTitle = title || original_title;
-  const posterImageSrc = generateImageUrlByPathOrDefault(poster_path, null);
-
   const handleCardClick = () => {
     router.push(`/movies/${movie.id}`);
   };
+
+  const { title, vote_average, poster_path, original_title } = movie;
+  const displayTitle = title || original_title;
 
   return (
     <div
@@ -48,7 +47,7 @@ const MovieCard = ({
       <Thumbnail
         style={`${variant}_${size}`}
         vote={vote_average}
-        thumbnailSrc={posterImageSrc}
+        thumbnailSrc={generateImageUrlByPathOrDefault(poster_path, null)}
         showVote={showVote}
       />
       <PreviewInfo cardSize={size} genres={genres} title={displayTitle} />
@@ -82,7 +81,10 @@ const Thumbnail = ({
 
   return (
     <div
-      className={`${thumbnailSize} relative overflow-hidden rounded-lg group transition-all duration-500`}
+      className={classNames(
+        "relative overflow-hidden rounded-lg group transition-all duration-500",
+        thumbnailSize
+      )}
     >
       {thumbnailSrc && (
         <Image
@@ -127,21 +129,18 @@ const PreviewInfo = ({
     { "text-lg 2xl:text-xl": cardSize === "sm" }
   );
 
-  const renderGenres = (genres: string[]) => {
-    const genresList = genres.join(", ");
-    return <span className="tracking-widest capitalize">{genresList}</span>;
-  };
+  const genresAsString = genres && <>{genres.join(", ")}</>;
 
   return (
     <div className="">
-      <h2 className={`title ${titleSize} text-gray-100 text-small"`}>
+      <h2 className={classNames("title text-gray-100 text-small", titleSize)}>
         {title}
       </h2>
-      {genres && (
-        <p className={`mt-0.5 text-xs font-light text-primary-400`}>
-          {renderGenres(genres)}
-        </p>
-      )}
+      <p
+        className={`mt-0.5 text-xs font-light text-primary-400 tracking-widest capitalize`}
+      >
+        {genresAsString}
+      </p>
     </div>
   );
 };

@@ -18,24 +18,29 @@ const MovieReview = ({ review }: Props) => {
   const reviewDateAsString = reviewDate.toLocaleDateString();
   const avatarImage = generateImageUrlByPathOrDefault(avatar_path, null);
 
+  const reviewHeader = (
+    <>
+      <h2>
+        <span className="text-xl capitalize">{author}</span>{" "}
+        <span className="text-lg">says</span>
+      </h2>
+      <p className="text-xs font-light lg:text-sm text-primary-500/80">
+        {reviewDateAsString}
+      </p>
+    </>
+  );
+
   return (
-    <div key={id} className="max-w-5xl p-4 border-b border-b-gray-500/50">
-      {/* Avatar + Title */}
+    <div className="max-w-5xl p-4 border-b border-b-gray-500/50">
+      {/* Avatar + Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center">
           <Avatar src={avatarImage} />
-          <div className="ml-4">
-            <h2 className="text-xl ">
-              <span className="capitalize">{author}</span>{" "}
-              <span className="text-lg">says</span>
-            </h2>
-            <p className="text-xs font-light lg:text-sm text-primary-500/80">
-              {reviewDateAsString}
-            </p>
-          </div>
+          <div className="ml-4">{reviewHeader}</div>
         </div>
         {rating && <VoteBadge vote={rating} size="sm" />}
       </div>
+
       {/* Content */}
       <ExpandableText
         as={"p"}

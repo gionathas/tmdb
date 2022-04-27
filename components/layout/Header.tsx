@@ -1,3 +1,4 @@
+import classNames from "classnames";
 import Properties from "config/properties";
 import useWindowScroll from "hooks/useWindowScroll";
 import Image from "next/image";
@@ -6,14 +7,17 @@ import React from "react";
 
 const Header = () => {
   const { headerScrollYOffset } = Properties;
-  const scrollY = useWindowScroll();
-
-  const bgClass =
-    scrollY >= headerScrollYOffset ? "bg-black" : "bg-transparent";
+  const pageYScroll = useWindowScroll();
 
   return (
     <header
-      className={`base-padding fixed inset-x-0 z-20 w-full transition-colors duration-300 ${bgClass} `}
+      className={classNames(
+        "base-padding fixed inset-x-0 z-20 w-full transition-colors duration-300",
+        {
+          "bg-black": pageYScroll >= headerScrollYOffset,
+          "bg-transparent": pageYScroll < headerScrollYOffset,
+        }
+      )}
     >
       <div className="flex items-center justify-between py-3 md:py-4">
         <div className="flex items-center space-x-10">

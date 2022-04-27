@@ -1,4 +1,5 @@
 import classNames from "classnames";
+import { isUndefined } from "lodash";
 import React, { useEffect, useState } from "react";
 import {
   PolymorphicComponentPropsWithRef,
@@ -13,48 +14,42 @@ type Props = {
 type ExpandableTextProps<T extends React.ElementType> =
   PolymorphicComponentPropsWithRef<T, Props>;
 
+type status = "expanded" | "expandable" | "unexpandable";
+
 const ExpandableText = React.forwardRef(
   <T extends React.ElementType = "p">(
     { as, children, maxLines, className, ...rest }: ExpandableTextProps<T>,
     ref?: PolymorphicRef<T>
   ) => {
-    const [isExpanded, setIsExpanded] = useState(false);
-    const [isExpandable, setIsExpandable] = useState(false);
+    const [state, setState] = useState<status>("unexpandable");
+    const isExpanded = state === "expanded";
+    const isTogglable = state === "expandable" || state === "expanded";
 
-    // const calculateIsContentExpandable = useCallback(
-    //   (node: HTMLElement | null) => {
-    //     if (node !== null) {
-    //       // console.log("Client height: ", node.clientHeight);
-    //       // console.log("Scroll height: ", node.scrollHeight);
+    useEffect(
+      () => {
+        if (!isUndefined(window)) {
+          const calculateIsExpandable = () => {
+            const textContainer = ref!.current as HTMLElement;
+            if (textContainer) {
+              const isExpandable =
+                textContainer.scrollHeight > textContainer.clientHeight;
+              setState(isExpandable ? "expandable" : "unexpandable");
+            }
+          };
 
-    //       const hasScrollableContent = node.scrollHeight > node.clientHeight;
-    //       setIsContentExpandable(hasScrollableContent);
-    //     }
-    //   },
-    //   []
-    // );
-
-    useEffect(() => {
-      const calculateIsExpandable = () => {
-        if (ref && ref.current) {
-          const text = ref.current as HTMLElement;
-          setIsExpandable(text.scrollHeight > text.clientHeight);
-        } else {
-          setIsExpandable(false);
+          calculateIsExpandable();
+          window.addEventListener("resize", calculateIsExpandable);
+          return () => {
+            window.removeEventListener("resize", calculateIsExpandable);
+          };
         }
-      };
-
-      calculateIsExpandable();
-      window.addEventListener("resize", calculateIsExpandable);
-      return () => {
-        window.removeEventListener("resize", calculateIsExpandable);
-      };
-    }, [isExpanded]);
+      },
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      []
+    );
 
     const toggleExpanded = () => {
-      setIsExpanded((isExpanded) => {
-        return !isExpanded;
-      });
+      setState(isExpanded ? "expandable" : "expanded");
     };
 
     const Component = as || "p";
@@ -64,16 +59,20 @@ const ExpandableText = React.forwardRef(
       { "line-clamp-5": maxLines === 5 }
     );
 
-    const classes = `${
-      !isExpanded ? lineClamp : "line-clamp-none"
-    } ${className}`;
-
     return (
       <>
-        <Component ref={ref} className={classes} {...rest}>
+        <Component
+          ref={ref}
+          // className={`${currentLineClamp} ${className}`}
+          className={classNames(className, {
+            "line-clamp-none": isExpanded,
+            [`${lineClamp}`]: !isExpanded,
+          })}
+          {...rest}
+        >
           {children}
         </Component>
-        {(isExpandable || isExpanded) && (
+        {isTogglable && (
           <span
             className="flex justify-end text-xs cursor-pointer hover:underline opacity-60 underline-offset-1"
             onClick={toggleExpanded}
