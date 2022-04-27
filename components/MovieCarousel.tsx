@@ -22,19 +22,27 @@ const MovieCarousel = ({
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  const nextMovie = useCallback(() => {
-    setCurrentIndex((prevIndex) =>
-      prevIndex + 1 >= movies.length ? 0 : prevIndex + 1
-    );
-    resetInterval();
-  }, [movies.length]);
+  const nextMovie = useCallback(
+    () => {
+      setCurrentIndex((prevIndex) =>
+        prevIndex + 1 >= movies.length ? 0 : prevIndex + 1
+      );
+      resetInterval();
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [movies.length]
+  );
 
-  const prevMovie = useCallback(() => {
-    setCurrentIndex((prevIndex) =>
-      prevIndex - 1 < 0 ? movies.length - 1 : prevIndex - 1
-    );
-    resetInterval();
-  }, [movies.length]);
+  const prevMovie = useCallback(
+    () => {
+      setCurrentIndex((prevIndex) =>
+        prevIndex - 1 < 0 ? movies.length - 1 : prevIndex - 1
+      );
+      resetInterval();
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [movies.length]
+  );
 
   const { resetInterval } = useInterval(nextMovie, carouselInterval);
 

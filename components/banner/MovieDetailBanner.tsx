@@ -38,9 +38,13 @@ const MovieDetailBanner = ({
   );
   const { isBackgroundLoading, isPosterLoading } = isContentLoading;
 
-  useEffect(() => {
-    setIsContentLoading(initialContentLoadingState);
-  }, [movie.id]);
+  useEffect(
+    () => {
+      setIsContentLoading(initialContentLoadingState);
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [movie.id]
+  );
 
   const handleMovieBannerLoadingComplete = useCallback(() => {
     setIsContentLoading((prev) => ({ ...prev, isBackgroundLoading: false }));

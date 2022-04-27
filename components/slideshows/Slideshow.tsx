@@ -26,9 +26,11 @@ const Slideshow = ({
     useSlideshow(slideContainerRef, scrollOffset);
 
   // reset the scroll position to 0, each time the component get updated
-  useEffect(() => {
-    resetScroll();
-  }, [children]);
+  useEffect(
+    () => resetScroll(),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [children]
+  );
 
   const generateArrowBtnClassName = (dir: "left" | "right") =>
     classNames(
@@ -47,12 +49,14 @@ const Slideshow = ({
    */
   const leftArrowBtnClassName = useMemo(
     () => generateArrowBtnClassName("left"),
-    [isScrollable["left"], showArrows]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [isScrollable.left, showArrows]
   );
 
   const rightArrowBtnClassName = useMemo(
     () => generateArrowBtnClassName("right"),
-    [isScrollable["right"], showArrows]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [isScrollable.right, showArrows]
   );
 
   return (

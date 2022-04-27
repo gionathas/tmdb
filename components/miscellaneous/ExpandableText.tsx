@@ -25,24 +25,28 @@ const ExpandableText = React.forwardRef(
     const isExpanded = state === "expanded";
     const isTogglable = state === "expandable" || state === "expanded";
 
-    useEffect(() => {
-      if (!isUndefined(window)) {
-        const calculateIsExpandable = () => {
-          const textContainer = ref!.current as HTMLElement;
-          if (textContainer) {
-            const isExpandable =
-              textContainer.scrollHeight > textContainer.clientHeight;
-            setState(isExpandable ? "expandable" : "unexpandable");
-          }
-        };
+    useEffect(
+      () => {
+        if (!isUndefined(window)) {
+          const calculateIsExpandable = () => {
+            const textContainer = ref!.current as HTMLElement;
+            if (textContainer) {
+              const isExpandable =
+                textContainer.scrollHeight > textContainer.clientHeight;
+              setState(isExpandable ? "expandable" : "unexpandable");
+            }
+          };
 
-        calculateIsExpandable();
-        window.addEventListener("resize", calculateIsExpandable);
-        return () => {
-          window.removeEventListener("resize", calculateIsExpandable);
-        };
-      }
-    }, []);
+          calculateIsExpandable();
+          window.addEventListener("resize", calculateIsExpandable);
+          return () => {
+            window.removeEventListener("resize", calculateIsExpandable);
+          };
+        }
+      },
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      []
+    );
 
     const toggleExpanded = () => {
       setState(isExpanded ? "expandable" : "expanded");
