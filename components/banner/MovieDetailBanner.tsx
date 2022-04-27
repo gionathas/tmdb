@@ -1,3 +1,4 @@
+import classNames from "classnames";
 import MovieBanner from "components/banner/MovieBanner";
 import ActionButton from "components/miscellaneous/buttons/ActionButton";
 import VoteBadge from "components/miscellaneous/VoteBadge";
@@ -29,13 +30,13 @@ const MovieDetailBanner = ({
 }: OwnProps) => {
   const { backdrop_path, poster_path } = movie;
   const initialContentLoadingState = {
-    isPosterLoading: poster_path !== null && true,
-    isBackgroundLoading: backdrop_path !== null && true,
+    isPosterLoading: poster_path != null && true,
+    isBackgroundLoading: backdrop_path != null && true,
   };
-
   const [isContentLoading, setIsContentLoading] = useState(
     initialContentLoadingState
   );
+  const { isBackgroundLoading, isPosterLoading } = isContentLoading;
 
   useEffect(() => {
     setIsContentLoading(initialContentLoadingState);
@@ -52,15 +53,12 @@ const MovieDetailBanner = ({
     }));
   }, []);
 
-  const { isBackgroundLoading, isPosterLoading } = isContentLoading;
-  const loadingStyle =
-    isBackgroundLoading || isPosterLoading
-      ? "animate-pulse blur-sm"
-      : "animate-none blur-none";
-
   return (
     <MovieBanner
-      className={loadingStyle}
+      className={classNames({
+        "animate-pulse blur-sm": isBackgroundLoading || isPosterLoading,
+        "animate-none blur-none": !isBackgroundLoading && !isPosterLoading,
+      })}
       backdropImageSrc={generateImageUrlByPathOrDefault(backdrop_path, null)}
       height={height}
       backgroundOpacity={backgroundOpacity}
@@ -89,7 +87,7 @@ const MovieDetailBanner = ({
 const MoviePosterImage = ({
   posterSrc,
   onLoadingComplete,
-  className = "",
+  className,
 }: {
   posterSrc: string | null;
   onLoadingComplete: () => void;
@@ -105,10 +103,13 @@ const MoviePosterImage = ({
     onLoadingComplete();
   };
 
-  const loadingStyle = isPosterLoading ? "opacity-0" : "opacity-1";
-
   return (
-    <div className={`${loadingStyle} ${className}`}>
+    <div
+      className={classNames(className, {
+        "opacity-0": isPosterLoading,
+        "opacity-100": !isPosterLoading,
+      })}
+    >
       {posterSrc && (
         <Image
           src={posterSrc}

@@ -11,7 +11,10 @@ const Avatar = ({ src, size = "sm" }: { src?: string; size?: size }) => {
   const avatarSize = classNames({ "w-10 h-10": size == "sm" });
   return (
     <div
-      className={`relative inline-block rounded-full ${avatarSize} overflow-hidden`}
+      className={classNames(
+        "relative inline-block rounded-full overflow-hidden",
+        avatarSize
+      )}
     >
       <Image
         src={src || defaultAvatarImage}

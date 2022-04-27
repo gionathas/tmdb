@@ -1,5 +1,6 @@
-import React, { useEffect, useRef, useState } from "react";
-import { useScroll } from "react-use";
+import classNames from "classnames";
+import useSlideshow from "hooks/useSlideshow";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import ArrowButton, {
   variant as ArrowVariant,
 } from "../miscellaneous/buttons/ArrowButton";
@@ -15,66 +16,44 @@ type Props = {
 const Slideshow = ({
   title,
   children,
-  className = "",
+  className,
   scrollOffset,
   arrowVariant,
 }: Props) => {
   const slideContainerRef = useRef<HTMLDivElement>(null);
-  const { x: sliderPosition } = useScroll(slideContainerRef);
   const [showArrows, setShowArrows] = useState(false);
-  const [isScrollable, setIsScrollable] = useState({
-    left: false,
-    right: false,
-  });
+  const { isScrollable, resetScroll, scrollToLeft, scrollToRight } =
+    useSlideshow(slideContainerRef, scrollOffset);
 
-  // each time the sliderPosition changes, calculate if the slideshow is scrollable (left and right) with the arrows
+  // reset the scroll position to 0, each time the component get updated
   useEffect(() => {
-    const isScrollableRight =
-      (slideContainerRef.current &&
-        slideContainerRef.current.scrollWidth -
-          slideContainerRef.current.clientWidth >
-          sliderPosition) ||
-      false;
-    const isScrollableLeft =
-      (slideContainerRef.current && sliderPosition != 0) || false;
-    setIsScrollable({ left: isScrollableLeft, right: isScrollableRight });
-  }, [sliderPosition]);
-
-  // reset the scroll position to 0 each time the component get updated
-  useEffect(() => {
-    if (slideContainerRef.current) {
-      slideContainerRef.current.scrollLeft = 0;
-    }
+    resetScroll();
   }, [children]);
 
-  const scrollToRight = () => {
-    if (slideContainerRef.current) {
-      const currentScroll = slideContainerRef.current.scrollLeft;
-      slideContainerRef.current.scrollTo({
-        left: currentScroll + scrollOffset,
-        behavior: "smooth",
-      });
-    }
-  };
+  const generateArrowBtnClassName = (dir: "left" | "right") =>
+    classNames(
+      "fill-white absolute transition-all opacity-80 hover:opacity-100 bg-gray-500/30 hover:bg-gray-500/60 duration-200 rounded-lg z-10 top-1/4",
+      {
+        "-left-4": dir === "left",
+        "-right-4": dir === "right",
+        "visible hover:cursor-pointer": isScrollable[dir] && showArrows,
+        "invisible hover:cursor-default": !isScrollable[dir] || !showArrows,
+      }
+    );
 
-  const scrollToLeft = () => {
-    if (slideContainerRef.current) {
-      const currentScroll = slideContainerRef.current.scrollLeft;
-      slideContainerRef.current.scrollTo({
-        left: currentScroll - scrollOffset,
-        behavior: "smooth",
-      });
-    }
-  };
+  /*
+   Generate the classname for the left and right arrow. Since this component is higly re-rendered due to the useEffect hook that trigger a re-render 
+   each time the slider position change, the left and right classnames are wrapped inside a useMemo hook.
+   */
+  const leftArrowBtnClassName = useMemo(
+    () => generateArrowBtnClassName("left"),
+    [isScrollable["left"], showArrows]
+  );
 
-  const arrowBaseStyle =
-    "fill-white absolute transition-all opacity-80 hover:opacity-100 bg-gray-500/30 hover:bg-gray-500/60 duration-200 rounded-lg z-10 top-1/4";
-  const showArrow = "visible hover:cursor-pointer";
-  const hideArrow = "invisible hover:cursor-default";
-
-  const getArrowVisibility = (dir: "left" | "right") => {
-    return isScrollable[dir] && showArrows ? showArrow : hideArrow;
-  };
+  const rightArrowBtnClassName = useMemo(
+    () => generateArrowBtnClassName("right"),
+    [isScrollable["right"], showArrows]
+  );
 
   return (
     <div className={className}>
@@ -86,7 +65,7 @@ const Slideshow = ({
       >
         {/* Left Scroll Arrow */}
         <ArrowButton
-          className={`-left-4 ${arrowBaseStyle} ${getArrowVisibility("left")}`}
+          className={leftArrowBtnClassName}
           direction="left"
           onClick={scrollToLeft}
           variant={arrowVariant}
@@ -100,9 +79,7 @@ const Slideshow = ({
         </div>
         {/* Right Scroll Arrow */}
         <ArrowButton
-          className={`-right-4 ${arrowBaseStyle} ${getArrowVisibility(
-            "right"
-          )}`}
+          className={rightArrowBtnClassName}
           direction="right"
           onClick={scrollToRight}
           variant={arrowVariant}

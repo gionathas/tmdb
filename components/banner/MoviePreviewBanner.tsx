@@ -1,3 +1,4 @@
+import classNames from "classnames";
 import ArrowButton from "components/miscellaneous/buttons/ArrowButton";
 import useMovieGenres from "hooks/useMovieGenres";
 import { generateImageUrlByPathOrDefault } from "lib/api/multimedia-api";
@@ -31,10 +32,6 @@ const MoviePreviewBanner = ({
     router.push(`/movies/${movieId}`);
   };
 
-  const navigationArrowStyle =
-    "fill-gray-200 opacity-70 hover:opacity-100 transition-all rounded-md duration-150 hover:cursor-pointer";
-  const arrowVariant = "sm";
-
   const { title, original_title, overview } = bannerMovie;
   const genresListAsString = genres.join(", ");
   const movieYear = new Date(bannerMovie.release_date).getFullYear();
@@ -42,6 +39,11 @@ const MoviePreviewBanner = ({
     bannerMovie.backdrop_path,
     null
   );
+
+  const arrowClassName = classNames(
+    "fill-gray-200 opacity-70 hover:opacity-100 transition-all rounded-md duration-150 hover:cursor-pointer"
+  );
+  const arrowVariant = "sm";
 
   return (
     <MovieBanner
@@ -55,7 +57,7 @@ const MoviePreviewBanner = ({
         <div className="flex items-center md:mx-4">
           <ArrowButton
             direction={"left"}
-            className={navigationArrowStyle}
+            className={arrowClassName}
             onClick={onLeftClick}
             variant={arrowVariant}
           />
@@ -78,7 +80,7 @@ const MoviePreviewBanner = ({
           </div>
           <ArrowButton
             direction={"right"}
-            className={`ml-auto ${navigationArrowStyle}`}
+            className={classNames("ml-auto", arrowClassName)}
             onClick={onRightClick}
             variant={arrowVariant}
           />

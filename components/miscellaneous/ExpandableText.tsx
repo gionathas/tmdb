@@ -49,19 +49,21 @@ const ExpandableText = React.forwardRef(
     };
 
     const Component = as || "p";
-    const lineClamps = classNames(
+    const lineClamp = classNames(
       { "line-clamp-3": maxLines === 3 },
       { "line-clamp-4": maxLines === 4 },
       { "line-clamp-5": maxLines === 5 }
     );
 
-    const currentLineClamp = `${isExpanded ? "line-clamp-none" : lineClamps}`;
-
     return (
       <>
         <Component
           ref={ref}
-          className={`${currentLineClamp} ${className}`}
+          // className={`${currentLineClamp} ${className}`}
+          className={classNames(className, {
+            "line-clamp-none": isExpanded,
+            [`${lineClamp}`]: !isExpanded,
+          })}
           {...rest}
         >
           {children}

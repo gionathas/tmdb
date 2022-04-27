@@ -1,3 +1,4 @@
+import classNames from "classnames";
 import React, { useCallback, useState } from "react";
 import ReactPlayer from "react-player/youtube";
 
@@ -18,10 +19,6 @@ const MovieTrailerPlayer = ({
     setIsReady(true);
   }, []);
 
-  const playTrailerBtnStyle = `absolute top-1 right-3 text-xl  ${
-    isReady ? "opacity-1" : "opacity-0"
-  }`;
-
   return (
     <div className={`absolute inset-0 grid w-full h-screen place-items-center`}>
       <div className={`relative w-full lg:w-3/4 h-2/3 `}>
@@ -32,7 +29,14 @@ const MovieTrailerPlayer = ({
           url={videoSrc}
           onReady={handlePlayerReady}
         />
-        <button onClick={handleClose} className={playTrailerBtnStyle}>
+        {/* Close button (X) */}
+        <button
+          onClick={handleClose}
+          className={classNames("absolute top-1 right-3 text-xl", {
+            "opacity-100": isReady,
+            "opacity-0": !isReady,
+          })}
+        >
           &#x2715;
         </button>
       </div>

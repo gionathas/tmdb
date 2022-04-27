@@ -1,3 +1,4 @@
+import classNames from "classnames";
 import React from "react";
 import { CastCredit } from "../../@types/models/credit";
 import Properties from "../../config/properties";
@@ -13,10 +14,10 @@ type Props = {
 
 const title = <h2 className="text-xl font-medium">Top Cast</h2>;
 
-const MovieCastSlideshow = ({ cast, className = "" }: Props) => {
+const MovieCastSlideshow = ({ cast, className }: Props) => {
   return (
     <Slideshow
-      className={`overflow-hidden ${className}`}
+      className={classNames("overflow-hidden", className)}
       scrollOffset={castSlideshowScrollOffset}
       title={title}
       arrowVariant="sm"

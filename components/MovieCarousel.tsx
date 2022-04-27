@@ -1,3 +1,4 @@
+import classNames from "classnames";
 import Properties from "config/properties";
 import useInterval from "hooks/useInterval";
 import { useCallback, useState } from "react";
@@ -40,15 +41,23 @@ const MovieCarousel = ({
   return (
     <div className="flex">
       {movies.map((movie, index) => {
-        const show = index === currentIndex;
-        const fadeEffect = show ? "opacity-1 flex-1" : "opacity-0 flex-none";
+        const showBanner = index === currentIndex;
         return (
           <div
             key={movie.id}
-            className={`transition-opacity duration-700 ease-in-out ${fadeEffect}`}
+            className={classNames(
+              "transition-opacity duration-700 ease-in-out",
+              {
+                "opacity-1 flex-1": showBanner,
+                "opacity-0 flex-none": !showBanner,
+              }
+            )}
           >
             <MoviePreviewBanner
-              className={`w-full ${show ? "block" : "hidden"}`}
+              className={classNames("w-full", {
+                block: showBanner,
+                hidden: !showBanner,
+              })}
               height={height}
               bannerMovie={movie}
               genresMap={genresMap}

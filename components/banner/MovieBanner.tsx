@@ -1,3 +1,4 @@
+import classNames from "classnames";
 import useImageLoad from "hooks/useImageLoad";
 import { shimmerEffect } from "lib/effects";
 import { toBase64 } from "lib/utils";
@@ -17,7 +18,7 @@ type Props = {
 
 const MovieBanner = ({
   backdropImageSrc,
-  className = "",
+  className,
   children,
   height,
   backgroundOpacity,
@@ -28,7 +29,7 @@ const MovieBanner = ({
   return (
     <div
       style={{ height: `${height}px`, ...style }}
-      className={`relative ${className}`}
+      className={classNames("relative", className)}
       onClick={handleClick}
     >
       {backdropImageSrc && (
