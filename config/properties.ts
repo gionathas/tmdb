@@ -12,6 +12,7 @@ export const Properties = {
   carouselIntervalMillis: 15000, // every 7 seconds (15000ms)
   indexPageRevalidationSeconds: 3600, // every hour
   movieDetailPageRevalidationSeconds: 300, // every 5 minute
+  defaultGenresToShowNumber: 2,
 };
 
 export default Properties;

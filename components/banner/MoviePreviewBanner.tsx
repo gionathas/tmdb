@@ -1,16 +1,20 @@
 import classNames from "classnames";
 import ArrowButton from "components/miscellaneous/buttons/ArrowButton";
+import Properties from "config/properties";
 import useGenres from "hooks/useGenres";
 import { generateImageUrlByPathOrDefault } from "lib/api/multimedia-api";
 import { useRouter } from "next/router";
 import { MoviePreview } from "../../@types/models/movie";
 import MovieBanner from "./MovieBanner";
 
+const { defaultGenresToShowNumber } = Properties;
+
 const MoviePreviewBanner = ({
   bannerMovie,
   height,
   className = "",
   style = {},
+  genresToShow = defaultGenresToShowNumber,
   onLeftClick,
   onRightClick,
 }: {
@@ -18,13 +22,15 @@ const MoviePreviewBanner = ({
   height: number;
   className?: string;
   style?: React.CSSProperties;
+  genresToShow?: number;
   onRightClick?: () => void;
   onLeftClick?: () => void;
 }) => {
   const router = useRouter();
-  const { genres, isLoading: isGenresLoading } = useGenres(
+  const { genres: allGenres, isLoading: isGenresLoading } = useGenres(
     bannerMovie.genre_ids
   );
+  const genres = allGenres.slice(0, genresToShow);
 
   const goToMovieDetail = () => {
     const { id: movieId } = bannerMovie;

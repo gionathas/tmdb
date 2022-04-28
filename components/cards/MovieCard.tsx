@@ -1,5 +1,6 @@
 import classNames from "classnames";
 import VoteBadge from "components/miscellaneous/VoteBadge";
+import Properties from "config/properties";
 import useGenres from "hooks/useGenres";
 import { generateImageUrlByPathOrDefault } from "lib/api/multimedia-api";
 import { shimmerEffect } from "lib/effects";
@@ -13,9 +14,11 @@ export type variant = "base" | "16:9";
 export type size = "sm" | "md" | "lg";
 export type style = `${variant}_${size}`;
 
+const { defaultGenresToShowNumber } = Properties;
+
 const MovieCard = ({
   movie,
-  genresToShow = 2,
+  genresToShow = defaultGenresToShowNumber,
   size = "lg",
   variant = "base",
   showVote = false,
