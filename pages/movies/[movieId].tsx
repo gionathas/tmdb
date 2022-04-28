@@ -19,7 +19,6 @@ import { Review } from "../../@types/models/review";
 import { Video } from "../../@types/models/video";
 import { Paths } from "../../@types/utils";
 import MovieDetailBanner from "../../components/banner/MovieDetailBanner";
-import Layout from "../../components/layout/Layout";
 import MovieCastSlideshow from "../../components/slideshows/MovieCastSlideshow";
 import { getAllGenres } from "../../lib/api/genre-api";
 import { hasApiResponsesError } from "../../lib/api/helpers";
@@ -173,51 +172,49 @@ const MoviePage: NextPage<Props> = ({
       <Head>
         <title>{title}</title>
       </Head>
-      <Layout>
-        {/* Main Movie Banner */}
-        <MovieDetailBanner
-          movie={movie!}
-          crew={crew}
-          backgroundOpacity={0.2}
-          height={700}
-          onPlayTrailer={handlePlayTrailer}
-          showPlayTrailer={isYoutubeTrailerAvailable}
+      {/* Main Movie Banner */}
+      <MovieDetailBanner
+        movie={movie!}
+        crew={crew}
+        backgroundOpacity={0.2}
+        height={700}
+        onPlayTrailer={handlePlayTrailer}
+        showPlayTrailer={isYoutubeTrailerAvailable}
+      />
+      {showTrailer && isYoutubeTrailerAvailable && (
+        <MovieTrailerPlayer
+          videoSrc={movieYoutubeTrailerSrc}
+          onClose={handleCloseTrailerPlayer}
         />
-        {showTrailer && isYoutubeTrailerAvailable && (
-          <MovieTrailerPlayer
-            videoSrc={movieYoutubeTrailerSrc}
-            onClose={handleCloseTrailerPlayer}
+      )}
+
+      {/* Row with Cast Slideshow and MovieSecondaryInfo (status, revenue, language ) */}
+      <div className="flex mt-10 base-padding">
+        {cast.length > 0 && <MovieCastSlideshow cast={cast} />}
+        <MovieSecondaryInfo movie={movie!} />
+      </div>
+
+      {/* Row with movie reviews and a list of recommended movies (on sm screen they are stacked in column) */}
+      <div className="flex flex-col mt-20 mb-10 xl:flex-row base-padding">
+        <MovieReviewList reviews={reviews!} />
+        {isXlScreen ? (
+          <RecommendedMovieList
+            className="max-w-xs ml-auto"
+            recomendations={recomendations!}
+            genresMap={genres!}
+          />
+        ) : (
+          <MovieSlideshow
+            className="mt-10"
+            title="Recommended"
+            movies={recomendations!}
+            genresMap={genres!}
+            cardSize="sm"
+            cardVariant="base"
+            arrowVariant={arrowVariant}
           />
         )}
-
-        {/* Row with Cast Slideshow and MovieSecondaryInfo (status, revenue, language ) */}
-        <div className="flex mt-10 base-padding">
-          {cast.length > 0 && <MovieCastSlideshow cast={cast} />}
-          <MovieSecondaryInfo movie={movie!} />
-        </div>
-
-        {/* Row with movie reviews and a list of recommended movies (on sm screen they are stacked in column) */}
-        <div className="flex flex-col mt-20 mb-10 xl:flex-row base-padding">
-          <MovieReviewList reviews={reviews!} />
-          {isXlScreen ? (
-            <RecommendedMovieList
-              className="max-w-xs ml-auto"
-              recomendations={recomendations!}
-              genresMap={genres!}
-            />
-          ) : (
-            <MovieSlideshow
-              className="mt-10"
-              title="Recommended"
-              movies={recomendations!}
-              genresMap={genres!}
-              cardSize="sm"
-              cardVariant="base"
-              arrowVariant={arrowVariant}
-            />
-          )}
-        </div>
-      </Layout>
+      </div>
     </>
   );
 };

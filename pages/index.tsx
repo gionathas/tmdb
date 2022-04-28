@@ -1,4 +1,3 @@
-import Layout from "components/layout/Layout";
 import { variant as ArrowVariant } from "components/miscellaneous/buttons/ArrowButton";
 import MovieCarousel from "components/MovieCarousel";
 import MovieSlideshow from "components/slideshows/MovieSlideshow";
@@ -90,58 +89,56 @@ const HomePage: NextPage<Props> = ({
       <Head>
         <title>TMDB</title>
       </Head>
-      <Layout>
-        <MovieCarousel
-          height={700}
-          movies={popularMovies!}
-          genresMap={genresList!}
-        />
+      <MovieCarousel
+        height={700}
+        movies={popularMovies!}
+        genresMap={genresList!}
+      />
 
-        <div className="px-4 mt-8 space-y-2 md:mt-10">
-          <MovieSlideshow
-            movies={popularMovies!}
-            className="mb-10"
-            title="Popular Movies on TMDB"
-            genresMap={genresList!}
-            cardSize={mainSlideshowCardSizes}
-            cardVariant="16:9"
-            arrowVariant={arrowVariant}
-          />
-          <MovieSlideshow
-            movies={trendingMovies!}
-            title="Trending Now"
-            genresMap={genresList!}
-            cardSize={baseSlideShowCardSize}
-            cardVariant="16:9"
-            arrowVariant={arrowVariant}
-          />
-          <MovieSlideshow
-            movies={nowPlayingMovies!}
-            title="Now Playing "
-            genresMap={genresList!}
-            cardSize={baseSlideShowCardSize}
-            cardVariant="16:9"
-            arrowVariant={arrowVariant}
-          />
-          <MovieSlideshow
-            movies={premiereMovies!}
-            title="Premiere"
-            genresMap={genresList!}
-            cardSize={baseSlideShowCardSize}
-            cardVariant="16:9"
-            arrowVariant={arrowVariant}
-          />
-          <MovieSlideshow
-            movies={topRatedMovies!}
-            title="Top Rated ⭐️"
-            genresMap={genresList!}
-            cardSize={baseSlideShowCardSize}
-            cardVariant="base"
-            arrowVariant={arrowVariant}
-            showVotes
-          />
-        </div>
-      </Layout>
+      <div className="px-4 mt-8 space-y-2 md:mt-10">
+        <MovieSlideshow
+          movies={popularMovies!}
+          className="mb-10"
+          title="Popular Movies on TMDB"
+          genresMap={genresList!}
+          cardSize={mainSlideshowCardSizes}
+          cardVariant="16:9"
+          arrowVariant={arrowVariant}
+        />
+        <MovieSlideshow
+          movies={trendingMovies!}
+          title="Trending Now"
+          genresMap={genresList!}
+          cardSize={baseSlideShowCardSize}
+          cardVariant="16:9"
+          arrowVariant={arrowVariant}
+        />
+        <MovieSlideshow
+          movies={nowPlayingMovies!}
+          title="Now Playing "
+          genresMap={genresList!}
+          cardSize={baseSlideShowCardSize}
+          cardVariant="16:9"
+          arrowVariant={arrowVariant}
+        />
+        <MovieSlideshow
+          movies={premiereMovies!}
+          title="Premiere"
+          genresMap={genresList!}
+          cardSize={baseSlideShowCardSize}
+          cardVariant="16:9"
+          arrowVariant={arrowVariant}
+        />
+        <MovieSlideshow
+          movies={topRatedMovies!}
+          title="Top Rated ⭐️"
+          genresMap={genresList!}
+          cardSize={baseSlideShowCardSize}
+          cardVariant="base"
+          arrowVariant={arrowVariant}
+          showVotes
+        />
+      </div>
     </>
   );
 };
