@@ -20,3 +20,7 @@ if (process.env.MOCKS_ENABLED === "true") {
 export const TmdbImagesAPI = axios.create({
   baseURL: process.env.TMDB_API_IMAGES_HOST,
 });
+
+// used by useSWR hook (client side data fetching) -- It points to the internale API exposed by NextJS
+export const swrFetcher = (url: string) =>
+  axios.get(url).then((res) => res.data);

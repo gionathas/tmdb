@@ -1,13 +1,12 @@
 import classNames from "classnames";
 import VoteBadge from "components/miscellaneous/VoteBadge";
-import useMovieGenres from "hooks/useMovieGenres";
+import useGenres from "hooks/useGenres";
 import { generateImageUrlByPathOrDefault } from "lib/api/multimedia-api";
 import { shimmerEffect } from "lib/effects";
 import { toBase64 } from "lib/utils";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import React from "react";
-import { Genre } from "../../@types/models/genre";
 import { MoviePreview } from "../../@types/models/movie";
 
 export type variant = "base" | "16:9";
@@ -16,21 +15,20 @@ export type style = `${variant}_${size}`;
 
 const MovieCard = ({
   movie,
-  genresMap,
   genresToShow = 2,
   size = "lg",
   variant = "base",
   showVote = false,
 }: {
   movie: MoviePreview;
-  genresMap: Genre[];
   genresToShow?: number;
   size?: size;
   variant?: variant;
   showVote?: boolean;
 }) => {
   const router = useRouter();
-  const { genres } = useMovieGenres(movie, genresMap, genresToShow);
+  const { genres: allGenres } = useGenres(movie.genre_ids);
+  const genres = allGenres.slice(0, genresToShow);
 
   const handleCardClick = () => {
     router.push(`/movies/${movie.id}`);

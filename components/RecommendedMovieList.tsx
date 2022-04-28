@@ -1,15 +1,12 @@
 import React from "react";
-import { Genre } from "../@types/models/genre";
 import { MoviePreview } from "../@types/models/movie";
 import MovieCard from "./cards/MovieCard";
 
 const RecommendedMovieList = ({
   recomendations,
-  genresMap,
   className = "",
 }: {
   recomendations: MoviePreview[];
-  genresMap: Genre[];
   className?: string;
 }) => {
   const noMoviesWarningTitle = (
@@ -19,12 +16,7 @@ const RecommendedMovieList = ({
   const recommendedMovieList = (
     <div className="grid grid-cols-2 mt-4 gap-x-4 gap-y-10">
       {recomendations.map((movie) => (
-        <MovieCard
-          key={movie.id}
-          genresMap={genresMap}
-          movie={movie}
-          size="sm"
-        />
+        <MovieCard key={movie.id} movie={movie} size="sm" />
       ))}
     </div>
   );

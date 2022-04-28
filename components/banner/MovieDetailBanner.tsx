@@ -182,8 +182,8 @@ const MovieInformationHeader = ({
   const releaseDate = new Date(release_date);
   const releaseDateAsString = releaseDate.toLocaleDateString();
   const movieYear = releaseDate.getFullYear();
-  const mainProductionCountryString: string =
-    (countries.length > 0 && countries[0].iso_3166_1) || "";
+  const mainProductionCountryString =
+    countries.length > 0 && countries[0].iso_3166_1;
   const movieGenresAsString: String = genres.map((gn) => gn.name).join(", ");
 
   return (
@@ -197,7 +197,9 @@ const MovieInformationHeader = ({
       {/* Release Date + Country + Genres + Duration */}
       <div className="flex flex-wrap mt-2 text-xs font-light text-gray-200 gap-y-1 sm:text-sm sm:mt-1 gap-x-2 2xl:text-base">
         <span>{releaseDateAsString}</span>
-        <div>({mainProductionCountryString})</div>
+        {mainProductionCountryString && (
+          <span>({mainProductionCountryString})</span>
+        )}
         <span className="capitalize">&#9702; {movieGenresAsString}</span>
         {runtime && <span>&#9702; {runtime}min</span>}
       </div>

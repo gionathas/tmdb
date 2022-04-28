@@ -2,7 +2,6 @@ import classNames from "classnames";
 import Properties from "config/properties";
 import useInterval from "hooks/useInterval";
 import { useCallback, useState } from "react";
-import { Genre } from "../@types/models/genre";
 import { MoviePreview } from "../@types/models/movie";
 import MoviePreviewBanner from "./banner/MoviePreviewBanner";
 
@@ -13,11 +12,9 @@ const { carouselIntervalMillis: carouselInterval } = Properties;
  */
 const MovieCarousel = ({
   movies,
-  genresMap,
   height,
 }: {
   movies: MoviePreview[];
-  genresMap: Genre[];
   height: number;
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -68,7 +65,6 @@ const MovieCarousel = ({
               })}
               height={height}
               bannerMovie={movie}
-              genresMap={genresMap}
               onLeftClick={prevMovie}
               onRightClick={nextMovie}
             />

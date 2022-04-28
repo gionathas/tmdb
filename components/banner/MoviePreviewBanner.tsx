@@ -1,15 +1,13 @@
 import classNames from "classnames";
 import ArrowButton from "components/miscellaneous/buttons/ArrowButton";
-import useMovieGenres from "hooks/useMovieGenres";
+import useGenres from "hooks/useGenres";
 import { generateImageUrlByPathOrDefault } from "lib/api/multimedia-api";
 import { useRouter } from "next/router";
-import { Genre } from "../../@types/models/genre";
 import { MoviePreview } from "../../@types/models/movie";
 import MovieBanner from "./MovieBanner";
 
 const MoviePreviewBanner = ({
   bannerMovie,
-  genresMap,
   height,
   className = "",
   style = {},
@@ -17,7 +15,6 @@ const MoviePreviewBanner = ({
   onRightClick,
 }: {
   bannerMovie: MoviePreview;
-  genresMap: Genre[];
   height: number;
   className?: string;
   style?: React.CSSProperties;
@@ -25,7 +22,9 @@ const MoviePreviewBanner = ({
   onLeftClick?: () => void;
 }) => {
   const router = useRouter();
-  const { genres } = useMovieGenres(bannerMovie, genresMap, 3);
+  const { genres, isLoading: isGenresLoading } = useGenres(
+    bannerMovie.genre_ids
+  );
 
   const goToMovieDetail = () => {
     const { id: movieId } = bannerMovie;
@@ -74,7 +73,15 @@ const MoviePreviewBanner = ({
             <p className="mt-4 text-sm tracking-wide text-gray-200 lg:text-base 2xl:text-lg line-clamp-3">
               {overview}
             </p>
-            <p className="mt-2 text-xs tracking-wider capitalize lg:text-sm 2xl:text-base text-primary-500">
+            <p
+              className={classNames(
+                "mt-2 text-xs tracking-wider capitalize lg:text-sm 2xl:text-base text-primary-500 transition-opacity duration-150",
+                {
+                  "opacity-0": isGenresLoading,
+                  "opacity-100": !isGenresLoading,
+                }
+              )}
+            >
               {genresListAsString}
             </p>
           </div>
