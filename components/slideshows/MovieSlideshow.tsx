@@ -1,4 +1,4 @@
-import { variant as ArrowVariant } from "components/miscellaneous/buttons/ArrowButton";
+import { ArrowVariant } from "components/miscellaneous/buttons/ArrowButton";
 import React from "react";
 import { MoviePreview } from "../../@types/models/movie";
 import Properties from "../../config/properties";
@@ -13,19 +13,21 @@ type Props = {
   movies: MoviePreview[];
   cardSize?: MovieCardStyle;
   cardVariant?: MovieCardVariant;
-  arrowVariant: ArrowVariant;
+  arrowVariant?: ArrowVariant;
+  scrollOffset?: number;
   showVotes?: boolean;
   className?: string;
 };
 
-const { movieSlideshowScrollXOffset: scrollOffset } = Properties;
+const { movieSlideshowDefaultScrollXOffset } = Properties;
 
 const MovieSlideshow = ({
   title,
   movies,
   cardSize = "md",
   cardVariant = "base",
-  arrowVariant,
+  arrowVariant = "base",
+  scrollOffset = movieSlideshowDefaultScrollXOffset,
   showVotes = false,
   className = "",
 }: Props) => {

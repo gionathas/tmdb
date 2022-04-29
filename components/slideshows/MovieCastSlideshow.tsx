@@ -5,7 +5,8 @@ import Properties from "../../config/properties";
 import CastCard from "../cards/CastCard";
 import Slideshow from "./Slideshow";
 
-const { castSlideshowScrollXOffset: castSlideshowScrollOffset } = Properties;
+const { castSlideshowDefaultScrollXOffset: castSlideshowScrollOffset } =
+  Properties;
 
 type Props = {
   cast: CastCredit[];

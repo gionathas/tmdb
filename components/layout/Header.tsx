@@ -5,8 +5,9 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
+const { headerDefaultScrollYOffset: headerScrollYOffset } = Properties;
+
 const Header = () => {
-  const { headerScrollYOffset } = Properties;
   const pageYScroll = useWindowScroll();
 
   return (

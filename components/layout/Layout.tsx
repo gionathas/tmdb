@@ -1,11 +1,14 @@
 import classNames from "classnames";
+import { isUndefined } from "lodash";
 import React, { useEffect } from "react";
 import Header from "./Header";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   // scroll to top
   useEffect(() => {
-    window.scrollTo(0, 0);
+    if (!isUndefined(window)) {
+      window.scrollTo(0, 0);
+    }
   }, []);
 
   return (

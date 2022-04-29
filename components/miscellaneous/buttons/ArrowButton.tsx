@@ -2,9 +2,8 @@ import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/solid";
 import classNames from "classnames";
 import React from "react";
 
-type directions = "left" | "right";
-
-export type variant = "sm" | "base" | "lg" | "xl";
+export type ArrowDirection = "left" | "right";
+export type ArrowVariant = "sm" | "base" | "lg" | "xl";
 
 const ArrowButton = ({
   direction,
@@ -12,10 +11,10 @@ const ArrowButton = ({
   className,
   variant = "base",
 }: {
-  direction: directions;
+  direction: ArrowDirection;
   onClick?: () => void;
   className?: string;
-  variant?: variant;
+  variant?: ArrowVariant;
 }) => {
   const size = classNames(
     { "w-10 h-10": variant === "sm" },

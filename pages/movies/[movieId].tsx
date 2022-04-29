@@ -1,4 +1,4 @@
-import { variant as ArrowVariant } from "components/miscellaneous/buttons/ArrowButton";
+import { ArrowVariant } from "components/miscellaneous/buttons/ArrowButton";
 import MovieReviewList from "components/MovieReviewList";
 import MovieTrailerPlayer from "components/MovieTrailerPlayer";
 import RecommendedMovieList from "components/RecommendedMovieList";

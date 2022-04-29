@@ -4,7 +4,7 @@ import useCarousel from "hooks/useCarousel";
 import { MoviePreview } from "../@types/models/movie";
 import MoviePreviewBanner from "./banner/MoviePreviewBanner";
 
-const { carouselIntervalMillis: defaultCarouselInterval } = Properties;
+const { carouselDefaultIntervalMillis: defaultCarouselInterval } = Properties;
 
 type Props = {
   movies: MoviePreview[];

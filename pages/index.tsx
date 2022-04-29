@@ -1,4 +1,4 @@
-import { variant as ArrowVariant } from "components/miscellaneous/buttons/ArrowButton";
+import { ArrowVariant } from "components/miscellaneous/buttons/ArrowButton";
 import MovieCarousel from "components/MovieCarousel";
 import MovieSlideshow from "components/slideshows/MovieSlideshow";
 import Properties from "config/properties";
