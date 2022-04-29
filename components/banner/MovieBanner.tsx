@@ -24,7 +24,7 @@ const MovieBanner = ({
   backgroundOpacity,
   style = {},
   onClick: handleClick,
-  onLoadingComplete,
+  onLoadingComplete: handleLoadingComplete,
 }: Props) => {
   return (
     <div
@@ -36,7 +36,7 @@ const MovieBanner = ({
         <BackgroundImage
           backdropSrc={backdropImageSrc}
           opacity={backgroundOpacity}
-          onLoadingComplete={onLoadingComplete}
+          onLoadingComplete={handleLoadingComplete}
         />
       )}
 
@@ -72,7 +72,7 @@ const BackgroundImage = ({
       alt="Movie Background Image"
       objectPosition="center"
       style={{ opacity: isImageLoading ? 0 : opacity }}
-      className={`transition-opacity duration-300`}
+      className={`transition-opacity duration-700`}
       placeholder="blur"
       blurDataURL={`data:image/svg+xml;base64,${toBase64(
         shimmerEffect(700, 475)

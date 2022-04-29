@@ -37,7 +37,11 @@ const MoviePreviewBanner = ({
     router.push(`/movies/${movieId}`);
   };
 
-  const { title, original_title, overview } = bannerMovie;
+  const {
+    title: movieTitle,
+    original_title: movieOriginalTitle,
+    overview: movieOverview,
+  } = bannerMovie;
   const genresListAsString = genres.join(", ");
   const movieYear = new Date(bannerMovie.release_date).getFullYear();
   const backdropImageSrc = generateImageUrlByPathOrDefault(
@@ -49,6 +53,37 @@ const MoviePreviewBanner = ({
     "fill-gray-200 opacity-70 hover:opacity-100 transition-all rounded-md duration-150 hover:cursor-pointer"
   );
   const arrowVariant = "sm";
+
+  const title = (
+    <h2 className="text-4xl font-semibold md:text-5xl lg:text-6xl title">
+      {movieTitle || movieOriginalTitle}
+    </h2>
+  );
+  const year = (
+    <span className="text-xs font-light md:text-sm xl:text-lg text-gray-50/70">
+      {movieYear}
+    </span>
+  );
+
+  const overview = (
+    <p className="mt-4 text-sm tracking-wide text-gray-200 lg:text-base 2xl:text-lg line-clamp-3">
+      {movieOverview}
+    </p>
+  );
+
+  const genresList = (
+    <p
+      className={classNames(
+        "mt-2 text-xs tracking-wider capitalize lg:text-sm 2xl:text-base text-primary-500 transition-opacity duration-150",
+        {
+          "opacity-0": isGenresLoading,
+          "opacity-100": !isGenresLoading,
+        }
+      )}
+    >
+      {genresListAsString}
+    </p>
+  );
 
   return (
     <MovieBanner
@@ -70,26 +105,10 @@ const MoviePreviewBanner = ({
             className="max-w-md pl-5 cursor-pointer lg:max-w-xl"
             onClick={goToMovieDetail}
           >
-            <h2 className="text-4xl font-semibold md:text-5xl lg:text-6xl title">
-              {title || original_title}
-            </h2>
-            <span className="text-xs font-light md:text-sm xl:text-lg text-gray-50/70">
-              {movieYear}
-            </span>
-            <p className="mt-4 text-sm tracking-wide text-gray-200 lg:text-base 2xl:text-lg line-clamp-3">
-              {overview}
-            </p>
-            <p
-              className={classNames(
-                "mt-2 text-xs tracking-wider capitalize lg:text-sm 2xl:text-base text-primary-500 transition-opacity duration-150",
-                {
-                  "opacity-0": isGenresLoading,
-                  "opacity-100": !isGenresLoading,
-                }
-              )}
-            >
-              {genresListAsString}
-            </p>
+            {title}
+            {year}
+            {overview}
+            {genresList}
           </div>
           <ArrowButton
             direction={"right"}
