@@ -7,7 +7,7 @@ import { generateImageUrlByPathOrDefault } from "lib/api/multimedia-api";
 import { shimmerEffect } from "lib/effects";
 import { toBase64 } from "lib/utils";
 import Image from "next/image";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useState } from "react";
 import { CrewCredit } from "../../@types/models/credit";
 import { MovieDetail } from "../../@types/models/movie";
 
@@ -29,44 +29,21 @@ const MovieDetailBanner = ({
   showPlayTrailer = false,
 }: OwnProps) => {
   const { backdrop_path, poster_path } = movie;
-  const initialContentLoadingState = {
-    isPosterLoading: poster_path != null && true,
-    isBackgroundLoading: backdrop_path != null && true,
+  const [isPosterLoading, setIsPosterLoading] = useState(
+    poster_path ? true : false
+  );
+
+  const handlePosterImageLoadingComplete = () => {
+    setIsPosterLoading(false);
   };
-  const [isContentLoading, setIsContentLoading] = useState(
-    initialContentLoadingState
-  );
-  const { isBackgroundLoading, isPosterLoading } = isContentLoading;
-
-  useEffect(
-    () => {
-      setIsContentLoading(initialContentLoadingState);
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [movie.id]
-  );
-
-  const handleMovieBannerLoadingComplete = useCallback(() => {
-    setIsContentLoading((prev) => ({ ...prev, isBackgroundLoading: false }));
-  }, []);
-
-  const handlePosterImageLoadingComplete = useCallback(() => {
-    setIsContentLoading((prev) => ({
-      ...prev,
-      isPosterLoading: false,
-    }));
-  }, []);
 
   return (
     <MovieBanner
-      className={classNames({
-        "animate-pulse blur-sm": isBackgroundLoading || isPosterLoading,
-        "animate-none blur-none": !isBackgroundLoading && !isPosterLoading,
-      })}
+      key={movie.id}
       backdropImageSrc={generateImageUrlByPathOrDefault(backdrop_path, null)}
       height={height}
       backgroundOpacity={backgroundOpacity}
-      onLoadingComplete={handleMovieBannerLoadingComplete}
+      isContentLoading={isPosterLoading}
     >
       <div className="flex flex-col justify-center h-full base-padding">
         <div className="lg:flex lg:space-x-8 2xl:pt-12">

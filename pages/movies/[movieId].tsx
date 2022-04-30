@@ -166,6 +166,7 @@ const MoviePage: NextPage<Props> = ({
       </Head>
       {/* Main Movie Banner */}
       <MovieDetailBanner
+        key={movie?.id}
         movie={movie!}
         crew={crew}
         backgroundOpacity={0.2}
