@@ -13,14 +13,13 @@ const useSlideshow = (
 
   // each time the sliderPosition changes, calculate if the slideshow is scrollable (left and right) with the arrows
   useEffect(() => {
+    const sliderContainer = slideshowContainerRef.current;
     const isScrollableRight =
-      (slideshowContainerRef.current &&
-        slideshowContainerRef.current.scrollWidth -
-          slideshowContainerRef.current.clientWidth >
+      (sliderContainer &&
+        sliderContainer.scrollWidth - sliderContainer.clientWidth >
           sliderPosition) ||
       false;
-    const isScrollableLeft =
-      (slideshowContainerRef.current && sliderPosition != 0) || false;
+    const isScrollableLeft = (sliderContainer && sliderPosition != 0) || false;
     setIsScrollable({ left: isScrollableLeft, right: isScrollableRight });
   }, [sliderPosition]);
 

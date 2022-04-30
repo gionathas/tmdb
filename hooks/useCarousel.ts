@@ -1,11 +1,11 @@
-import useInterval from "hooks/useInterval";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 /**
  * Cycle through a list of items every n seconds.
  */
 const useCarousel = (items: Array<any>, interval: number) => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const intervalRef = useRef<NodeJS.Timer | null>(null);
 
   const nextItem = useCallback(
     () => {
@@ -29,7 +29,28 @@ const useCarousel = (items: Array<any>, interval: number) => {
     [items.length]
   );
 
-  const { resetInterval } = useInterval(nextItem, interval);
+  // setup carousel interval
+  useEffect(() => {
+    intervalRef.current = setInterval(nextItem, interval);
+    return () => clearInterval(intervalRef.current!);
+  }, [nextItem, interval]);
+
+  // clear previous interval and setup a new one
+  const resetInterval = () => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+    }
+    intervalRef.current = setInterval(nextItem, interval);
+  };
+
+  // clear the carousel interval before unmount
+  useEffect(() => {
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+    };
+  }, []);
 
   return { nextItem, prevItem, resetInterval, currentIndex };
 };

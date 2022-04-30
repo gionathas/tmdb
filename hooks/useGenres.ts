@@ -20,7 +20,7 @@ const useGenres = (genre_ids: number[]) => {
   let genres: string[] = [];
 
   if (res && !error && !isValidating) {
-    genres = getMovieGenresFromIds(genre_ids, res.data || []);
+    genres = getMovieGenresFromIds(genre_ids, res.data ?? []);
   }
 
   return { genres, isLoading: !error && !res };
