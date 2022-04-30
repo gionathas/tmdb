@@ -36,7 +36,13 @@ const Logo = () => {
   return (
     <Link href="/" passHref>
       <div className="relative w-24 h-8 cursor-pointer sm:w-28 md:w-32">
-        <Image src={logo} alt="TMDB Logo" layout="fill" objectFit="contain" />
+        <Image
+          src={logo}
+          alt="TMDB Logo"
+          layout="fill"
+          objectFit="contain"
+          priority
+        />
       </div>
     </Link>
   );

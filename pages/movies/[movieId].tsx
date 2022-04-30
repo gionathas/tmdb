@@ -1,7 +1,7 @@
+import MovieReviewList from "components/lists/MovieReviewList";
+import RecommendedMovieList from "components/lists/RecommendedMovieList";
 import { ArrowVariant } from "components/miscellaneous/buttons/ArrowButton";
-import MovieReviewList from "components/MovieReviewList";
 import MovieTrailerPlayer from "components/MovieTrailerPlayer";
-import RecommendedMovieList from "components/RecommendedMovieList";
 import MovieSlideshow from "components/slideshows/MovieSlideshow";
 import Properties from "config/properties";
 import useMediaQuery from "hooks/useMediaQuery";
