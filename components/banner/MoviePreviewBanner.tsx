@@ -4,6 +4,7 @@ import Properties from "config/properties";
 import useGenres from "hooks/useGenres";
 import { generateImageUrlByPathOrDefault } from "lib/api/multimedia-api";
 import { useRouter } from "next/router";
+import React from "react";
 import { MoviePreview } from "../../@types/models/movie";
 import MovieBanner from "./MovieBanner";
 

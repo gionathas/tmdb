@@ -21,7 +21,7 @@ type Props = {
 };
 
 // TODO: add constants to control the size of the movies to be shown for each category
-export const getStaticProps: GetStaticProps<Props> = async (context) => {
+export const getStaticProps: GetStaticProps<Props> = async () => {
   console.info("Generating Index Page..");
 
   //fetching data from tmdb api

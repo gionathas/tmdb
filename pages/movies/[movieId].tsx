@@ -8,7 +8,7 @@ import useMediaQuery from "hooks/useMediaQuery";
 import { generateYoutubeVideoUrl } from "lib/api/multimedia-api";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import Head from "next/head";
-import { useCallback, useState } from "react";
+import React, { useCallback, useState } from "react";
 import {
   MovieCredits,
   MovieDetail,

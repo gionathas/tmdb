@@ -3,11 +3,11 @@ import ExpandableText from "components/miscellaneous/ExpandableText";
 import VoteBadge from "components/miscellaneous/VoteBadge";
 import { generateImageUrlByPathOrDefault } from "lib/api/multimedia-api";
 import React, { useRef } from "react";
-import { Review } from "../../@types/models/review";
+import { Review as ReviewType } from "../../@types/models/review";
 import List from "./List";
 
 type ReviewListProps = {
-  reviews: Review[];
+  reviews: ReviewType[];
   className?: string;
 };
 
@@ -33,7 +33,7 @@ const MovieReviewList = ({ reviews, className = "" }: ReviewListProps) => {
 };
 
 type ReviewProps = {
-  review: Review;
+  review: ReviewType;
 };
 
 const Review = ({ review }: ReviewProps) => {

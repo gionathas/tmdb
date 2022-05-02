@@ -4,7 +4,6 @@ const Spinner = ({ className }: { className?: string }) => {
   return (
     <svg
       role="status"
-      // className="w-8 h-8 mr-2 text-gray-200 animate-spin fill-primary-500"
       className="w-8 h-8 mr-2 text-gray-200 animate-spin fill-primary-500"
       viewBox="0 0 100 101"
       fill="none"
