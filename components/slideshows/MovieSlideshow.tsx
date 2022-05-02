@@ -1,6 +1,5 @@
-import { variant as ArrowVariant } from "components/miscellaneous/buttons/ArrowButton";
+import { ArrowVariant } from "components/miscellaneous/buttons/ArrowButton";
 import React from "react";
-import { Genre } from "../../@types/models/genre";
 import { MoviePreview } from "../../@types/models/movie";
 import Properties from "../../config/properties";
 import MovieCard, {
@@ -12,23 +11,23 @@ import Slideshow from "./Slideshow";
 type Props = {
   title: string;
   movies: MoviePreview[];
-  genresMap: Genre[];
   cardSize?: MovieCardStyle;
   cardVariant?: MovieCardVariant;
-  arrowVariant: ArrowVariant;
+  arrowVariant?: ArrowVariant;
+  scrollOffset?: number;
   showVotes?: boolean;
   className?: string;
 };
 
-const { movieSlideshowScrollXOffset: scrollOffset } = Properties;
+const { movieSlideshowDefaultScrollXOffset } = Properties;
 
 const MovieSlideshow = ({
   title,
   movies,
-  genresMap,
   cardSize = "md",
   cardVariant = "base",
-  arrowVariant,
+  arrowVariant = "base",
+  scrollOffset = movieSlideshowDefaultScrollXOffset,
   showVotes = false,
   className = "",
 }: Props) => {
@@ -44,7 +43,6 @@ const MovieSlideshow = ({
           <MovieCard
             key={movie.id}
             movie={movie}
-            genresMap={genresMap}
             size={cardSize}
             variant={cardVariant}
             showVote={showVotes}

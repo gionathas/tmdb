@@ -1,74 +1,53 @@
 import classNames from "classnames";
 import Properties from "config/properties";
-import useInterval from "hooks/useInterval";
-import { useCallback, useState } from "react";
-import { Genre } from "../@types/models/genre";
+import useCarousel from "hooks/useCarousel";
 import { MoviePreview } from "../@types/models/movie";
 import MoviePreviewBanner from "./banner/MoviePreviewBanner";
 
-const { carouselIntervalMillis: carouselInterval } = Properties;
+const { carouselDefaultIntervalMillis: defaultCarouselInterval } = Properties;
+
+type Props = {
+  movies: MoviePreview[];
+  height: number;
+  interval?: number;
+};
 
 /**
- * This Carousel cycle around a list of movie, within a fade effect.
+ * This Carousel cycle through a list of movie, using a fade effect as a transition animation.
  */
 const MovieCarousel = ({
   movies,
-  genresMap,
   height,
-}: {
-  movies: MoviePreview[];
-  genresMap: Genre[];
-  height: number;
-}) => {
-  const [currentIndex, setCurrentIndex] = useState(0);
-
-  const nextMovie = useCallback(
-    () => {
-      setCurrentIndex((prevIndex) =>
-        prevIndex + 1 >= movies.length ? 0 : prevIndex + 1
-      );
-      resetInterval();
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [movies.length]
-  );
-
-  const prevMovie = useCallback(
-    () => {
-      setCurrentIndex((prevIndex) =>
-        prevIndex - 1 < 0 ? movies.length - 1 : prevIndex - 1
-      );
-      resetInterval();
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [movies.length]
-  );
-
-  const { resetInterval } = useInterval(nextMovie, carouselInterval);
+  interval = defaultCarouselInterval,
+}: Props) => {
+  const {
+    currentIndex,
+    nextItem: nextMovie,
+    prevItem: prevMovie,
+  } = useCarousel(movies, interval);
 
   return (
     <div className="flex">
       {movies.map((movie, index) => {
-        const showBanner = index === currentIndex;
+        const showMovieBanner = index === currentIndex;
         return (
           <div
             key={movie.id}
             className={classNames(
               "transition-opacity duration-700 ease-in-out",
               {
-                "opacity-1 flex-1": showBanner,
-                "opacity-0 flex-none": !showBanner,
+                "opacity-1 flex-1": showMovieBanner,
+                "opacity-0 flex-none": !showMovieBanner,
               }
             )}
           >
             <MoviePreviewBanner
               className={classNames("w-full", {
-                block: showBanner,
-                hidden: !showBanner,
+                block: showMovieBanner,
+                hidden: !showMovieBanner,
               })}
               height={height}
               bannerMovie={movie}
-              genresMap={genresMap}
               onLeftClick={prevMovie}
               onRightClick={nextMovie}
             />

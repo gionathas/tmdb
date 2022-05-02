@@ -1,9 +1,10 @@
 import classNames from "classnames";
+import Spinner from "components/miscellaneous/Spinner";
 import useImageLoad from "hooks/useImageLoad";
 import { shimmerEffect } from "lib/effects";
 import { toBase64 } from "lib/utils";
 import Image from "next/image";
-import React from "react";
+import React, { useState } from "react";
 
 type Props = {
   backdropImageSrc: string | null;
@@ -14,6 +15,7 @@ type Props = {
   style?: React.CSSProperties;
   onClick?: () => void;
   onLoadingComplete?: () => void;
+  isContentLoading?: boolean;
 };
 
 const MovieBanner = ({
@@ -24,23 +26,35 @@ const MovieBanner = ({
   backgroundOpacity,
   style = {},
   onClick: handleClick,
-  onLoadingComplete,
+  isContentLoading = false,
 }: Props) => {
+  const [isBackgroundLoading, setIsBackgroundLoading] = useState(
+    backdropImageSrc ? true : false
+  );
+
+  const isLoading = isBackgroundLoading || isContentLoading;
+
   return (
     <div
       style={{ height: `${height}px`, ...style }}
       className={classNames("relative", className)}
       onClick={handleClick}
     >
+      {isLoading && (
+        <div className="grid h-full place-items-center">
+          <Spinner />
+        </div>
+      )}
       {backdropImageSrc && (
         <BackgroundImage
           backdropSrc={backdropImageSrc}
           opacity={backgroundOpacity}
-          onLoadingComplete={onLoadingComplete}
+          onLoadingComplete={() => setIsBackgroundLoading(false)}
         />
       )}
-
-      <div className="absolute inset-x-0 h-full">{children}</div>
+      {!isBackgroundLoading && (
+        <div className="absolute inset-x-0 h-full">{children}</div>
+      )}
     </div>
   );
 };
@@ -72,7 +86,7 @@ const BackgroundImage = ({
       alt="Movie Background Image"
       objectPosition="center"
       style={{ opacity: isImageLoading ? 0 : opacity }}
-      className={`transition-opacity duration-300`}
+      className={`transition-opacity duration-700`}
       placeholder="blur"
       blurDataURL={`data:image/svg+xml;base64,${toBase64(
         shimmerEffect(700, 475)

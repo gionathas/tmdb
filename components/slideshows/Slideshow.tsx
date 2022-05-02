@@ -2,7 +2,7 @@ import classNames from "classnames";
 import useSlideshow from "hooks/useSlideshow";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import ArrowButton, {
-  variant as ArrowVariant,
+  ArrowVariant,
 } from "../miscellaneous/buttons/ArrowButton";
 
 type Props = {

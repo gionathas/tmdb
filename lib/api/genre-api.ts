@@ -1,6 +1,6 @@
-import { handleError } from "./helpers";
 import { TmdbAPI } from "config/clients";
 import { Genre, Genres } from "../../@types/models/genre";
+import { handleError } from "./helpers";
 import { ApiResponse } from "./types";
 
 const basePath = "/genre";

@@ -1,4 +1,3 @@
-import { Video } from "../../@types/models/video";
 import { TmdbAPI } from "config/clients";
 import { SortOrder } from "lib/common";
 import {
@@ -8,11 +7,11 @@ import {
 } from "../../@types//models/movie";
 import { Credit } from "../../@types/models/credit";
 import { Review } from "../../@types/models/review";
+import { Video } from "../../@types/models/video";
 import { handleError } from "./helpers";
 import {
   ApiResponse,
   ApiResponseWithPagination,
-  ApiResponseWithResults,
   TmdbListResponse,
   TmdbPaginatedResponse,
 } from "./types";

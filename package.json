@@ -1,6 +1,6 @@
 {
   "name": "tmdb",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -19,6 +19,7 @@
     "react-player": "^2.10.0",
     "react-use": "^17.3.2",
     "sharp": "^0.30.4",
+    "swr": "^1.3.0",
     "usehooks-ts": "^2.5.1"
   },
   "devDependencies": {

@@ -1,3 +1,4 @@
+import Layout from "components/layout/Layout";
 import type { AppProps } from "next/app";
 import Head from "next/head";
 import "styles/globals.css";
@@ -11,7 +12,9 @@ function MyApp({ Component, pageProps }: AppProps) {
           content="width=device-width, initial-scale=1, shrink-to-fit=no"
         />
       </Head>
-      <Component {...pageProps} />
+      <Layout>
+        <Component {...pageProps} />
+      </Layout>
     </>
   );
 }
