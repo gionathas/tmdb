@@ -82,7 +82,11 @@ const HomePage: NextPage<Props> = ({
       <Head>
         <title>TMDB</title>
       </Head>
-      <MovieCarousel height={700} movies={popularMovies!} />
+      <MovieCarousel
+        height={700}
+        backgroundOpacity={0.5}
+        movies={popularMovies!}
+      />
 
       <div className="px-4 mt-8 space-y-2 md:mt-10">
         <MovieSlideshow

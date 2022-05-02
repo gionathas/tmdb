@@ -9,23 +9,23 @@ import MovieBanner from "./MovieBanner";
 
 const { defaultGenresToShowNumber } = Properties;
 
-const MoviePreviewBanner = ({
-  bannerMovie,
-  height,
-  className = "",
-  style = {},
-  genresToShow = defaultGenresToShowNumber,
-  onLeftClick,
-  onRightClick,
-}: {
+type Props = Pick<
+  React.ComponentProps<typeof MovieBanner>,
+  "className" | "height" | "backgroundOpacity" | "style"
+> & {
   bannerMovie: MoviePreview;
-  height: number;
-  className?: string;
-  style?: React.CSSProperties;
   genresToShow?: number;
   onRightClick?: () => void;
   onLeftClick?: () => void;
-}) => {
+};
+
+const MoviePreviewBanner = ({
+  bannerMovie,
+  genresToShow = defaultGenresToShowNumber,
+  onLeftClick,
+  onRightClick,
+  ...rest
+}: Props) => {
   const router = useRouter();
   const { genres: allGenres, isLoading: isGenresLoading } = useGenres(
     bannerMovie.genre_ids
@@ -86,13 +86,7 @@ const MoviePreviewBanner = ({
   );
 
   return (
-    <MovieBanner
-      style={style}
-      className={className}
-      backgroundOpacity={0.5}
-      height={height}
-      backdropImageSrc={backdropImageSrc}
-    >
+    <MovieBanner backdropImageSrc={backdropImageSrc} {...rest}>
       <div className="flex flex-col justify-center h-full">
         <div className="flex items-center md:mx-4">
           <ArrowButton

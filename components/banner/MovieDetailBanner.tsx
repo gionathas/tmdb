@@ -11,23 +11,23 @@ import React, { useState } from "react";
 import { CrewCredit } from "../../@types/models/credit";
 import { MovieDetail } from "../../@types/models/movie";
 
-type OwnProps = {
+type Props = {
   movie: MovieDetail;
   crew: CrewCredit[];
-  height: number;
-  backgroundOpacity: number;
   onPlayTrailer?: () => void;
   showPlayTrailer: boolean;
-};
+} & Pick<
+  React.ComponentProps<typeof MovieBanner>,
+  "backgroundOpacity" | "height"
+>;
 
 const MovieDetailBanner = ({
   movie,
   crew,
-  height,
-  backgroundOpacity,
   onPlayTrailer: handlePlayTrailer,
   showPlayTrailer = false,
-}: OwnProps) => {
+  ...rest
+}: Props) => {
   const { backdrop_path, poster_path } = movie;
   const [isPosterLoading, setIsPosterLoading] = useState(
     poster_path ? true : false
@@ -41,9 +41,8 @@ const MovieDetailBanner = ({
     <MovieBanner
       key={movie.id}
       backdropImageSrc={generateImageUrlByPathOrDefault(backdrop_path, null)}
-      height={height}
-      backgroundOpacity={backgroundOpacity}
       isContentLoading={isPosterLoading}
+      {...rest}
     >
       <div className="flex flex-col justify-center h-full base-padding">
         <div className="lg:flex lg:space-x-8 2xl:pt-12">
