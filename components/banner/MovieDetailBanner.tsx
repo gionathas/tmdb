@@ -208,22 +208,18 @@ const MovieInformationSubHeader = ({
 
       {/* Action Buttons */}
       <div className="flex space-x-4">
-        <ActionButton
-          content={<span className="2xl:text-lg">&#9781;</span>}
-          tooltip="Add to watchlist"
-        />
-        <ActionButton
-          content={<span className="2xl:text-lg">&#10029;</span>}
-          tooltip="Rate it!"
-        />
-        <ActionButton
-          content={<span className="2xl:text-lg">&#9873;</span>}
-          tooltip="Report"
-        />
-        <ActionButton
-          tooltip="Mark as favourite"
-          content={<span className="text-[11px]">&#9829;</span>}
-        />
+        <ActionButton tooltip="Add to watchlist">
+          <span className="2xl:text-lg">&#9781;</span>
+        </ActionButton>
+        <ActionButton tooltip="Rate it!">
+          <span className="2xl:text-lg">&#10029;</span>
+        </ActionButton>
+        <ActionButton tooltip="Report">
+          <span className="2xl:text-lg">&#9873;</span>
+        </ActionButton>
+        <ActionButton tooltip="Mark as favourite">
+          <span className="text-[11px]">&#9829;</span>
+        </ActionButton>
       </div>
 
       {/* Play Trailer Button */}

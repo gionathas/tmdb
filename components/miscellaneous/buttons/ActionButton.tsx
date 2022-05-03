@@ -4,28 +4,36 @@ import React from "react";
 type variant = "blue";
 type size = "base" | "lg";
 
+type OwnProps = {
+  variant?: variant;
+  tooltip?: string;
+};
+
+type ActionButtonProps = OwnProps & React.ComponentPropsWithRef<"button">;
+
 const ActionButton = ({
   variant = "blue",
-  content,
+  children,
+  className,
   tooltip,
-}: {
-  variant?: variant;
-  content: React.ReactElement;
-  tooltip?: string;
-}) => {
-  const bgColor = classNames({ "bg-dark-blue": variant === "blue" });
-
+  ...rest
+}: ActionButtonProps) => {
   return (
-    <div
-      className={`relative ${bgColor} rounded-full w-10 h-10 grid place-items-center group cursor-pointer`}
+    <button
+      className={classNames(
+        "relative rounded-full w-10 h-10 grid place-items-center group cursor-pointer",
+        { "bg-dark-blue": variant === "blue" },
+        className
+      )}
+      {...rest}
     >
-      {content}
+      {children}
       {tooltip && (
         <div className="min-w-max invisible absolute top-10 px-3 py-2 mt-0.5 text-xs rounded opacity-60 bg-dark-blue group-hover:visible 2xl:text-sm">
           {tooltip}
         </div>
       )}
-    </div>
+    </button>
   );
 };
 
