@@ -82,12 +82,12 @@ const HomePage: NextPage<Props> = ({
       <MovieCarousel
         height={700}
         backgroundOpacity={0.5}
-        movies={popularMovies!}
+        movies={popularMovies}
       />
 
       <div className="px-4 mt-8 space-y-2 md:mt-10">
         <MovieSlideshow
-          movies={popularMovies!}
+          movies={popularMovies}
           className="mb-10"
           title="Popular Movies on TMDB"
           cardSize={mainSlideshowCardSizes}
@@ -95,28 +95,28 @@ const HomePage: NextPage<Props> = ({
           arrowVariant={arrowVariant}
         />
         <MovieSlideshow
-          movies={trendingMovies!}
+          movies={trendingMovies}
           title="Trending Now"
           cardSize={baseSlideShowCardSize}
           cardVariant="16:9"
           arrowVariant={arrowVariant}
         />
         <MovieSlideshow
-          movies={nowPlayingMovies!}
+          movies={nowPlayingMovies}
           title="Now Playing "
           cardSize={baseSlideShowCardSize}
           cardVariant="16:9"
           arrowVariant={arrowVariant}
         />
         <MovieSlideshow
-          movies={premiereMovies!}
+          movies={premiereMovies}
           title="Premiere"
           cardSize={baseSlideShowCardSize}
           cardVariant="16:9"
           arrowVariant={arrowVariant}
         />
         <MovieSlideshow
-          movies={topRatedMovies!}
+          movies={topRatedMovies}
           title="Top Rated ⭐️"
           cardSize={baseSlideShowCardSize}
           cardVariant="base"
