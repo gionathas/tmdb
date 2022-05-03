@@ -7,7 +7,7 @@ import MoviePreviewBanner from "./banner/MoviePreviewBanner";
 
 const { carouselDefaultIntervalMillis: defaultCarouselInterval } = Properties;
 
-type Props = {
+type OwnProps = {
   movies: MoviePreview[];
   interval?: number;
 } & Pick<
@@ -15,14 +15,20 @@ type Props = {
   "height" | "backgroundOpacity"
 >;
 
+type MovieCarouselProps = OwnProps &
+  Omit<React.ComponentPropsWithoutRef<"div">, keyof OwnProps>;
+
 /**
  * This Carousel cycle through a list of movie, using a fade effect as a transition animation.
  */
 const MovieCarousel = ({
   movies,
   interval = defaultCarouselInterval,
+  height,
+  backgroundOpacity,
+  className = "",
   ...rest
-}: Props) => {
+}: MovieCarouselProps) => {
   const {
     currentIndex,
     nextItem: nextMovie,
@@ -30,7 +36,7 @@ const MovieCarousel = ({
   } = useCarousel(movies, interval);
 
   return (
-    <div className="flex">
+    <div className={`flex ${className}`} {...rest}>
       {movies.map((movie, index) => {
         const showMovieBanner = index === currentIndex;
         return (
@@ -52,7 +58,8 @@ const MovieCarousel = ({
               bannerMovie={movie}
               onLeftClick={prevMovie}
               onRightClick={nextMovie}
-              {...rest}
+              height={height}
+              backgroundOpacity={backgroundOpacity}
             />
           </div>
         );
