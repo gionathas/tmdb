@@ -13,11 +13,11 @@ import { MoviePreview } from "../@types/models/movie";
 const revalidationTime = Properties.indexPageRevalidationSeconds;
 
 type Props = {
-  popularMovies: MoviePreview[] | null;
-  topRatedMovies: MoviePreview[] | null;
-  trendingMovies: MoviePreview[] | null;
-  nowPlayingMovies: MoviePreview[] | null;
-  premiereMovies: MoviePreview[] | null;
+  popularMovies: MoviePreview[];
+  topRatedMovies: MoviePreview[];
+  trendingMovies: MoviePreview[];
+  nowPlayingMovies: MoviePreview[];
+  premiereMovies: MoviePreview[];
 };
 
 // TODO: add constants to control the size of the movies to be shown for each category
@@ -51,14 +51,11 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
 
   return {
     props: {
-      popularMovies:
-        (popularMovies && _.shuffle(popularMovies.results)) || null,
-      topRatedMovies:
-        (topRatedMovies && _.shuffle(topRatedMovies.results)) || null,
-      trendingMovies:
-        (trendingMovies && _.shuffle(trendingMovies.results)) || null,
-      nowPlayingMovies: (nowPlaying && _.shuffle(nowPlaying.results)) || null,
-      premiereMovies: (comingSoon && _.shuffle(comingSoon.results)) || null,
+      popularMovies: _.shuffle(popularMovies?.results),
+      topRatedMovies: _.shuffle(topRatedMovies?.results),
+      trendingMovies: _.shuffle(trendingMovies?.results),
+      nowPlayingMovies: _.shuffle(nowPlaying?.results),
+      premiereMovies: _.shuffle(comingSoon?.results),
     },
     revalidate: revalidationTime,
   };
