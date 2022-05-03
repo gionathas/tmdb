@@ -7,14 +7,20 @@ import MovieCard, {
 } from "../cards/MovieCard";
 import Slideshow from "./Slideshow";
 
-type Props = {
+type OwnProps = {
   title: string;
   movies: MoviePreview[];
   cardSize?: MovieCardStyle;
   cardVariant?: MovieCardVariant;
   showVotes?: boolean;
   scrollOffset?: number;
-} & Pick<React.ComponentProps<typeof Slideshow>, "className" | "arrowVariant">;
+};
+
+type MovieSlideshowProps = OwnProps &
+  Omit<
+    React.ComponentPropsWithoutRef<typeof Slideshow>,
+    keyof OwnProps | "children"
+  >;
 
 const MovieSlideshow = ({
   title,
@@ -24,7 +30,7 @@ const MovieSlideshow = ({
   showVotes = false,
   scrollOffset = Properties.movieSlideshowDefaultScrollXOffset,
   ...rest
-}: Props) => {
+}: MovieSlideshowProps) => {
   return (
     <Slideshow
       title={<h2 className="text-2xl font-light text-gray-200">{title}</h2>}

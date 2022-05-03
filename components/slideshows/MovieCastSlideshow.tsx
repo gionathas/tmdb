@@ -7,7 +7,7 @@ import Slideshow from "./Slideshow";
 
 const { castSlideshowDefaultScrollXOffset } = Properties;
 
-type Props = {
+type OwnProps = {
   cast: CastCredit[];
   className?: string;
   scrollOffset?: number;
@@ -19,7 +19,7 @@ const MovieCastSlideshow = ({
   cast,
   className,
   scrollOffset = castSlideshowDefaultScrollXOffset,
-}: Props) => {
+}: OwnProps) => {
   return (
     <Slideshow
       className={classNames("overflow-hidden", className)}
