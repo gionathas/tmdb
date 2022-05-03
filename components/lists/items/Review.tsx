@@ -53,7 +53,7 @@ const Review = ({ review, className = "", ...rest }: ReviewProps) => {
   );
 
   return (
-    <div className={`"border-b border-b-gray-500/50" ${className}`} {...rest}>
+    <div className={`border-b border-b-gray-500/50 ${className}`} {...rest}>
       {reviewHeader}
       {reviewContent}
     </div>
