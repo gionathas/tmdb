@@ -16,9 +16,9 @@ type Props = {
   crew: CrewCredit[];
   onPlayTrailer?: () => void;
   showPlayTrailer: boolean;
-} & Pick<
+} & Omit<
   React.ComponentProps<typeof MovieBanner>,
-  "backgroundOpacity" | "height"
+  "backdropImageSrc" | "isContentLoading"
 >;
 
 const MovieDetailBanner = ({
@@ -39,7 +39,6 @@ const MovieDetailBanner = ({
 
   return (
     <MovieBanner
-      key={movie.id}
       backdropImageSrc={generateImageUrlByPathOrDefault(backdrop_path, null)}
       isContentLoading={isPosterLoading}
       {...rest}
