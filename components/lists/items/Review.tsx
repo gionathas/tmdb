@@ -2,7 +2,7 @@ import Avatar from "components/miscellaneous/Avatar";
 import ExpandableText from "components/miscellaneous/ExpandableText";
 import VoteBadge from "components/miscellaneous/VoteBadge";
 import { generateImageUrlByPathOrDefault } from "lib/api/multimedia-api";
-import React, { useRef } from "react";
+import React from "react";
 import { Review as ReviewType } from "../../../@types/models/review";
 
 type OwnProps = {
@@ -12,8 +12,6 @@ type OwnProps = {
 type ReviewProps = OwnProps & React.ComponentPropsWithoutRef<"div">;
 
 const Review = ({ review, className = "", ...rest }: ReviewProps) => {
-  const reviewContentRef = useRef(null);
-
   const { author, content, created_at: createdAt } = review;
   const { rating, avatar_path } = review.author_details;
   const reviewDate = new Date(createdAt);
@@ -45,11 +43,8 @@ const Review = ({ review, className = "", ...rest }: ReviewProps) => {
     <ExpandableText
       as={"p"}
       className="mt-6 ml-6 text-sm font-normal leading-relaxed text-gray-300 xl:text-base"
-      maxLines={5}
-      ref={reviewContentRef}
-    >
-      {content}
-    </ExpandableText>
+      text={content}
+    />
   );
 
   return (
