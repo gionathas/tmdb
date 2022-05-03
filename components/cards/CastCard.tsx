@@ -1,20 +1,30 @@
+import classNames from "classnames";
 import { Properties } from "config/properties";
 import { generateImageUrlByPathOrDefault } from "lib/api/multimedia-api";
 import Image from "next/image";
 import React from "react";
 import { CastCredit } from "../../@types/models/credit";
 
-type Props = {
+type OwnProps = {
   cast: CastCredit;
 };
 
+type CastCardProps = OwnProps &
+  Omit<React.ComponentPropsWithoutRef<"div">, keyof OwnProps>;
+
 const defaultAvatar = Properties.defaultAvatarImageSrcPath;
 
-const CastCard = ({ cast }: Props) => {
+const CastCard = ({ cast, className, ...rest }: CastCardProps) => {
   const { name, character, profile_path } = cast;
 
   return (
-    <div className="flex-none overflow-hidden rounded-lg cursor-pointer w-36">
+    <div
+      className={classNames(
+        "flex-none overflow-hidden rounded-lg cursor-pointer w-36",
+        className
+      )}
+      {...rest}
+    >
       {/* thumbnail */}
       <div className="relative h-40">
         <Image

@@ -16,19 +16,26 @@ export type style = `${variant}_${size}`;
 
 const { defaultGenresToShowNumber } = Properties;
 
+type OwnProps = {
+  movie: MoviePreview;
+  genresToShow?: number;
+  size?: size;
+  variant?: variant;
+  showVote?: boolean;
+};
+
+type MovieCardProps = OwnProps &
+  Omit<React.ComponentPropsWithoutRef<"div">, keyof OwnProps | "onClick">;
+
 const MovieCard = ({
   movie,
   genresToShow = defaultGenresToShowNumber,
   size = "lg",
   variant = "base",
   showVote = false,
-}: {
-  movie: MoviePreview;
-  genresToShow?: number;
-  size?: size;
-  variant?: variant;
-  showVote?: boolean;
-}) => {
+  className,
+  ...rest
+}: MovieCardProps) => {
   const router = useRouter();
   const { genres: allGenres } = useGenres(movie.genre_ids);
   const genres = allGenres.slice(0, genresToShow);
@@ -42,8 +49,12 @@ const MovieCard = ({
 
   return (
     <div
-      className={`flex flex-col max-w-min space-y-2 transition-transform duration-500 cursor-pointer hover:scale-[1.01]`}
+      className={classNames(
+        "flex flex-col max-w-min space-y-2 transition-transform duration-500 cursor-pointer hover:scale-[1.01]",
+        className
+      )}
       onClick={handleCardClick}
+      {...rest}
     >
       <Thumbnail
         style={`${variant}_${size}`}
