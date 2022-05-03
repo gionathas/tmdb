@@ -38,7 +38,7 @@ type Props = {
   credits: MovieCredits;
   recomendations: MoviePreview[];
   reviews: Review[];
-  youtubeTrailer?: Video;
+  youtubeTrailer: Video | null;
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
@@ -116,7 +116,7 @@ export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
       credits: credits!,
       recomendations: recommendations!.results,
       reviews: reviews!.results,
-      youtubeTrailer: youtubeTrailer,
+      youtubeTrailer: youtubeTrailer || null,
     },
     revalidate: revalidateTime,
   };
