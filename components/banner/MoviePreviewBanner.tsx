@@ -10,15 +10,12 @@ import MovieBanner from "./MovieBanner";
 
 const { defaultGenresToShowNumber } = Properties;
 
-type Props = Pick<
-  React.ComponentProps<typeof MovieBanner>,
-  "className" | "height" | "backgroundOpacity" | "style"
-> & {
+type Props = {
   bannerMovie: MoviePreview;
   genresToShow?: number;
   onRightClick?: () => void;
   onLeftClick?: () => void;
-};
+} & Omit<React.ComponentProps<typeof MovieBanner>, "backdropImageSrc">;
 
 const MoviePreviewBanner = ({
   bannerMovie,

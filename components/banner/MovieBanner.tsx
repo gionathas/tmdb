@@ -9,7 +9,7 @@ type OwnProps = {
   backdropImageSrc: string | null;
   height: number;
   backgroundOpacity: number;
-  children: React.ReactNode;
+  children?: React.ReactNode;
   onLoadingComplete?: () => void;
   isContentLoading?: boolean;
 };
