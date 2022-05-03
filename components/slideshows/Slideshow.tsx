@@ -8,21 +8,23 @@ import ArrowButton, {
 
 const { movieSlideshowDefaultScrollXOffset } = Properties;
 
-type Props = {
-  title?: React.ReactElement;
-  className?: string;
-  children: React.ReactNode;
+type OwnProps = {
+  title?: React.ReactNode;
   scrollOffset: number;
   arrowVariant?: ArrowVariant;
+  children: React.ReactNode;
 };
+
+type SlideShowProps = OwnProps &
+  Omit<React.ComponentPropsWithoutRef<"div">, keyof OwnProps>;
 
 const Slideshow = ({
   title,
+  className,
   children,
-  className = "",
   scrollOffset = movieSlideshowDefaultScrollXOffset,
   arrowVariant = "base",
-}: Props) => {
+}: SlideShowProps) => {
   const slideContainerRef = useRef<HTMLDivElement>(null);
   const [showArrows, setShowArrows] = useState(false);
   const { isScrollable, resetScroll, scrollToLeft, scrollToRight } =
