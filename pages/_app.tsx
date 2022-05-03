@@ -1,3 +1,4 @@
+import classNames from "classnames";
 import Layout from "components/layout/Layout";
 import type { AppProps } from "next/app";
 import Head from "next/head";
@@ -12,7 +13,11 @@ function MyApp({ Component, pageProps }: AppProps) {
           content="width=device-width, initial-scale=1, shrink-to-fit=no"
         />
       </Head>
-      <Layout>
+      <Layout
+        className={classNames({
+          "debug-screens": process.env.NODE_ENV === "development",
+        })}
+      >
         <Component {...pageProps} />
       </Layout>
     </>

@@ -5,9 +5,12 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
-const { headerDefaultScrollYOffset: headerScrollYOffset } = Properties;
+const { headerDefaultScrollYOffset: headerScrollYOffset, logoPath: logo } =
+  Properties;
 
-const Header = () => {
+type HeaderProps = React.ComponentPropsWithoutRef<"header">;
+
+const Header = ({ className, ...rest }: HeaderProps) => {
   const pageYScroll = useWindowScroll();
 
   return (
@@ -17,8 +20,10 @@ const Header = () => {
         {
           "bg-black": pageYScroll >= headerScrollYOffset,
           "bg-transparent": pageYScroll < headerScrollYOffset,
-        }
+        },
+        className
       )}
+      {...rest}
     >
       <div className="flex items-center justify-between py-3 md:py-4">
         <div className="flex items-center space-x-10">
@@ -32,7 +37,6 @@ const Header = () => {
 };
 
 const Logo = () => {
-  const { logoPath: logo } = Properties;
   return (
     <Link href="/" passHref>
       <div className="relative w-24 h-8 cursor-pointer sm:w-28 md:w-32">

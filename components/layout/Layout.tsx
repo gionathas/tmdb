@@ -1,9 +1,10 @@
 import classNames from "classnames";
 import { isUndefined } from "lodash";
 import React, { useEffect } from "react";
-import Header from "./Header";
+import Header from "../navigation/Header";
 
-const Layout = ({ children }: { children: React.ReactNode }) => {
+type LayoutProps = React.ComponentPropsWithoutRef<"div">;
+const Layout = ({ children, className }: LayoutProps) => {
   // scroll to top
   useEffect(() => {
     if (!isUndefined(window)) {
@@ -12,11 +13,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   return (
-    <div
-      className={classNames("relative min-h-screen", {
-        "debug-screens": process.env.NODE_ENV === "development",
-      })}
-    >
+    <div className={classNames("relative min-h-screen", className)}>
       <Header />
       <main className="">{children}</main>
       {/* <Footer /> */}
