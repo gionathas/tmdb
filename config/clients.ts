@@ -1,5 +1,5 @@
 import axios, { AxiosRequestConfig } from "axios";
-import enableTmdbApiMock from "../mock/api-mock";
+import enableTmdbApiMock from "../__mocks__/api-mock";
 
 // axios common configurations
 axios.defaults.timeout = 10000;
