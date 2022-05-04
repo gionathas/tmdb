@@ -5,9 +5,11 @@ import MovieTrailerPlayer from "components/MovieTrailerPlayer";
 import MovieSlideshow from "components/slideshows/MovieSlideshow";
 import Properties from "config/properties";
 import useMediaQuery from "hooks/useMediaQuery";
+import { getAllGenres } from "lib/api/genre-api";
 import { generateYoutubeVideoUrl } from "lib/api/multimedia-api";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import Head from "next/head";
+import { SharedPageProps } from "pages/_app";
 import React, { useCallback, useState } from "react";
 import {
   MovieCredits,
@@ -33,7 +35,7 @@ import { formatNumberToUSDCurrency } from "../../lib/utils";
 
 const revalidateTime = Properties.movieDetailPageRevalidationSeconds;
 
-type Props = {
+type PageProps = SharedPageProps & {
   movie: MovieDetail;
   credits: MovieCredits;
   recomendations: MoviePreview[];
@@ -81,7 +83,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 };
 
 // TODO: add constant values
-export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
+export const getStaticProps: GetStaticProps<PageProps> = async ({ params }) => {
   const movieId = parseInt(params?.movieId as string);
   console.info(`Generating Movie Detail Page for id ${movieId}..`);
 
@@ -91,6 +93,7 @@ export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
     getMovieCredits(movieId, 10, 6), // fetch 10 people from the cast (top 10 actors) and 6 people from the crew (producer, director, ecc..)
     getMoviesLinkedToMovie(movieId, "recommendations", 8), //fetch 6 recommended movie
     getMovieReviews(movieId, 8), //fetch the first 8 reviews
+    getAllGenres(),
   ]);
 
   const hasError = hasApiResponsesError(...requiredData);
@@ -108,6 +111,7 @@ export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
     { data: credits },
     { data: recommendations },
     { data: reviews },
+    { data: genresMap },
   ] = requiredData;
 
   return {
@@ -117,6 +121,7 @@ export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
       recomendations: recommendations!.results,
       reviews: reviews!.results,
       youtubeTrailer: youtubeTrailer || null,
+      genresMap: genresMap!,
     },
     revalidate: revalidateTime,
   };
@@ -126,7 +131,7 @@ export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
  * This page render the detail of a specific movie identified by his id:
  * movie general info, cast, crew, reviews and recommended movies
  */
-const MoviePage: NextPage<Props> = ({
+const MoviePage: NextPage<PageProps> = ({
   movie,
   credits,
   reviews,

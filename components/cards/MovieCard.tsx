@@ -37,8 +37,7 @@ const MovieCard = ({
   ...rest
 }: MovieCardProps) => {
   const router = useRouter();
-  const { genres: allGenres } = useGenres(movie.genre_ids);
-  const genres = allGenres.slice(0, genresToShow);
+  const genres = useGenres(movie.genre_ids).slice(0, genresToShow);
 
   const handleCardClick = () => {
     router.push(`/movies/${movie.id}`);

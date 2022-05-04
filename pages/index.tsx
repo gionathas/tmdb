@@ -3,16 +3,18 @@ import MovieCarousel from "components/MovieCarousel";
 import MovieSlideshow from "components/slideshows/MovieSlideshow";
 import Properties from "config/properties";
 import useMediaQuery from "hooks/useMediaQuery";
+import { getAllGenres } from "lib/api/genre-api";
 import { hasApiResponsesError } from "lib/api/helpers";
 import { getMoviesByCategory, getTrendingMovies } from "lib/api/movie-api";
 import _ from "lodash";
 import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
 import { MoviePreview } from "../@types/models/movie";
+import { SharedPageProps } from "./_app";
 
 const revalidationTime = Properties.indexPageRevalidationSeconds;
 
-type Props = {
+type PageProps = SharedPageProps & {
   popularMovies: MoviePreview[];
   topRatedMovies: MoviePreview[];
   trendingMovies: MoviePreview[];
@@ -21,7 +23,7 @@ type Props = {
 };
 
 // TODO: add constants to control the size of the movies to be shown for each category
-export const getStaticProps: GetStaticProps<Props> = async () => {
+export const getStaticProps: GetStaticProps<PageProps> = async () => {
   console.info("Generating Index Page..");
 
   //fetching data from tmdb api
@@ -31,6 +33,7 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
     getMoviesByCategory("now_playing"),
     getMoviesByCategory("upcoming"),
     getTrendingMovies(),
+    getAllGenres(),
   ]);
 
   const hasError = hasApiResponsesError(...requestedData);
@@ -47,6 +50,7 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
     { data: nowPlaying },
     { data: comingSoon },
     { data: trendingMovies },
+    { data: genresMap },
   ] = requestedData;
 
   return {
@@ -56,17 +60,18 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
       trendingMovies: _.shuffle(trendingMovies?.results),
       nowPlayingMovies: _.shuffle(nowPlaying?.results),
       premiereMovies: _.shuffle(comingSoon?.results),
+      genresMap: genresMap!,
     },
     revalidate: revalidationTime,
   };
 };
-const HomePage: NextPage<Props> = ({
+const HomePage: NextPage<PageProps> = ({
   popularMovies,
   topRatedMovies,
   trendingMovies,
   nowPlayingMovies,
   premiereMovies,
-}: Props) => {
+}: PageProps) => {
   const isMdScreen = useMediaQuery("(min-width: 768px)");
   const isLgScreen = useMediaQuery("(min-width: 1024px)");
   const mainSlideshowCardSizes = isMdScreen ? "lg" : "md";
