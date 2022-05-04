@@ -5,7 +5,8 @@ import React from "react";
 import { MoviePreview } from "../@types/models/movie";
 import MoviePreviewBanner from "./banner/MoviePreviewBanner";
 
-const { carouselDefaultIntervalMillis: defaultCarouselInterval } = Properties;
+const { DEFAULT_CAROUSEL_INTERVAL_SECONDS: defaultCarouselInterval } =
+  Properties;
 
 type OwnProps = {
   movies: MoviePreview[];

@@ -7,6 +7,8 @@ import MovieCard, {
 } from "../cards/MovieCard";
 import Slideshow from "./Slideshow";
 
+const { DEFAULT_MOVIE_SLIDESHOW_SCROLL_X_OFFSET } = Properties;
+
 type OwnProps = {
   title: string;
   movies: MoviePreview[];
@@ -28,7 +30,7 @@ const MovieSlideshow = ({
   cardSize = "md",
   cardVariant = "base",
   showVotes = false,
-  scrollOffset = Properties.movieSlideshowDefaultScrollXOffset,
+  scrollOffset = DEFAULT_MOVIE_SLIDESHOW_SCROLL_X_OFFSET,
   ...rest
 }: MovieSlideshowProps) => {
   return (

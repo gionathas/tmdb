@@ -14,7 +14,7 @@ export type variant = "base" | "16:9";
 export type size = "sm" | "md" | "lg";
 export type style = `${variant}_${size}`;
 
-const { defaultGenresToShowNumber } = Properties;
+const { DEFAULT_GENRES_TO_SHOW: defaultGenresToShowNumber } = Properties;
 
 type OwnProps = {
   movie: MoviePreview;

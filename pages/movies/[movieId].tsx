@@ -33,7 +33,7 @@ import {
 } from "../../lib/api/movie-api";
 import { formatNumberToUSDCurrency } from "../../lib/utils";
 
-const revalidateTime = Properties.movieDetailPageRevalidationSeconds;
+const { DEFAULT_MOVIE_DETAIL_PAGE_REVALIDATION_SECONDS } = Properties;
 
 type PageProps = SharedPageProps & {
   movie: MovieDetail;
@@ -123,7 +123,7 @@ export const getStaticProps: GetStaticProps<PageProps> = async ({ params }) => {
       youtubeTrailer: youtubeTrailer || null,
       genresMap: genresMap!,
     },
-    revalidate: revalidateTime,
+    revalidate: DEFAULT_MOVIE_DETAIL_PAGE_REVALIDATION_SECONDS,
   };
 };
 

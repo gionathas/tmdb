@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
-const { headerDefaultScrollYOffset: headerScrollYOffset, logoPath: logo } =
+const { DEFAULT_HEADER_SCROLL_Y_OFFSET: headerScrollYOffset, LOGO_PATH: logo } =
   Properties;
 
 type HeaderProps = React.ComponentPropsWithoutRef<"header">;

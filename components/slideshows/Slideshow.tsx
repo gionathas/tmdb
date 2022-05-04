@@ -6,7 +6,9 @@ import ArrowButton, {
   ArrowVariant,
 } from "../miscellaneous/buttons/ArrowButton";
 
-const { movieSlideshowDefaultScrollXOffset } = Properties;
+const {
+  DEFAULT_MOVIE_SLIDESHOW_SCROLL_X_OFFSET: movieSlideshowDefaultScrollXOffset,
+} = Properties;
 
 type OwnProps = {
   title?: React.ReactNode;

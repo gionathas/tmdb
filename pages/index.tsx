@@ -12,7 +12,7 @@ import Head from "next/head";
 import { MoviePreview } from "../@types/models/movie";
 import { SharedPageProps } from "./_app";
 
-const revalidationTime = Properties.indexPageRevalidationSeconds;
+const { DEFAULT_INDEX_PAGE_REVALIDATION_SECONDS } = Properties;
 
 type PageProps = SharedPageProps & {
   popularMovies: MoviePreview[];
@@ -62,7 +62,7 @@ export const getStaticProps: GetStaticProps<PageProps> = async () => {
       premiereMovies: _.shuffle(comingSoon?.results),
       genresMap: genresMap!,
     },
-    revalidate: revalidationTime,
+    revalidate: DEFAULT_INDEX_PAGE_REVALIDATION_SECONDS,
   };
 };
 const HomePage: NextPage<PageProps> = ({

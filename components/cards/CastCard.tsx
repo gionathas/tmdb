@@ -12,7 +12,7 @@ type OwnProps = {
 type CastCardProps = OwnProps &
   Omit<React.ComponentPropsWithoutRef<"div">, keyof OwnProps>;
 
-const defaultAvatar = Properties.defaultAvatarImageSrcPath;
+const defaultAvatar = Properties.DEFAULT_AVATART_IMG_SRC;
 
 const CastCard = ({ cast, className, ...rest }: CastCardProps) => {
   const { name, character, profile_path } = cast;
