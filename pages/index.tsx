@@ -3,25 +3,27 @@ import MovieCarousel from "components/MovieCarousel";
 import MovieSlideshow from "components/slideshows/MovieSlideshow";
 import Properties from "config/properties";
 import useMediaQuery from "hooks/useMediaQuery";
+import { getAllGenres } from "lib/api/genre-api";
 import { hasApiResponsesError } from "lib/api/helpers";
 import { getMoviesByCategory, getTrendingMovies } from "lib/api/movie-api";
 import _ from "lodash";
 import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
 import { MoviePreview } from "../@types/models/movie";
+import { SharedPageProps } from "./_app";
 
 const revalidationTime = Properties.indexPageRevalidationSeconds;
 
-type Props = {
-  popularMovies: MoviePreview[] | null;
-  topRatedMovies: MoviePreview[] | null;
-  trendingMovies: MoviePreview[] | null;
-  nowPlayingMovies: MoviePreview[] | null;
-  premiereMovies: MoviePreview[] | null;
+type PageProps = SharedPageProps & {
+  popularMovies: MoviePreview[];
+  topRatedMovies: MoviePreview[];
+  trendingMovies: MoviePreview[];
+  nowPlayingMovies: MoviePreview[];
+  premiereMovies: MoviePreview[];
 };
 
 // TODO: add constants to control the size of the movies to be shown for each category
-export const getStaticProps: GetStaticProps<Props> = async (context) => {
+export const getStaticProps: GetStaticProps<PageProps> = async () => {
   console.info("Generating Index Page..");
 
   //fetching data from tmdb api
@@ -31,6 +33,7 @@ export const getStaticProps: GetStaticProps<Props> = async (context) => {
     getMoviesByCategory("now_playing"),
     getMoviesByCategory("upcoming"),
     getTrendingMovies(),
+    getAllGenres(),
   ]);
 
   const hasError = hasApiResponsesError(...requestedData);
@@ -47,29 +50,28 @@ export const getStaticProps: GetStaticProps<Props> = async (context) => {
     { data: nowPlaying },
     { data: comingSoon },
     { data: trendingMovies },
+    { data: genresMap },
   ] = requestedData;
 
   return {
     props: {
-      popularMovies:
-        (popularMovies && _.shuffle(popularMovies.results)) || null,
-      topRatedMovies:
-        (topRatedMovies && _.shuffle(topRatedMovies.results)) || null,
-      trendingMovies:
-        (trendingMovies && _.shuffle(trendingMovies.results)) || null,
-      nowPlayingMovies: (nowPlaying && _.shuffle(nowPlaying.results)) || null,
-      premiereMovies: (comingSoon && _.shuffle(comingSoon.results)) || null,
+      popularMovies: _.shuffle(popularMovies?.results),
+      topRatedMovies: _.shuffle(topRatedMovies?.results),
+      trendingMovies: _.shuffle(trendingMovies?.results),
+      nowPlayingMovies: _.shuffle(nowPlaying?.results),
+      premiereMovies: _.shuffle(comingSoon?.results),
+      genresMap: genresMap!,
     },
     revalidate: revalidationTime,
   };
 };
-const HomePage: NextPage<Props> = ({
+const HomePage: NextPage<PageProps> = ({
   popularMovies,
   topRatedMovies,
   trendingMovies,
   nowPlayingMovies,
   premiereMovies,
-}: Props) => {
+}: PageProps) => {
   const isMdScreen = useMediaQuery("(min-width: 768px)");
   const isLgScreen = useMediaQuery("(min-width: 1024px)");
   const mainSlideshowCardSizes = isMdScreen ? "lg" : "md";
@@ -82,11 +84,15 @@ const HomePage: NextPage<Props> = ({
       <Head>
         <title>TMDB</title>
       </Head>
-      <MovieCarousel height={700} movies={popularMovies!} />
+      <MovieCarousel
+        height={700}
+        backgroundOpacity={0.5}
+        movies={popularMovies}
+      />
 
       <div className="px-4 mt-8 space-y-2 md:mt-10">
         <MovieSlideshow
-          movies={popularMovies!}
+          movies={popularMovies}
           className="mb-10"
           title="Popular Movies on TMDB"
           cardSize={mainSlideshowCardSizes}
@@ -94,28 +100,28 @@ const HomePage: NextPage<Props> = ({
           arrowVariant={arrowVariant}
         />
         <MovieSlideshow
-          movies={trendingMovies!}
+          movies={trendingMovies}
           title="Trending Now"
           cardSize={baseSlideShowCardSize}
           cardVariant="16:9"
           arrowVariant={arrowVariant}
         />
         <MovieSlideshow
-          movies={nowPlayingMovies!}
+          movies={nowPlayingMovies}
           title="Now Playing "
           cardSize={baseSlideShowCardSize}
           cardVariant="16:9"
           arrowVariant={arrowVariant}
         />
         <MovieSlideshow
-          movies={premiereMovies!}
+          movies={premiereMovies}
           title="Premiere"
           cardSize={baseSlideShowCardSize}
           cardVariant="16:9"
           arrowVariant={arrowVariant}
         />
         <MovieSlideshow
-          movies={topRatedMovies!}
+          movies={topRatedMovies}
           title="Top Rated ⭐️"
           cardSize={baseSlideShowCardSize}
           cardVariant="base"

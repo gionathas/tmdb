@@ -4,39 +4,28 @@ import Properties from "config/properties";
 import useGenres from "hooks/useGenres";
 import { generateImageUrlByPathOrDefault } from "lib/api/multimedia-api";
 import { useRouter } from "next/router";
+import React from "react";
 import { MoviePreview } from "../../@types/models/movie";
 import MovieBanner from "./MovieBanner";
 
 const { defaultGenresToShowNumber } = Properties;
 
-const MoviePreviewBanner = ({
-  bannerMovie,
-  height,
-  className = "",
-  style = {},
-  genresToShow = defaultGenresToShowNumber,
-  onLeftClick,
-  onRightClick,
-}: {
+type Props = {
   bannerMovie: MoviePreview;
-  height: number;
-  className?: string;
-  style?: React.CSSProperties;
   genresToShow?: number;
   onRightClick?: () => void;
   onLeftClick?: () => void;
-}) => {
+} & Omit<React.ComponentProps<typeof MovieBanner>, "backdropImageSrc">;
+
+const MoviePreviewBanner = ({
+  bannerMovie,
+  genresToShow = defaultGenresToShowNumber,
+  onLeftClick,
+  onRightClick,
+  ...rest
+}: Props) => {
   const router = useRouter();
-  const { genres: allGenres, isLoading: isGenresLoading } = useGenres(
-    bannerMovie.genre_ids
-  );
-  const genres = allGenres.slice(0, genresToShow);
-
-  const goToMovieDetail = () => {
-    const { id: movieId } = bannerMovie;
-    router.push(`/movies/${movieId}`);
-  };
-
+  const genres = useGenres(bannerMovie.genre_ids).slice(0, genresToShow);
   const {
     title: movieTitle,
     original_title: movieOriginalTitle,
@@ -48,6 +37,11 @@ const MoviePreviewBanner = ({
     bannerMovie.backdrop_path,
     null
   );
+
+  const goToMovieDetail = () => {
+    const { id: movieId } = bannerMovie;
+    router.push(`/movies/${movieId}`);
+  };
 
   const arrowClassName = classNames(
     "fill-gray-200 opacity-70 hover:opacity-100 transition-all rounded-md duration-150 hover:cursor-pointer"
@@ -73,26 +67,16 @@ const MoviePreviewBanner = ({
 
   const genresList = (
     <p
-      className={classNames(
-        "mt-2 text-xs tracking-wider capitalize lg:text-sm 2xl:text-base text-primary-500 transition-opacity duration-150",
-        {
-          "opacity-0": isGenresLoading,
-          "opacity-100": !isGenresLoading,
-        }
-      )}
+      className={
+        "mt-2 text-xs tracking-wider capitalize lg:text-sm 2xl:text-base text-primary-500 transition-opacity duration-150"
+      }
     >
       {genresListAsString}
     </p>
   );
 
   return (
-    <MovieBanner
-      style={style}
-      className={className}
-      backgroundOpacity={0.5}
-      height={height}
-      backdropImageSrc={backdropImageSrc}
-    >
+    <MovieBanner backdropImageSrc={backdropImageSrc} {...rest}>
       <div className="flex flex-col justify-center h-full">
         <div className="flex items-center md:mx-4">
           <ArrowButton

@@ -1,25 +1,30 @@
 import classNames from "classnames";
+import Properties from "config/properties";
 import useSlideshow from "hooks/useSlideshow";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import ArrowButton, {
   ArrowVariant,
 } from "../miscellaneous/buttons/ArrowButton";
 
-type Props = {
-  title?: React.ReactElement;
-  className?: string;
-  children: React.ReactNode;
+const { movieSlideshowDefaultScrollXOffset } = Properties;
+
+type OwnProps = {
+  title?: React.ReactNode;
   scrollOffset: number;
-  arrowVariant: ArrowVariant;
+  arrowVariant?: ArrowVariant;
+  children: React.ReactNode;
 };
+
+type SlideShowProps = OwnProps &
+  Omit<React.ComponentPropsWithoutRef<"div">, keyof OwnProps>;
 
 const Slideshow = ({
   title,
-  children,
   className,
-  scrollOffset,
-  arrowVariant,
-}: Props) => {
+  children,
+  scrollOffset = movieSlideshowDefaultScrollXOffset,
+  arrowVariant = "base",
+}: SlideShowProps) => {
   const slideContainerRef = useRef<HTMLDivElement>(null);
   const [showArrows, setShowArrows] = useState(false);
   const { isScrollable, resetScroll, scrollToLeft, scrollToRight } =

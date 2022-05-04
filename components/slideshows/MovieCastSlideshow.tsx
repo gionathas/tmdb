@@ -5,21 +5,25 @@ import Properties from "../../config/properties";
 import CastCard from "../cards/CastCard";
 import Slideshow from "./Slideshow";
 
-const { castSlideshowDefaultScrollXOffset: castSlideshowScrollOffset } =
-  Properties;
+const { castSlideshowDefaultScrollXOffset } = Properties;
 
-type Props = {
+type OwnProps = {
   cast: CastCredit[];
   className?: string;
+  scrollOffset?: number;
 };
 
 const title = <h2 className="text-xl font-medium">Top Cast</h2>;
 
-const MovieCastSlideshow = ({ cast, className }: Props) => {
+const MovieCastSlideshow = ({
+  cast,
+  className,
+  scrollOffset = castSlideshowDefaultScrollXOffset,
+}: OwnProps) => {
   return (
     <Slideshow
       className={classNames("overflow-hidden", className)}
-      scrollOffset={castSlideshowScrollOffset}
+      scrollOffset={scrollOffset}
       title={title}
       arrowVariant="sm"
     >

@@ -11,23 +11,23 @@ import React, { useState } from "react";
 import { CrewCredit } from "../../@types/models/credit";
 import { MovieDetail } from "../../@types/models/movie";
 
-type OwnProps = {
+type Props = {
   movie: MovieDetail;
   crew: CrewCredit[];
-  height: number;
-  backgroundOpacity: number;
   onPlayTrailer?: () => void;
   showPlayTrailer: boolean;
-};
+} & Omit<
+  React.ComponentProps<typeof MovieBanner>,
+  "backdropImageSrc" | "isContentLoading"
+>;
 
 const MovieDetailBanner = ({
   movie,
   crew,
-  height,
-  backgroundOpacity,
   onPlayTrailer: handlePlayTrailer,
   showPlayTrailer = false,
-}: OwnProps) => {
+  ...rest
+}: Props) => {
   const { backdrop_path, poster_path } = movie;
   const [isPosterLoading, setIsPosterLoading] = useState(
     poster_path ? true : false
@@ -39,11 +39,9 @@ const MovieDetailBanner = ({
 
   return (
     <MovieBanner
-      key={movie.id}
       backdropImageSrc={generateImageUrlByPathOrDefault(backdrop_path, null)}
-      height={height}
-      backgroundOpacity={backgroundOpacity}
       isContentLoading={isPosterLoading}
+      {...rest}
     >
       <div className="flex flex-col justify-center h-full base-padding">
         <div className="lg:flex lg:space-x-8 2xl:pt-12">
@@ -210,22 +208,18 @@ const MovieInformationSubHeader = ({
 
       {/* Action Buttons */}
       <div className="flex space-x-4">
-        <ActionButton
-          content={<span className="2xl:text-lg">&#9781;</span>}
-          tooltip="Add to watchlist"
-        />
-        <ActionButton
-          content={<span className="2xl:text-lg">&#10029;</span>}
-          tooltip="Rate it!"
-        />
-        <ActionButton
-          content={<span className="2xl:text-lg">&#9873;</span>}
-          tooltip="Report"
-        />
-        <ActionButton
-          tooltip="Mark as favourite"
-          content={<span className="text-[11px]">&#9829;</span>}
-        />
+        <ActionButton tooltip="Add to watchlist">
+          <span className="2xl:text-lg">&#9781;</span>
+        </ActionButton>
+        <ActionButton tooltip="Rate it!">
+          <span className="2xl:text-lg">&#10029;</span>
+        </ActionButton>
+        <ActionButton tooltip="Report">
+          <span className="2xl:text-lg">&#9873;</span>
+        </ActionButton>
+        <ActionButton tooltip="Mark as favourite">
+          <span className="text-[11px]">&#9829;</span>
+        </ActionButton>
       </div>
 
       {/* Play Trailer Button */}

@@ -1,4 +1,3 @@
-import { ArrowVariant } from "components/miscellaneous/buttons/ArrowButton";
 import React from "react";
 import { MoviePreview } from "../../@types/models/movie";
 import Properties from "../../config/properties";
@@ -8,35 +7,35 @@ import MovieCard, {
 } from "../cards/MovieCard";
 import Slideshow from "./Slideshow";
 
-type Props = {
+type OwnProps = {
   title: string;
   movies: MoviePreview[];
   cardSize?: MovieCardStyle;
   cardVariant?: MovieCardVariant;
-  arrowVariant?: ArrowVariant;
-  scrollOffset?: number;
   showVotes?: boolean;
-  className?: string;
+  scrollOffset?: number;
 };
 
-const { movieSlideshowDefaultScrollXOffset } = Properties;
+type MovieSlideshowProps = OwnProps &
+  Omit<
+    React.ComponentPropsWithoutRef<typeof Slideshow>,
+    keyof OwnProps | "children"
+  >;
 
 const MovieSlideshow = ({
   title,
   movies,
   cardSize = "md",
   cardVariant = "base",
-  arrowVariant = "base",
-  scrollOffset = movieSlideshowDefaultScrollXOffset,
   showVotes = false,
-  className = "",
-}: Props) => {
+  scrollOffset = Properties.movieSlideshowDefaultScrollXOffset,
+  ...rest
+}: MovieSlideshowProps) => {
   return (
     <Slideshow
-      className={className}
       title={<h2 className="text-2xl font-light text-gray-200">{title}</h2>}
-      arrowVariant={arrowVariant}
       scrollOffset={scrollOffset}
+      {...rest}
     >
       {movies.length > 0 ? (
         movies.map((movie) => (

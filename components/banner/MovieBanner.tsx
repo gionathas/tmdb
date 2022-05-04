@@ -1,22 +1,21 @@
 import classNames from "classnames";
 import Spinner from "components/miscellaneous/Spinner";
-import useImageLoad from "hooks/useImageLoad";
 import { shimmerEffect } from "lib/effects";
 import { toBase64 } from "lib/utils";
 import Image from "next/image";
 import React, { useState } from "react";
 
-type Props = {
+type OwnProps = {
   backdropImageSrc: string | null;
   height: number;
   backgroundOpacity: number;
-  className?: string;
-  children: React.ReactNode;
-  style?: React.CSSProperties;
-  onClick?: () => void;
+  children?: React.ReactNode;
   onLoadingComplete?: () => void;
   isContentLoading?: boolean;
 };
+
+type MovieBannerProps = OwnProps &
+  Omit<React.ComponentPropsWithoutRef<"div">, keyof OwnProps>;
 
 const MovieBanner = ({
   backdropImageSrc,
@@ -25,75 +24,47 @@ const MovieBanner = ({
   height,
   backgroundOpacity,
   style = {},
-  onClick: handleClick,
   isContentLoading = false,
-}: Props) => {
+  ...rest
+}: MovieBannerProps) => {
   const [isBackgroundLoading, setIsBackgroundLoading] = useState(
     backdropImageSrc ? true : false
   );
 
-  const isLoading = isBackgroundLoading || isContentLoading;
+  const isBannerLoading = isBackgroundLoading || isContentLoading;
 
   return (
     <div
       style={{ height: `${height}px`, ...style }}
       className={classNames("relative", className)}
-      onClick={handleClick}
+      {...rest}
     >
-      {isLoading && (
+      {isBannerLoading && (
         <div className="grid h-full place-items-center">
           <Spinner />
         </div>
       )}
       {backdropImageSrc && (
-        <BackgroundImage
-          backdropSrc={backdropImageSrc}
-          opacity={backgroundOpacity}
+        <Image
+          src={backdropImageSrc}
+          layout="fill"
+          objectFit="cover"
+          alt="Movie Background Image"
+          objectPosition="center"
+          style={{ opacity: isBackgroundLoading ? 0 : backgroundOpacity }}
+          className={`transition-opacity duration-700`}
+          placeholder="blur"
+          blurDataURL={`data:image/svg+xml;base64,${toBase64(
+            shimmerEffect(700, 475)
+          )}`}
           onLoadingComplete={() => setIsBackgroundLoading(false)}
+          priority
         />
       )}
       {!isBackgroundLoading && (
         <div className="absolute inset-x-0 h-full">{children}</div>
       )}
     </div>
-  );
-};
-
-const BackgroundImage = ({
-  backdropSrc,
-  opacity,
-  onLoadingComplete,
-}: {
-  backdropSrc: string;
-  opacity: number;
-  onLoadingComplete?: () => void;
-}) => {
-  const {
-    isLoading: isImageLoading,
-    handleLoadingComplete: handleImageLoadingComplete,
-  } = useImageLoad(backdropSrc);
-
-  const handleLoadingComplete = () => {
-    handleImageLoadingComplete();
-    onLoadingComplete && onLoadingComplete();
-  };
-
-  return (
-    <Image
-      src={backdropSrc}
-      layout="fill"
-      objectFit="cover"
-      alt="Movie Background Image"
-      objectPosition="center"
-      style={{ opacity: isImageLoading ? 0 : opacity }}
-      className={`transition-opacity duration-700`}
-      placeholder="blur"
-      blurDataURL={`data:image/svg+xml;base64,${toBase64(
-        shimmerEffect(700, 475)
-      )}`}
-      onLoadingComplete={handleLoadingComplete}
-      priority
-    />
   );
 };
 
