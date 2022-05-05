@@ -56,7 +56,7 @@ const NavLinks = () => {
   return (
     <nav className="hidden md:space-x-6 md:font-light md:flex">
       <Link href="#" passHref>
-        <div className="link">Movies</div>
+        <div className="link">Discover</div>
       </Link>
       <Link href="#" passHref>
         <div className="link">Tv Shows</div>
