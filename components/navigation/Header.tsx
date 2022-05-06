@@ -1,4 +1,4 @@
-import { UserIcon } from "@heroicons/react/solid";
+import { SearchIcon, UserIcon } from "@heroicons/react/solid";
 import classNames from "classnames";
 import SignInButton from "components/miscellaneous/buttons/SignInButton";
 import SearchInput from "components/miscellaneous/SearchInput";
@@ -9,7 +9,7 @@ import useWindowScroll from "hooks/useWindowScroll";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { useCallback } from "react";
+import React, { useState } from "react";
 
 const { DEFAULT_HEADER_SCROLL_Y_OFFSET: headerScrollYOffset, LOGO_PATH: logo } =
   Properties;
@@ -19,16 +19,13 @@ type HeaderProps = React.ComponentPropsWithoutRef<"header">;
 const Header = ({ className, ...rest }: HeaderProps) => {
   const pageYScroll = useWindowScroll();
   const isSmallScreen = useMediaQuery("(min-width: 640px)");
+
   const router = useRouter();
   const isSearchPage = router.pathname === routes.searchPage;
 
-  const search = useCallback(
-    (query: string) => {
-      router.push(`${routes.searchPage}?query=${query}`);
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
-  );
+  const search = (query: string) => {
+    router.push(`${routes.searchPage}?query=${query}`);
+  };
 
   return (
     <header
@@ -55,11 +52,7 @@ const Header = ({ className, ...rest }: HeaderProps) => {
             </>
           ) : (
             <>
-              {/* {!isSearchPage && (
-                <Link href={routes.searchPage} passHref>
-                  <SearchIcon className="w-5 h-5 cursor-pointer opacity-80 hover:opacity-100" />
-                </Link>
-              )} */}
+              {!isSearchPage && <SearchButton onSearch={search} />}
               <UserIcon className="w-5 h-5 cursor-pointer opacity-80 hover:opacity-100" />
             </>
           )}
@@ -98,6 +91,18 @@ const NavLinks = () => {
         <div className="link">People</div>
       </Link>
     </nav>
+  );
+};
+
+const SearchButton = ({ onSearch }: { onSearch: (query: string) => void }) => {
+  const [showSearch, setShowSearch] = useState(false);
+  return showSearch ? (
+    <SearchInput className="w-36" onSearch={onSearch} />
+  ) : (
+    <SearchIcon
+      className="w-5 h-5 cursor-pointer opacity-80 hover:opacity-100"
+      onClick={() => setShowSearch(true)}
+    />
   );
 };
 
