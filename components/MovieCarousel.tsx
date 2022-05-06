@@ -1,7 +1,6 @@
-import classNames from "classnames";
 import Properties from "config/properties";
 import useCarousel from "hooks/useCarousel";
-import React from "react";
+import React, { useCallback } from "react";
 import { MoviePreview } from "../@types/models/movie";
 import MoviePreviewBanner from "./banner/MoviePreviewBanner";
 
@@ -37,43 +36,32 @@ const MovieCarousel = ({
     resetInterval: resetCarouselInterval,
   } = useCarousel(movies, interval);
 
-  const handleRightArrowClick = () => {
+  const handleRightArrowClick = useCallback(() => {
     nextMovie();
     resetCarouselInterval();
-  };
+  }, [nextMovie, resetCarouselInterval]);
 
-  const handleLeftArrowClick = () => {
+  const handleLeftArrowClick = useCallback(() => {
     prevMovie();
     resetCarouselInterval();
-  };
+  }, [resetCarouselInterval, prevMovie]);
 
   return (
     <div className={`flex ${className}`} {...rest}>
       {movies.map((movie, index) => {
         const showMovieBanner = index === currentIndex;
         return (
-          <div
-            key={movie.id}
-            className={classNames(
-              "transition-opacity duration-700 ease-in-out",
-              {
-                "opacity-1 flex-1": showMovieBanner,
-                "opacity-0 flex-none": !showMovieBanner,
-              }
-            )}
-          >
-            <MoviePreviewBanner
-              className={classNames("w-full", {
-                block: showMovieBanner,
-                hidden: !showMovieBanner,
-              })}
-              bannerMovie={movie}
-              onLeftClick={handleLeftArrowClick}
-              onRightClick={handleRightArrowClick}
-              height={height}
-              backgroundOpacity={backgroundOpacity}
-            />
-          </div>
+          showMovieBanner && (
+            <div key={movie.id} className="flex-1">
+              <MoviePreviewBanner
+                bannerMovie={movie}
+                onLeftClick={handleLeftArrowClick}
+                onRightClick={handleRightArrowClick}
+                height={height}
+                backgroundOpacity={backgroundOpacity}
+              />
+            </div>
+          )
         );
       })}
     </div>
