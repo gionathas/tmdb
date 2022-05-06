@@ -1,6 +1,6 @@
+import { ArrowVariant } from "components/buttons/ArrowButton";
 import MovieReviewList from "components/lists/MovieReviewList";
 import RecommendedMovieList from "components/lists/RecommendedMovieList";
-import { ArrowVariant } from "components/miscellaneous/buttons/ArrowButton";
 import MovieTrailerPlayer from "components/MovieTrailerPlayer";
 import MovieSlideshow from "components/slideshows/MovieSlideshow";
 import Properties from "config/properties";

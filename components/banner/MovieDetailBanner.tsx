@@ -1,6 +1,6 @@
 import classNames from "classnames";
 import MovieBanner from "components/banner/MovieBanner";
-import ActionButton from "components/miscellaneous/buttons/ActionButton";
+import ActionButton from "components/buttons/ActionButton";
 import VoteBadge from "components/miscellaneous/VoteBadge";
 import Properties from "config/properties";
 import useImageLoad from "hooks/useImageLoad";

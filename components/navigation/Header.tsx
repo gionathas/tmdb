@@ -1,7 +1,7 @@
 import { SearchIcon, UserIcon } from "@heroicons/react/solid";
 import classNames from "classnames";
-import SignInButton from "components/miscellaneous/buttons/SignInButton";
-import SearchInput from "components/miscellaneous/SearchInput";
+import SignInButton from "components/buttons/SignInButton";
+import SearchBar from "components/miscellaneous/SearchBar";
 import Properties from "config/properties";
 import routes from "config/routes";
 import useMediaQuery from "hooks/useMediaQuery";
@@ -18,7 +18,7 @@ type HeaderProps = React.ComponentPropsWithoutRef<"header">;
 
 const Header = ({ className, ...rest }: HeaderProps) => {
   const pageYScroll = useWindowScroll();
-  const isSmallScreen = useMediaQuery("(min-width: 640px)");
+  const isSmallScreen = useMediaQuery("(max-width: 640px)");
 
   const router = useRouter();
   const isSearchPage = router.pathname === routes.searchPage;
@@ -47,13 +47,13 @@ const Header = ({ className, ...rest }: HeaderProps) => {
         <div className="flex items-center space-x-3">
           {isSmallScreen ? (
             <>
-              {!isSearchPage && <SearchInput onSearch={search} />}
-              <SignInButton />
+              {!isSearchPage && <SearchButton onSearch={search} />}
+              <UserIcon className="w-5 h-5 cursor-pointer opacity-80 hover:opacity-100" />
             </>
           ) : (
             <>
-              {!isSearchPage && <SearchButton onSearch={search} />}
-              <UserIcon className="w-5 h-5 cursor-pointer opacity-80 hover:opacity-100" />
+              {!isSearchPage && <SearchBar onSearch={search} />}
+              <SignInButton />
             </>
           )}
         </div>
@@ -99,7 +99,7 @@ NavLinks.displayName = "NavLinks";
 const SearchButton = ({ onSearch }: { onSearch: (query: string) => void }) => {
   const [showSearch, setShowSearch] = useState(false);
   return showSearch ? (
-    <SearchInput className="w-36" onSearch={onSearch} />
+    <SearchBar className="w-36" onSearch={onSearch} />
   ) : (
     <SearchIcon
       className="w-5 h-5 cursor-pointer opacity-80 hover:opacity-100"

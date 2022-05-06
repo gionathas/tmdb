@@ -1,5 +1,5 @@
 import MovieResultList from "components/lists/MovieResultList";
-import SearchInput from "components/miscellaneous/SearchInput";
+import SearchBar from "components/miscellaneous/SearchBar";
 import useSearch from "hooks/useSearch";
 import { getAllGenres } from "lib/api/genre-api";
 import { hasApiResponsesError } from "lib/api/helpers";
@@ -31,7 +31,7 @@ const SearchPage: NextPage<SearchPageProps> = ({ initialResults }) => {
         <title>Search</title>
       </Head>
       <section className="pt-28 base-padding">
-        <SearchInput
+        <SearchBar
           initialQuery={searchQuery}
           onSearch={handleSearch}
           className="w-full mx-auto sm:w-96"

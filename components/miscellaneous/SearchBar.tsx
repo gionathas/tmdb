@@ -7,7 +7,7 @@ type SearchInputProps = {
   onSearch: (query: string) => void;
 };
 
-const SearchInput = ({
+const SearchBar = ({
   initialQuery = "",
   className = "",
   onSearch,
@@ -38,4 +38,4 @@ const SearchInput = ({
   );
 };
 
-export default SearchInput;
+export default SearchBar;

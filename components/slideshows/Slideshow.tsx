@@ -2,9 +2,7 @@ import classNames from "classnames";
 import Properties from "config/properties";
 import useSlideshow from "hooks/useSlideshow";
 import React, { useCallback, useMemo, useState } from "react";
-import ArrowButton, {
-  ArrowVariant,
-} from "../miscellaneous/buttons/ArrowButton";
+import ArrowButton, { ArrowVariant } from "../buttons/ArrowButton";
 
 const {
   DEFAULT_MOVIE_SLIDESHOW_SCROLL_X_OFFSET: movieSlideshowDefaultScrollXOffset,

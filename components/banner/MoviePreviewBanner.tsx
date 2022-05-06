@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import ArrowButton from "components/miscellaneous/buttons/ArrowButton";
+import ArrowButton from "components/buttons/ArrowButton";
 import Properties from "config/properties";
 import useGenres from "hooks/useGenres";
 import { generateImageUrlByPathOrDefault } from "lib/api/multimedia-api";
