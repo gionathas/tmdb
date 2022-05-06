@@ -9,7 +9,7 @@ import useWindowScroll from "hooks/useWindowScroll";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import React, { memo, useState } from "react";
 
 const { DEFAULT_HEADER_SCROLL_Y_OFFSET: headerScrollYOffset, LOGO_PATH: logo } =
   Properties;
@@ -62,7 +62,7 @@ const Header = ({ className, ...rest }: HeaderProps) => {
   );
 };
 
-const Logo = () => {
+const Logo = memo(() => {
   return (
     <Link href={routes.indexPage} passHref>
       <div className="relative w-24 h-8 cursor-pointer sm:w-28 md:w-32">
@@ -76,9 +76,10 @@ const Logo = () => {
       </div>
     </Link>
   );
-};
+});
+Logo.displayName = "Logo";
 
-const NavLinks = () => {
+const NavLinks = memo(() => {
   return (
     <nav className="hidden md:space-x-6 md:font-light md:flex">
       <Link href="#" passHref>
@@ -92,7 +93,8 @@ const NavLinks = () => {
       </Link>
     </nav>
   );
-};
+});
+NavLinks.displayName = "NavLinks";
 
 const SearchButton = ({ onSearch }: { onSearch: (query: string) => void }) => {
   const [showSearch, setShowSearch] = useState(false);

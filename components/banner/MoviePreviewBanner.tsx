@@ -30,15 +30,16 @@ const MoviePreviewBanner = ({
     title: movieTitle,
     original_title: movieOriginalTitle,
     overview: movieOverview,
+    release_date,
   } = bannerMovie;
   const genresListAsString = genres.join(", ");
-  const movieYear = new Date(bannerMovie.release_date).getFullYear();
+  const movieYear = release_date && new Date(release_date).getFullYear();
   const backdropImageSrc = generateImageUrlByPathOrDefault(
     bannerMovie.backdrop_path,
     null
   );
 
-  const goToMovieDetail = () => {
+  const handleBannerInformationClick = () => {
     const { id: movieId } = bannerMovie;
     router.push(`/movies/${movieId}`);
   };
@@ -87,7 +88,7 @@ const MoviePreviewBanner = ({
           />
           <div
             className="max-w-md pl-5 cursor-pointer lg:max-w-xl"
-            onClick={goToMovieDetail}
+            onClick={handleBannerInformationClick}
           >
             {title}
             {year}

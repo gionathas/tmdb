@@ -2,6 +2,7 @@ import classNames from "classnames";
 import MovieBanner from "components/banner/MovieBanner";
 import ActionButton from "components/miscellaneous/buttons/ActionButton";
 import VoteBadge from "components/miscellaneous/VoteBadge";
+import Properties from "config/properties";
 import useImageLoad from "hooks/useImageLoad";
 import { generateImageUrlByPathOrDefault } from "lib/api/multimedia-api";
 import { shimmerEffect } from "lib/effects";
@@ -10,6 +11,8 @@ import Image from "next/image";
 import React, { useState } from "react";
 import { CrewCredit } from "../../@types/models/credit";
 import { MovieDetail } from "../../@types/models/movie";
+
+const { EMPTY_POSTER_IMG_SRC } = Properties;
 
 type Props = {
   movie: MovieDetail;
@@ -47,7 +50,10 @@ const MovieDetailBanner = ({
         <div className="lg:flex lg:space-x-8 2xl:pt-12">
           <MoviePosterImage
             className={`hidden lg:block relative flex-none w-[350px] h-[500px] xl:w-[400px] 2xl:w-[440px] 2xl:h-[550px] rounded overflow-hidden transition-opacity duration-300`}
-            posterSrc={generateImageUrlByPathOrDefault(poster_path, null)}
+            posterSrc={generateImageUrlByPathOrDefault(
+              poster_path,
+              EMPTY_POSTER_IMG_SRC
+            )}
             onLoadingComplete={handlePosterImageLoadingComplete}
           />
           <MovieInformation
@@ -154,19 +160,22 @@ const MovieInformationHeader = ({
     runtime,
   } = movie;
   const displayTitle = title || original_title;
-  const releaseDate = new Date(release_date);
-  const releaseDateAsString = releaseDate.toLocaleDateString();
-  const movieYear = releaseDate.getFullYear();
+  const releaseDate = release_date && new Date(release_date);
+  const releaseDateAsString =
+    (releaseDate && releaseDate.toLocaleDateString()) || "Unknown";
+  const movieYear = (releaseDate && releaseDate.getFullYear()) || undefined;
   const mainProductionCountryString =
     countries.length > 0 && countries[0].iso_3166_1;
-  const movieGenresAsString: String = genres.map((gn) => gn.name).join(", ");
+  const movieGenresAsString: string = genres.map((gn) => gn.name).join(", ");
 
   return (
     <div className={className}>
       {/* Title + Year */}
       <h2 className="text-3xl 2xl:text-4xl">
         <span className="font-semibold title">{displayTitle}</span>
-        <span className="ml-2 text-gray-300 uppercase">({movieYear})</span>
+        {movieYear && (
+          <span className="ml-2 text-gray-300 uppercase">({movieYear})</span>
+        )}
       </h2>
 
       {/* Release Date + Country + Genres + Duration */}
