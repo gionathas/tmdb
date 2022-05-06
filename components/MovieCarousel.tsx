@@ -34,7 +34,18 @@ const MovieCarousel = ({
     currentIndex,
     nextItem: nextMovie,
     prevItem: prevMovie,
+    resetInterval: resetCarouselInterval,
   } = useCarousel(movies, interval);
+
+  const handleRightArrowClick = () => {
+    nextMovie();
+    resetCarouselInterval();
+  };
+
+  const handleLeftArrowClick = () => {
+    prevMovie();
+    resetCarouselInterval();
+  };
 
   return (
     <div className={`flex ${className}`} {...rest}>
@@ -57,8 +68,8 @@ const MovieCarousel = ({
                 hidden: !showMovieBanner,
               })}
               bannerMovie={movie}
-              onLeftClick={prevMovie}
-              onRightClick={nextMovie}
+              onLeftClick={handleLeftArrowClick}
+              onRightClick={handleRightArrowClick}
               height={height}
               backgroundOpacity={backgroundOpacity}
             />
