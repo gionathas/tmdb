@@ -1,6 +1,7 @@
+import classNames from "classnames";
 import Properties from "config/properties";
 import useCarousel from "hooks/useCarousel";
-import React, { useCallback } from "react";
+import React from "react";
 import { MoviePreview } from "../@types/models/movie";
 import MoviePreviewBanner from "./banner/MoviePreviewBanner";
 
@@ -36,32 +37,43 @@ const MovieCarousel = ({
     resetInterval: resetCarouselInterval,
   } = useCarousel(movies, interval);
 
-  const handleRightArrowClick = useCallback(() => {
+  const handleRightArrowClick = () => {
     nextMovie();
     resetCarouselInterval();
-  }, [nextMovie, resetCarouselInterval]);
+  };
 
-  const handleLeftArrowClick = useCallback(() => {
+  const handleLeftArrowClick = () => {
     prevMovie();
     resetCarouselInterval();
-  }, [resetCarouselInterval, prevMovie]);
+  };
 
   return (
     <div className={`flex ${className}`} {...rest}>
       {movies.map((movie, index) => {
         const showMovieBanner = index === currentIndex;
         return (
-          showMovieBanner && (
-            <div key={movie.id} className="flex-1">
-              <MoviePreviewBanner
-                bannerMovie={movie}
-                onLeftClick={handleLeftArrowClick}
-                onRightClick={handleRightArrowClick}
-                height={height}
-                backgroundOpacity={backgroundOpacity}
-              />
-            </div>
-          )
+          <div
+            key={movie.id}
+            className={classNames(
+              "transition-opacity duration-700 ease-in-out",
+              {
+                "opacity-1 flex-1": showMovieBanner,
+                "opacity-0 flex-none": !showMovieBanner,
+              }
+            )}
+          >
+            <MoviePreviewBanner
+              className={classNames({
+                block: showMovieBanner,
+                hidden: !showMovieBanner,
+              })}
+              bannerMovie={movie}
+              onLeftClick={handleLeftArrowClick}
+              onRightClick={handleRightArrowClick}
+              height={height}
+              backgroundOpacity={backgroundOpacity}
+            />
+          </div>
         );
       })}
     </div>
