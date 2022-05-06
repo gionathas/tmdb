@@ -184,7 +184,7 @@ const MoviePage: NextPage<PageProps> = ({
 
       {/* Row with Cast Slideshow and MovieSecondaryInfo (status, revenue, language ) */}
       <div className="flex mt-10 base-padding">
-        {cast.length > 0 && <MovieCastSlideshow cast={cast} />}
+        {cast.length > 0 && <MovieCastSlideshow key={movie.id} cast={cast} />}
         <MovieSecondaryInfo movie={movie} />
       </div>
 

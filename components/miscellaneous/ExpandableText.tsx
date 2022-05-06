@@ -36,7 +36,7 @@ const ExpandableText = <T extends React.ElementType = "p">({
       {content}
       {isTextTruncated && "..."}
       {isExpandable && (
-        <div className="flex justify-end">
+        <span className="flex justify-end">
           <button
             className="ml-2 text-xs hover:underline opacity-80 underline-offset-1"
             onClick={toggleExpansions}
@@ -44,7 +44,7 @@ const ExpandableText = <T extends React.ElementType = "p">({
             {" "}
             {btnLabel}
           </button>
-        </div>
+        </span>
       )}
     </Component>
   );

@@ -1,59 +1,79 @@
-import React, { useEffect, useState } from "react";
-import { useScroll } from "react-use";
+import { useCallback, useRef, useState } from "react";
 
-const useSlideshow = (
-  slideshowContainerRef: React.RefObject<HTMLDivElement>,
-  scrollOffset: number
-) => {
-  const { x: sliderPosition } = useScroll(slideshowContainerRef);
+const useSlideshow = (scrollOffset: number) => {
   const [isScrollable, setIsScrollable] = useState({
     left: false,
     right: false,
   });
 
-  // each time the sliderPosition changes, calculate if the slideshow is scrollable (left and right) with the arrows
-  useEffect(() => {
-    const sliderContainer = slideshowContainerRef.current;
-    const isScrollableRight =
-      (sliderContainer &&
-        sliderContainer.scrollWidth - sliderContainer.clientWidth >
-          sliderPosition) ||
-      false;
-    const isScrollableLeft = (sliderContainer && sliderPosition != 0) || false;
-    setIsScrollable({ left: isScrollableLeft, right: isScrollableRight });
-  }, [sliderPosition]);
+  const sliderContainerRef = useRef<HTMLElement | null>(null);
 
-  const scrollToRight = () => {
-    if (slideshowContainerRef.current) {
-      const currentScroll = slideshowContainerRef.current.scrollLeft;
-      slideshowContainerRef.current.scrollTo({
+  // calculate if the slider container is scrollable left and riht
+  const calculateIsScrollable = useCallback((el: HTMLElement) => {
+    if (el) {
+      const isScrollableRight = el.scrollLeft + el.clientWidth < el.scrollWidth;
+      const isScrollableLeft = el.scrollLeft > 0;
+      setIsScrollable({ left: isScrollableLeft, right: isScrollableRight });
+    }
+  }, []);
+
+  // event listener attached to the slider container
+  const scrollListener = useCallback(
+    (ev: Event) => {
+      return calculateIsScrollable(ev.target as HTMLElement);
+    },
+    [calculateIsScrollable]
+  );
+
+  // callback used to set the reference to the slider container
+  const setRef = useCallback(
+    (node: HTMLElement | null) => {
+      //unmount
+      if (sliderContainerRef.current) {
+        sliderContainerRef.current.removeEventListener(
+          "scroll",
+          scrollListener
+        );
+      }
+
+      sliderContainerRef.current = node;
+
+      //mount
+      if (sliderContainerRef.current) {
+        calculateIsScrollable(sliderContainerRef.current);
+        sliderContainerRef.current.addEventListener("scroll", scrollListener, {
+          passive: true,
+        });
+      }
+    },
+    [scrollListener, calculateIsScrollable]
+  );
+
+  const scrollToRight = useCallback(() => {
+    if (sliderContainerRef.current) {
+      const currentScroll = sliderContainerRef.current.scrollLeft;
+      sliderContainerRef.current.scrollTo({
         left: currentScroll + scrollOffset,
         behavior: "smooth",
       });
     }
-  };
+  }, [scrollOffset]);
 
-  const scrollToLeft = () => {
-    if (slideshowContainerRef.current) {
-      const currentScroll = slideshowContainerRef.current.scrollLeft;
-      slideshowContainerRef.current.scrollTo({
+  const scrollToLeft = useCallback(() => {
+    if (sliderContainerRef.current) {
+      const currentScroll = sliderContainerRef.current.scrollLeft;
+      sliderContainerRef.current.scrollTo({
         left: currentScroll - scrollOffset,
         behavior: "smooth",
       });
     }
-  };
-
-  const resetScroll = () => {
-    if (slideshowContainerRef.current) {
-      slideshowContainerRef.current.scrollLeft = 0;
-    }
-  };
+  }, [scrollOffset]);
 
   return {
     scrollToLeft,
     scrollToRight,
-    resetScroll,
     isScrollable,
+    setRef,
   };
 };
 

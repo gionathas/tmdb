@@ -1,7 +1,7 @@
 import classNames from "classnames";
 import Properties from "config/properties";
 import useSlideshow from "hooks/useSlideshow";
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import ArrowButton, {
   ArrowVariant,
 } from "../miscellaneous/buttons/ArrowButton";
@@ -27,28 +27,23 @@ const Slideshow = ({
   scrollOffset = movieSlideshowDefaultScrollXOffset,
   arrowVariant = "base",
 }: SlideShowProps) => {
-  const slideContainerRef = useRef<HTMLDivElement>(null);
   const [showArrows, setShowArrows] = useState(false);
-  const { isScrollable, resetScroll, scrollToLeft, scrollToRight } =
-    useSlideshow(slideContainerRef, scrollOffset);
+  const { isScrollable, scrollToLeft, scrollToRight, setRef } =
+    useSlideshow(scrollOffset);
 
-  // reset the scroll position to 0, each time the component get updated
-  useEffect(
-    () => resetScroll(),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [children]
+  const generateArrowBtnClassName = useCallback(
+    (dir: "left" | "right") =>
+      classNames(
+        "fill-white absolute transition-all opacity-80 hover:opacity-100 bg-gray-500/30 hover:bg-gray-500/60 duration-200 rounded-lg z-10 top-1/4",
+        {
+          "-left-4": dir === "left",
+          "-right-4": dir === "right",
+          "visible hover:cursor-pointer": isScrollable[dir] && showArrows,
+          "invisible hover:cursor-default": !isScrollable[dir] || !showArrows,
+        }
+      ),
+    [isScrollable, showArrows]
   );
-
-  const generateArrowBtnClassName = (dir: "left" | "right") =>
-    classNames(
-      "fill-white absolute transition-all opacity-80 hover:opacity-100 bg-gray-500/30 hover:bg-gray-500/60 duration-200 rounded-lg z-10 top-1/4",
-      {
-        "-left-4": dir === "left",
-        "-right-4": dir === "right",
-        "visible hover:cursor-pointer": isScrollable[dir] && showArrows,
-        "invisible hover:cursor-default": !isScrollable[dir] || !showArrows,
-      }
-    );
 
   /*
    Generate the classname for the left and right arrow. Since this component is higly re-rendered due to the useEffect hook that trigger a re-render 
@@ -56,14 +51,12 @@ const Slideshow = ({
    */
   const leftArrowBtnClassName = useMemo(
     () => generateArrowBtnClassName("left"),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [isScrollable.left, showArrows]
+    [generateArrowBtnClassName]
   );
 
   const rightArrowBtnClassName = useMemo(
     () => generateArrowBtnClassName("right"),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [isScrollable.right, showArrows]
+    [generateArrowBtnClassName]
   );
 
   return (
@@ -83,7 +76,7 @@ const Slideshow = ({
         />
         {/* Slider Container */}
         <div
-          ref={slideContainerRef}
+          ref={setRef}
           className={`relative flex overflow-auto scroll-smooth snap-x space-x-3.5 hide-scrollbar mt-4`}
         >
           {children}
