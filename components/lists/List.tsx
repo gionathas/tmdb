@@ -1,6 +1,6 @@
 import React, { Fragment, ReactNode } from "react";
 
-type Props<T> = {
+export type ListProps<T> = {
   title: ReactNode;
   emptyTitle: ReactNode;
   items: T[];
@@ -16,7 +16,7 @@ const List = <T extends unknown>({
   renderItem,
   keyExtractor,
   className = "",
-}: Props<T>) => {
+}: ListProps<T>) => {
   const itemList = items.map((item) => (
     <Fragment key={keyExtractor(item)}>{renderItem(item)}</Fragment>
   ));

@@ -8,7 +8,7 @@ import React from "react";
 import { MoviePreview } from "../../@types/models/movie";
 import MovieBanner from "./MovieBanner";
 
-const { DEFAULT_GENRES_TO_SHOW: defaultGenresToShowNumber } = Properties;
+const { DEFAULT_MAX_GENRES_TO_SHOW: defaultGenresToShowNumber } = Properties;
 
 type Props = {
   bannerMovie: MoviePreview;

@@ -14,7 +14,7 @@ export type variant = "base" | "16:9";
 export type size = "sm" | "md" | "lg";
 export type style = `${variant}_${size}`;
 
-const { DEFAULT_GENRES_TO_SHOW: defaultGenresToShowNumber } = Properties;
+const { DEFAULT_MAX_GENRES_TO_SHOW, EMPTY_POSTER_IMG_SRC } = Properties;
 
 type OwnProps = {
   movie: MoviePreview;
@@ -29,7 +29,7 @@ type MovieCardProps = OwnProps &
 
 const MovieCard = ({
   movie,
-  genresToShow = defaultGenresToShowNumber,
+  genresToShow = DEFAULT_MAX_GENRES_TO_SHOW,
   size = "lg",
   variant = "base",
   showVote = false,
@@ -58,7 +58,10 @@ const MovieCard = ({
       <Thumbnail
         style={`${variant}_${size}`}
         vote={vote_average}
-        thumbnailSrc={generateImageUrlByPathOrDefault(poster_path, null)}
+        thumbnailSrc={generateImageUrlByPathOrDefault(
+          poster_path,
+          EMPTY_POSTER_IMG_SRC
+        )}
         showVote={showVote}
       />
       <PreviewInfo cardSize={size} genres={genres} title={displayTitle} />
@@ -144,7 +147,12 @@ const PreviewInfo = ({
 
   return (
     <div className="">
-      <h2 className={classNames("title text-gray-100 text-small", titleSize)}>
+      <h2
+        className={classNames(
+          "title text-gray-100 text-small line-clamp-2",
+          titleSize
+        )}
+      >
         {title}
       </h2>
       <p

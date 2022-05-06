@@ -1,3 +1,5 @@
+import { ParsedUrlQuery } from "querystring";
+
 export const isLastElement = (idx: number, array: Array<any>): boolean => {
   return idx === array.length - 1;
 };
@@ -16,6 +18,13 @@ export const isValidUrl = (url: string): boolean => {
     return false;
   }
   return true;
+};
+
+export const getQueryParam = (
+  key: string,
+  query: ParsedUrlQuery
+): string | undefined => {
+  return query[key] as string;
 };
 
 export const toBase64 = (str: string): string =>
