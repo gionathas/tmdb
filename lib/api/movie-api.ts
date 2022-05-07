@@ -37,6 +37,8 @@ export const TMDBApiRoutes = {
   getMovieReviewsByMovieId: (movieId: number) =>
     `${basePath}/${movieId}/reviews`,
   getMovieVideos: (movieId: number) => `${basePath}/${movieId}/videos`,
+  searchMovie: (encodedQuery: string, page: number) =>
+    `/search/movie?query=${encodedQuery}&page=${page}`,
 };
 
 export const getMovie = async (
@@ -231,6 +233,30 @@ export const getMovieYoutubeTrailer = async (
     console.error(
       `Error while retrieving youtube trailer of movie with id ${movieId}!`
     );
+    const { code, message } = handleError(error);
+    return { error: { code, message } };
+  }
+};
+
+export const searchMovie = async (
+  query: string,
+  page: number = 1
+): Promise<ApiResponseWithPagination<MoviePreview>> => {
+  try {
+    const apiRoute = TMDBApiRoutes.searchMovie(encodeURIComponent(query), page);
+    console.debug(apiRoute);
+
+    console.info(`Searching movie with query ${query} and page ${page}..`);
+    const { data: results } = await TmdbAPI.get<
+      TmdbPaginatedResponse<MoviePreview>
+    >(apiRoute);
+    console.info(
+      `Found ${results.total_results} results for movie search with query ${query}!`
+    );
+
+    return { data: results };
+  } catch (error) {
+    console.error(`Error while searching for movie with query ${query}!`);
     const { code, message } = handleError(error);
     return { error: { code, message } };
   }

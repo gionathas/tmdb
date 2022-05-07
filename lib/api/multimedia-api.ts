@@ -16,7 +16,7 @@ export const generateImageUrlByPathOrDefault = (
       return subPath;
     }
 
-    const TmdbUrlImageUrl = Properties.TmdbApi.ImagesHost!.concat(path);
+    const TmdbUrlImageUrl = Properties.TMDB_API.IMAGE_HOST!.concat(path);
     return isValidUrl(TmdbUrlImageUrl) ? TmdbUrlImageUrl : defaultValue;
   }
 

@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import ArrowButton from "components/miscellaneous/buttons/ArrowButton";
+import ArrowButton from "components/buttons/ArrowButton";
 import Properties from "config/properties";
 import useGenres from "hooks/useGenres";
 import { generateImageUrlByPathOrDefault } from "lib/api/multimedia-api";
@@ -8,7 +8,7 @@ import React from "react";
 import { MoviePreview } from "../../@types/models/movie";
 import MovieBanner from "./MovieBanner";
 
-const { defaultGenresToShowNumber } = Properties;
+const { DEFAULT_MAX_GENRES_TO_SHOW: defaultGenresToShowNumber } = Properties;
 
 type Props = {
   bannerMovie: MoviePreview;
@@ -30,15 +30,16 @@ const MoviePreviewBanner = ({
     title: movieTitle,
     original_title: movieOriginalTitle,
     overview: movieOverview,
+    release_date,
   } = bannerMovie;
   const genresListAsString = genres.join(", ");
-  const movieYear = new Date(bannerMovie.release_date).getFullYear();
+  const movieYear = release_date && new Date(release_date).getFullYear();
   const backdropImageSrc = generateImageUrlByPathOrDefault(
     bannerMovie.backdrop_path,
     null
   );
 
-  const goToMovieDetail = () => {
+  const handleBannerInformationClick = () => {
     const { id: movieId } = bannerMovie;
     router.push(`/movies/${movieId}`);
   };
@@ -87,7 +88,7 @@ const MoviePreviewBanner = ({
           />
           <div
             className="max-w-md pl-5 cursor-pointer lg:max-w-xl"
-            onClick={goToMovieDetail}
+            onClick={handleBannerInformationClick}
           >
             {title}
             {year}

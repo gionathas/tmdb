@@ -5,7 +5,8 @@ import React from "react";
 import { MoviePreview } from "../@types/models/movie";
 import MoviePreviewBanner from "./banner/MoviePreviewBanner";
 
-const { carouselDefaultIntervalMillis: defaultCarouselInterval } = Properties;
+const { DEFAULT_CAROUSEL_INTERVAL_SECONDS: defaultCarouselInterval } =
+  Properties;
 
 type OwnProps = {
   movies: MoviePreview[];
@@ -33,7 +34,18 @@ const MovieCarousel = ({
     currentIndex,
     nextItem: nextMovie,
     prevItem: prevMovie,
+    resetInterval: resetCarouselInterval,
   } = useCarousel(movies, interval);
+
+  const handleRightArrowClick = () => {
+    nextMovie();
+    resetCarouselInterval();
+  };
+
+  const handleLeftArrowClick = () => {
+    prevMovie();
+    resetCarouselInterval();
+  };
 
   return (
     <div className={`flex ${className}`} {...rest}>
@@ -51,13 +63,13 @@ const MovieCarousel = ({
             )}
           >
             <MoviePreviewBanner
-              className={classNames("w-full", {
+              className={classNames({
                 block: showMovieBanner,
                 hidden: !showMovieBanner,
               })}
               bannerMovie={movie}
-              onLeftClick={prevMovie}
-              onRightClick={nextMovie}
+              onLeftClick={handleLeftArrowClick}
+              onRightClick={handleRightArrowClick}
               height={height}
               backgroundOpacity={backgroundOpacity}
             />

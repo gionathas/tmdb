@@ -3,7 +3,7 @@ import Properties from "config/properties";
 import Image from "next/image";
 import React from "react";
 
-const defaultAvatarImage = Properties.defaultAvatarImageSrcPath;
+const defaultAvatarImage = Properties.DEFAULT_AVATART_IMG_SRC;
 
 type size = "sm";
 

@@ -1,6 +1,6 @@
+import { ArrowVariant } from "components/buttons/ArrowButton";
 import MovieReviewList from "components/lists/MovieReviewList";
 import RecommendedMovieList from "components/lists/RecommendedMovieList";
-import { ArrowVariant } from "components/miscellaneous/buttons/ArrowButton";
 import MovieTrailerPlayer from "components/MovieTrailerPlayer";
 import MovieSlideshow from "components/slideshows/MovieSlideshow";
 import Properties from "config/properties";
@@ -33,7 +33,7 @@ import {
 } from "../../lib/api/movie-api";
 import { formatNumberToUSDCurrency } from "../../lib/utils";
 
-const revalidateTime = Properties.movieDetailPageRevalidationSeconds;
+const { DEFAULT_MOVIE_DETAIL_PAGE_REVALIDATION_SECONDS } = Properties;
 
 type PageProps = SharedPageProps & {
   movie: MovieDetail;
@@ -123,7 +123,7 @@ export const getStaticProps: GetStaticProps<PageProps> = async ({ params }) => {
       youtubeTrailer: youtubeTrailer || null,
       genresMap: genresMap!,
     },
-    revalidate: revalidateTime,
+    revalidate: DEFAULT_MOVIE_DETAIL_PAGE_REVALIDATION_SECONDS,
   };
 };
 
@@ -184,7 +184,7 @@ const MoviePage: NextPage<PageProps> = ({
 
       {/* Row with Cast Slideshow and MovieSecondaryInfo (status, revenue, language ) */}
       <div className="flex mt-10 base-padding">
-        {cast.length > 0 && <MovieCastSlideshow cast={cast} />}
+        {cast.length > 0 && <MovieCastSlideshow key={movie.id} cast={cast} />}
         <MovieSecondaryInfo movie={movie} />
       </div>
 

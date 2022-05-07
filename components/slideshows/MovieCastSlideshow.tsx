@@ -5,7 +5,7 @@ import Properties from "../../config/properties";
 import CastCard from "../cards/CastCard";
 import Slideshow from "./Slideshow";
 
-const { castSlideshowDefaultScrollXOffset } = Properties;
+const { DEFAULT_CAST_SLIDESHOW_SCROLL_X_OFFSET } = Properties;
 
 type OwnProps = {
   cast: CastCredit[];
@@ -18,7 +18,7 @@ const title = <h2 className="text-xl font-medium">Top Cast</h2>;
 const MovieCastSlideshow = ({
   cast,
   className,
-  scrollOffset = castSlideshowDefaultScrollXOffset,
+  scrollOffset = DEFAULT_CAST_SLIDESHOW_SCROLL_X_OFFSET,
 }: OwnProps) => {
   return (
     <Slideshow
