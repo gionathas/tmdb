@@ -4,7 +4,10 @@ import ActionButton from "components/buttons/ActionButton";
 import VoteBadge from "components/miscellaneous/VoteBadge";
 import Properties from "config/properties";
 import useMediaQuery from "hooks/useMediaQuery";
-import { generateImageUrlByPathOrDefault } from "lib/api/multimedia-api";
+import {
+  buildBackdropImageUrlOrDefault,
+  buildPosterImageUrlOrDefault,
+} from "lib/api/multimedia-api";
 import { shimmerEffect } from "lib/effects";
 import { toBase64 } from "lib/utils";
 import Image from "next/image";
@@ -36,7 +39,11 @@ const MovieDetailBanner = ({
 
   return (
     <MovieBanner
-      backdropImageSrc={generateImageUrlByPathOrDefault(backdrop_path, null)}
+      backdropImageSrc={buildBackdropImageUrlOrDefault(
+        backdrop_path,
+        "original",
+        null
+      )}
       {...rest}
     >
       {/* Banner Content */}
@@ -45,8 +52,9 @@ const MovieDetailBanner = ({
           {isLgScreen && (
             <MoviePosterImage
               key={poster_path}
-              posterSrc={generateImageUrlByPathOrDefault(
+              posterSrc={buildPosterImageUrlOrDefault(
                 poster_path,
+                "w500",
                 EMPTY_POSTER_IMG_SRC
               )}
             />
@@ -65,13 +73,15 @@ const MovieDetailBanner = ({
 };
 
 const MoviePosterImage = ({ posterSrc }: { posterSrc: string | null }) => {
-  const [isImageLoading, setImageLoading] = useState(true);
+  const [isImageLoading, setImageLoading] = useState(
+    posterSrc != null ? true : false
+  );
 
   return posterSrc ? (
     <Image
       src={posterSrc}
-      // layout="fill"
-      // objectFit="cover"
+      width={350}
+      height={500}
       className={classNames(
         "rounded overflow-hidden transition-opacity duration-300",
         {
@@ -85,8 +95,6 @@ const MoviePosterImage = ({ posterSrc }: { posterSrc: string | null }) => {
       )}`}
       alt="Movie Poster Image"
       onLoadingComplete={() => setImageLoading(false)}
-      width={350}
-      height={500}
       priority
     />
   ) : null;

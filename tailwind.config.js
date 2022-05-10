@@ -26,5 +26,6 @@ module.exports = {
   plugins: [
     require("@tailwindcss/line-clamp"),
     require("tailwindcss-debug-screens"),
+    require("@tailwindcss/aspect-ratio"),
   ],
 };

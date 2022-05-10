@@ -6,7 +6,7 @@ import MovieSlideshow from "components/slideshows/MovieSlideshow";
 import Properties from "config/properties";
 import useMediaQuery from "hooks/useMediaQuery";
 import { getAllGenres } from "lib/api/genre-api";
-import { generateYoutubeVideoUrl } from "lib/api/multimedia-api";
+import { buildYoutubeVideoUrl } from "lib/api/multimedia-api";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import Head from "next/head";
 import { SharedPageProps } from "pages/_app";
@@ -157,7 +157,7 @@ const MoviePage: NextPage<PageProps> = ({
   const { title } = movie;
   const { cast, crew } = credits;
   const movieYoutubeTrailerSrc =
-    youtubeTrailer != null ? generateYoutubeVideoUrl(youtubeTrailer.key) : "";
+    youtubeTrailer != null ? buildYoutubeVideoUrl(youtubeTrailer.key) : "";
 
   return (
     <>

@@ -23,6 +23,7 @@ const Avatar = ({ src, size = "sm" }: { src?: string; size?: size }) => {
         objectFit="cover"
         placeholder="blur"
         blurDataURL={defaultAvatarImage}
+        quality={50}
       />
     </div>
   );

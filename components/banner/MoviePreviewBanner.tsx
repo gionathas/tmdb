@@ -2,7 +2,7 @@ import classNames from "classnames";
 import ArrowButton from "components/buttons/ArrowButton";
 import Properties from "config/properties";
 import useGenres from "hooks/useGenres";
-import { generateImageUrlByPathOrDefault } from "lib/api/multimedia-api";
+import { buildBackdropImageUrlOrDefault } from "lib/api/multimedia-api";
 import { useRouter } from "next/router";
 import React from "react";
 import { MoviePreview } from "../../@types/models/movie";
@@ -35,7 +35,11 @@ const MoviePreviewBanner = ({
   } = bannerMovie;
   const genresListAsString = genres.join(", ");
   const movieYear = release_date && new Date(release_date).getFullYear();
-  const backdropImageSrc = generateImageUrlByPathOrDefault(backdrop_path, null);
+  const backdropImageSrc = buildBackdropImageUrlOrDefault(
+    backdrop_path,
+    "original",
+    null
+  );
 
   const handleBannerInformationClick = () => {
     const { id: movieId } = bannerMovie;

@@ -2,7 +2,7 @@ import classNames from "classnames";
 import VoteBadge from "components/miscellaneous/VoteBadge";
 import Properties from "config/properties";
 import useGenres from "hooks/useGenres";
-import { generateImageUrlByPathOrDefault } from "lib/api/multimedia-api";
+import { buildPosterImageUrlOrDefault } from "lib/api/multimedia-api";
 import { shimmerEffect } from "lib/effects";
 import { toBase64 } from "lib/utils";
 import Image from "next/image";
@@ -58,8 +58,9 @@ const MovieCard = ({
       <Thumbnail
         style={`${variant}_${size}`}
         vote={vote_average}
-        thumbnailSrc={generateImageUrlByPathOrDefault(
+        thumbnailSrc={buildPosterImageUrlOrDefault(
           poster_path,
+          "w500",
           EMPTY_POSTER_IMG_SRC
         )}
         showVote={showVote}

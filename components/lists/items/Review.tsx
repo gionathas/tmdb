@@ -1,7 +1,7 @@
 import Avatar from "components/miscellaneous/Avatar";
 import ExpandableText from "components/miscellaneous/ExpandableText";
 import VoteBadge from "components/miscellaneous/VoteBadge";
-import { generateImageUrlByPathOrDefault } from "lib/api/multimedia-api";
+import { buildProfilemageUrlOrDefault } from "lib/api/multimedia-api";
 import React from "react";
 import { Review as ReviewType } from "../../../@types/models/review";
 
@@ -32,7 +32,7 @@ const Review = ({ review, className = "", ...rest }: ReviewProps) => {
   const reviewHeader = (
     <div className="flex items-center justify-between">
       <div className="flex items-center">
-        <Avatar src={generateImageUrlByPathOrDefault(avatar_path, null)} />
+        <Avatar src={buildProfilemageUrlOrDefault(avatar_path, "w45", null)} />
         <div className="ml-4">{reviewInfo}</div>
       </div>
       {rating && <VoteBadge vote={rating} size="sm" />}

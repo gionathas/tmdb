@@ -42,7 +42,6 @@ const MovieBanner = ({
           alt="Movie Background Image"
           objectPosition="center"
           style={{ opacity: isBackgroundLoading ? 0 : backgroundOpacity }}
-          // style={{ opacity: backgroundOpacity }}
           className={`transition-opacity duration-700`}
           placeholder="blur"
           blurDataURL={`data:image/svg+xml;base64,${toBase64(
