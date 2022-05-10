@@ -1,5 +1,4 @@
-import classNames from "classnames";
-import Spinner from "components/miscellaneous/Spinner";
+import cn from "classnames";
 import { shimmerEffect } from "lib/effects";
 import { toBase64 } from "lib/utils";
 import Image from "next/image";
@@ -11,7 +10,6 @@ type OwnProps = {
   backgroundOpacity: number;
   children?: React.ReactNode;
   onLoadingComplete?: () => void;
-  isContentLoading?: boolean;
 };
 
 type MovieBannerProps = OwnProps &
@@ -24,26 +22,18 @@ const MovieBanner = ({
   height,
   backgroundOpacity,
   style = {},
-  isContentLoading = false,
   ...rest
 }: MovieBannerProps) => {
   const [isBackgroundLoading, setIsBackgroundLoading] = useState(
     backdropImageSrc ? true : false
   );
 
-  const isBannerLoading = isBackgroundLoading || isContentLoading;
-
   return (
     <div
       style={{ height: `${height}px`, ...style }}
-      className={classNames("relative", className)}
+      className={cn("relative", className)}
       {...rest}
     >
-      {isBannerLoading && (
-        <div className="grid h-full place-items-center">
-          <Spinner />
-        </div>
-      )}
       {backdropImageSrc && (
         <Image
           src={backdropImageSrc}
@@ -52,6 +42,7 @@ const MovieBanner = ({
           alt="Movie Background Image"
           objectPosition="center"
           style={{ opacity: isBackgroundLoading ? 0 : backgroundOpacity }}
+          // style={{ opacity: backgroundOpacity }}
           className={`transition-opacity duration-700`}
           placeholder="blur"
           blurDataURL={`data:image/svg+xml;base64,${toBase64(
@@ -61,9 +52,7 @@ const MovieBanner = ({
           priority
         />
       )}
-      {!isBackgroundLoading && (
-        <div className="absolute inset-x-0 h-full">{children}</div>
-      )}
+      <div className="absolute inset-x-0 h-full">{children}</div>
     </div>
   );
 };

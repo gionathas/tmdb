@@ -28,6 +28,7 @@ const SearchBar = ({
         }}
       />
       <button
+        aria-label="search"
         onClick={() => onSearch(query)}
         className="absolute z-10 bg-transparent rounded-full right-3 opacity-70 peer-focus:opacity-100 disabled:cursor-not-allowed hover:opacity-100 "
         disabled={query.length === 0}

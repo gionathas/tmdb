@@ -48,7 +48,6 @@ export const getStaticPaths: GetStaticPaths = async () => {
     getMoviesByCategory("popular"),
     getMoviesByCategory("top_rated"),
     getMoviesByCategory("now_playing"),
-    // getMoviesByCategory("upcoming"),
     getTrendingMovies(),
   ]);
 

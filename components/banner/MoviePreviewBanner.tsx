@@ -31,13 +31,11 @@ const MoviePreviewBanner = ({
     original_title: movieOriginalTitle,
     overview: movieOverview,
     release_date,
+    backdrop_path,
   } = bannerMovie;
   const genresListAsString = genres.join(", ");
   const movieYear = release_date && new Date(release_date).getFullYear();
-  const backdropImageSrc = generateImageUrlByPathOrDefault(
-    bannerMovie.backdrop_path,
-    null
-  );
+  const backdropImageSrc = generateImageUrlByPathOrDefault(backdrop_path, null);
 
   const handleBannerInformationClick = () => {
     const { id: movieId } = bannerMovie;
@@ -78,6 +76,7 @@ const MoviePreviewBanner = ({
 
   return (
     <MovieBanner backdropImageSrc={backdropImageSrc} {...rest}>
+      {/* Banner Content */}
       <div className="flex flex-col justify-center h-full">
         <div className="flex items-center md:mx-4">
           <ArrowButton
