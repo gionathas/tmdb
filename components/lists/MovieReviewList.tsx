@@ -24,7 +24,7 @@ const MovieReviewList = ({ reviews, className, ...rest }: ReviewListProps) => {
         emptyTitle={noReviewWarningTitle}
         items={reviews}
         renderItem={(review) => (
-          <Review className="max-w-5xl p-4" review={review} />
+          <Review className="max-w-5xl p-4 mt-6 first:mt-0" review={review} />
         )}
         keyExtractor={(review) => review.id}
       />

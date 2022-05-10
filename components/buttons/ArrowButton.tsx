@@ -31,7 +31,11 @@ const ArrowButton = ({
       <ChevronRightIcon className={size} />
     );
 
-  return <button {...rest}>{icon}</button>;
+  return (
+    <button aria-label={`arrow-${direction}`} {...rest}>
+      {icon}
+    </button>
+  );
 };
 
 export default ArrowButton;

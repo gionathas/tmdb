@@ -3,8 +3,11 @@ import MovieBanner from "components/banner/MovieBanner";
 import ActionButton from "components/buttons/ActionButton";
 import VoteBadge from "components/miscellaneous/VoteBadge";
 import Properties from "config/properties";
-import useImageLoad from "hooks/useImageLoad";
-import { generateImageUrlByPathOrDefault } from "lib/api/multimedia-api";
+import useMediaQuery from "hooks/useMediaQuery";
+import {
+  buildBackdropImageUrlOrDefault,
+  buildPosterImageUrlOrDefault,
+} from "lib/api/multimedia-api";
 import { shimmerEffect } from "lib/effects";
 import { toBase64 } from "lib/utils";
 import Image from "next/image";
@@ -32,30 +35,30 @@ const MovieDetailBanner = ({
   ...rest
 }: Props) => {
   const { backdrop_path, poster_path } = movie;
-  const [isPosterLoading, setIsPosterLoading] = useState(
-    poster_path ? true : false
-  );
-
-  const handlePosterImageLoadingComplete = () => {
-    setIsPosterLoading(false);
-  };
+  const isLgScreen = useMediaQuery("(min-width: 1024px)");
 
   return (
     <MovieBanner
-      backdropImageSrc={generateImageUrlByPathOrDefault(backdrop_path, null)}
-      isContentLoading={isPosterLoading}
+      backdropImageSrc={buildBackdropImageUrlOrDefault(
+        backdrop_path,
+        "original",
+        null
+      )}
       {...rest}
     >
+      {/* Banner Content */}
       <div className="flex flex-col justify-center h-full base-padding">
         <div className="lg:flex lg:space-x-8 2xl:pt-12">
-          <MoviePosterImage
-            className={`hidden lg:block relative flex-none w-[350px] h-[500px] xl:w-[400px] 2xl:w-[440px] 2xl:h-[550px] rounded overflow-hidden transition-opacity duration-300`}
-            posterSrc={generateImageUrlByPathOrDefault(
-              poster_path,
-              EMPTY_POSTER_IMG_SRC
-            )}
-            onLoadingComplete={handlePosterImageLoadingComplete}
-          />
+          {isLgScreen && (
+            <MoviePosterImage
+              key={poster_path}
+              posterSrc={buildPosterImageUrlOrDefault(
+                poster_path,
+                "w500",
+                EMPTY_POSTER_IMG_SRC
+              )}
+            />
+          )}
           <MovieInformation
             className="w-full max-w-4xl mx-auto lg:pt-5 lg:flex-1 2xl:pt-2"
             movie={movie}
@@ -69,48 +72,32 @@ const MovieDetailBanner = ({
   );
 };
 
-const MoviePosterImage = ({
-  posterSrc,
-  onLoadingComplete,
-  className,
-}: {
-  posterSrc: string | null;
-  onLoadingComplete: () => void;
-  className?: string;
-}) => {
-  const {
-    isLoading: isPosterLoading,
-    handleLoadingComplete: handlePosterLoadingComplete,
-  } = useImageLoad(posterSrc);
-
-  const handleLoadingComplete = () => {
-    handlePosterLoadingComplete();
-    onLoadingComplete();
-  };
-
-  return (
-    <div
-      className={classNames(className, {
-        "opacity-0": isPosterLoading,
-        "opacity-100": !isPosterLoading,
-      })}
-    >
-      {posterSrc && (
-        <Image
-          src={posterSrc}
-          layout="fill"
-          objectFit="cover"
-          placeholder="blur"
-          blurDataURL={`data:image/svg+xml;base64,${toBase64(
-            shimmerEffect(700, 475)
-          )}`}
-          alt="Movie Poster Image"
-          onLoadingComplete={handleLoadingComplete}
-          priority
-        />
-      )}
-    </div>
+const MoviePosterImage = ({ posterSrc }: { posterSrc: string | null }) => {
+  const [isImageLoading, setImageLoading] = useState(
+    posterSrc != null ? true : false
   );
+
+  return posterSrc ? (
+    <Image
+      src={posterSrc}
+      width={350}
+      height={500}
+      className={classNames(
+        "rounded overflow-hidden transition-opacity duration-300",
+        {
+          "opacity-40": isImageLoading,
+          "opacity-100": !isImageLoading,
+        }
+      )}
+      placeholder="blur"
+      blurDataURL={`data:image/svg+xml;base64,${toBase64(
+        shimmerEffect(700, 475)
+      )}`}
+      alt="Movie Poster Image"
+      onLoadingComplete={() => setImageLoading(false)}
+      priority
+    />
+  ) : null;
 };
 
 const MovieInformation = ({
