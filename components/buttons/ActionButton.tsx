@@ -20,6 +20,7 @@ const ActionButton = ({
 }: ActionButtonProps) => {
   return (
     <button
+      aria-label={`${tooltip}`}
       className={classNames(
         "relative rounded-full w-10 h-10 grid place-items-center group cursor-pointer",
         { "bg-dark-blue": variant === "blue" },

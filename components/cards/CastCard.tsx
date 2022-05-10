@@ -1,6 +1,6 @@
 import classNames from "classnames";
 import { Properties } from "config/properties";
-import { generateImageUrlByPathOrDefault } from "lib/api/multimedia-api";
+import { buildProfilemageUrlOrDefault } from "lib/api/multimedia-api";
 import Image from "next/image";
 import React from "react";
 import { CastCredit } from "../../@types/models/credit";
@@ -28,7 +28,11 @@ const CastCard = ({ cast, className, ...rest }: CastCardProps) => {
       {/* thumbnail */}
       <div className="relative h-40">
         <Image
-          src={generateImageUrlByPathOrDefault(profile_path, defaultAvatar)}
+          src={buildProfilemageUrlOrDefault(
+            profile_path,
+            "w185",
+            defaultAvatar
+          )}
           alt="Profile Image"
           objectFit="cover"
           layout="fill"
